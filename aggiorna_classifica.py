@@ -27,13 +27,19 @@ COMPETIZIONI = {
         "slug":   "uefa.europa.conf",
         "nome":   "Conference League",
         "comp":   "UECL",
-        "giornate": 8,
+        "giornate": 6,
     },
 }
 
-# Overrides loghi per squadre italiane (Wikipedia SVG, alta qualità)
+# Overrides loghi per squadre italiane
 LOGO_OVERRIDE = {
     "juventus":  "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
+    "napoli":    "https://upload.wikimedia.org/wikipedia/commons/4/4d/SSC_Napoli_2025_%28white_and_azure%29.svg",
+    "atalanta":  "https://upload.wikimedia.org/wikipedia/it/2/24/Atalanta_BC_2026.svg",
+    "udinese":   "https://upload.wikimedia.org/wikipedia/it/a/ae/Logo_Udinese_Calcio_2010.svg",
+    "fiorentina":"https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
+    "verona":    "https://sport.sky.it/assets/images/3a737aa34cf3cac3ed64133d1527a6c517d0e8d5/skysport/it/calcio/serie-a/2020/06/01/hellas-verona-stemma/herllas%20verona_giallo_dentro.png",
+    "roma":      "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
 }
 
 HEADERS = {
@@ -101,9 +107,12 @@ def parse_standings(data: dict) -> tuple[list, int]:
             logos = team.get("logos", [])
             logo_url = logos[0]["href"] if logos else ""
 
-            # Override logo Juventus
-            if "juventus" in nome.lower():
-                logo_url = LOGO_OVERRIDE["juventus"]
+            # Override loghi per squadre note
+            nome_lower = nome.lower()
+            for chiave, url in LOGO_OVERRIDE.items():
+                if chiave in nome_lower:
+                    logo_url = url
+                    break
 
             # Statistiche dalle 'stats'
             stats = {s["name"]: s.get("value", 0) for s in entry.get("stats", [])}
