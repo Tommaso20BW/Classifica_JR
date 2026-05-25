@@ -12,6 +12,7 @@ on:
           - SA
           - UCL
           - UEL
+          - UECL
 
 jobs:
   build:
