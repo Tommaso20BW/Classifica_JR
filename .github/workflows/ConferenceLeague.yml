@@ -20,7 +20,7 @@ jobs:
       - name: Esegui Script Classifica
         env:
           FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
-          COMPETITION: SA
+          COMPETITION: UECL
         run: python aggiorna_classifica.py
       - name: Invia Screenshot su Telegram
         env:
