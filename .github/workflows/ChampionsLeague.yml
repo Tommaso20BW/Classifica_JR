@@ -1,4 +1,4 @@
-name: Aggiorna Classifica Live - Serie A
+name: Aggiorna Classifica Live - Champions League
 on:
   workflow_dispatch:
 jobs:
