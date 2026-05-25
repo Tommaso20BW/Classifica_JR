@@ -15,62 +15,68 @@
       overflow: hidden;
     }
 
-    /* ══ VARIABILI BASE (Serie A) ══ */
+    /* ══ TEMI ══ */
     body {
-      --c-bg:        #005CA9;
-      --c-header-hi: #ffffff;
-      --c-row-odd:   rgba(255,255,255,0.10);
-      --c-row-even:  rgba(0,0,0,0.08);
-      --c-row-border:rgba(255,255,255,0.14);
+      --c-bg-a:      #0a1a6e;
+      --c-bg-b:      #061050;
+      --c-bg-base:   #04093a;
+      --c-header-hi: #4a9fff;
+      --c-row-odd:   rgba(255,255,255,0.06);
+      --c-row-even:  rgba(255,255,255,0.00);
+      --c-row-border:rgba(255,255,255,0.08);
       --c-text:      #ffffff;
-      --c-text-dim:  #a8c8f0;
-      --c-pts:       #ffffff;
+      --c-text-dim:  #7a8ecc;
+      --c-pts:       #5aabff;
       --c-zone-ucl:  #1a6bdc;
       --c-zone-uel:  #e87010;
       --c-zone-uecl: #22a855;
       --c-zone-rel:  #dc2020;
       --c-juve:      #d4af37;
-      --c-divider:   rgba(255,255,255,0.20);
-      --head-h: 160px;
-      --leg-h:  52px;
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
+      --row-h: 93px;
+      --head-h: 170px;
+      --leg-h: 52px;
     }
 
-    body.comp-UCL {
-      --c-bg:        #0A1E5E;
-      --c-header-hi: #e8c84a;
-      --c-row-odd:   rgba(255,255,255,0.07);
-      --c-row-even:  rgba(0,0,0,0.10);
-      --c-row-border:rgba(255,255,255,0.10);
-      --c-text-dim:  #8a9fcc;
-      --c-pts:       #e8c84a;
-      --c-zone-ucl:  #3a6fd8;
-      --c-zone-uel:  #e87010;
+    body.comp-UCL, body.comp-UEL {
+      --c-bg-a:      #1a0560;
+      --c-bg-b:      #3a0090;
+      --c-bg-base:   #08002a;
+      --c-header-hi: #c080ff;
+      --c-row-odd:   rgba(255,255,255,0.06);
+      --c-row-even:  rgba(255,255,255,0.00);
+      --c-row-border:rgba(160,80,255,0.15);
+      --c-text-dim:  #9070c0;
+      --c-pts:       #c080ff;
+      --c-zone-ucl:  #7040e0;
+      --c-zone-uel:  #e040e0;
       --c-zone-uecl: #94a3b8;
       --c-zone-rel:  #dc2020;
-      --c-divider:   rgba(255,255,255,0.14);
-      --head-h: 145px;
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='20%25' cy='5%25' r='60%25'%3E%3Cstop offset='0' stop-color='%232000a0' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='80%25' cy='95%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c000ff' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g3' cx='50%25' cy='50%25' r='40%25'%3E%3Cstop offset='0' stop-color='%236000c0' stop-opacity='.2'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%2305001a'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Crect width='900' height='1200' fill='url(%23g3)'/%3E%3Ccircle cx='450' cy='600' r='420' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.07'/%3E%3Ccircle cx='450' cy='600' r='300' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.05'/%3E%3C/svg%3E");
+      --row-h: 49px;
+      --head-h: 150px;
+      --leg-h: 52px;
     }
 
     body.comp-UEL {
-      --c-bg:        #000000;
-      --c-header-hi: #FF6B00;
-      --c-row-odd:   rgba(255,107,0,0.08);
-      --c-row-even:  rgba(255,255,255,0.03);
-      --c-row-border:rgba(255,107,0,0.22);
-      --c-text-dim:  #b06030;
-      --c-pts:       #FF6B00;
-      --c-zone-ucl:  #FF6B00;
-      --c-zone-uel:  #cc9900;
-      --c-zone-uecl: #94a3b8;
-      --c-zone-rel:  #dc2020;
-      --c-divider:   rgba(255,107,0,0.30);
-      --head-h: 145px;
+      --c-bg-a:      #5a1000;
+      --c-bg-b:      #2a0800;
+      --c-bg-base:   #120300;
+      --c-header-hi: #ff7040;
+      --c-row-border:rgba(220,70,20,0.18);
+      --c-text-dim:  #b05030;
+      --c-pts:       #ff7040;
+      --c-zone-ucl:  #d04010;
+      --c-zone-uel:  #e09020;
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c02000' stop-opacity='.65'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%23802000' stop-opacity='.5'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0200'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3C/svg%3E");
     }
 
     body {
       font-family: 'Inter', sans-serif;
       color: var(--c-text);
-      background-color: var(--c-bg);
+      background-image: var(--c-texture);
+      background-size: cover;
+      background-position: center;
       display: flex;
       flex-direction: column;
     }
@@ -87,28 +93,33 @@
     }
     .header-title {
       font-family: 'Anton', sans-serif;
-      font-size: 6rem;
-      letter-spacing: 0.08em;
+      font-size: 5.8rem;
+      letter-spacing: 0.10em;
       color: #fff;
       line-height: 1;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
       text-align: center;
       white-space: nowrap;
     }
-    .header-title.long { font-size: 4.2rem; }
+    /* titoli lunghi (UCL, UEL): riduco font */
+    .header-title.long {
+      font-size: 4rem;
+    }
     .header-sub {
-      font-family: 'Anton', sans-serif;
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 1.05rem;
-      letter-spacing: .32em;
+      font-weight: 900;
+      letter-spacing: .35em;
       text-transform: uppercase;
       color: var(--c-header-hi);
-      margin-top: 5px;
+      margin-top: 4px;
       text-align: center;
     }
     .header-divider {
       width: 100%;
       height: 1px;
-      background: var(--c-divider);
-      margin-top: 13px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      margin-top: 12px;
     }
 
     /* ── TABLE AREA ── */
@@ -137,11 +148,11 @@
       padding: 4px 8px 6px;
       margin-bottom: 4px;
       color: var(--c-text-dim);
-      font-family: 'Anton', sans-serif;
       font-size: .78rem;
-      letter-spacing: .22em;
+      font-weight: 800;
+      letter-spacing: .18em;
       text-transform: uppercase;
-      border-bottom: 1px solid var(--c-divider);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     .col-head div { text-align: center; }
     .col-head div:nth-child(3) { text-align: left; padding-left: 4px; }
@@ -181,8 +192,8 @@
 
     /* ── CELLE ── */
     .c-pos {
-      font-family: 'Anton', sans-serif;
-      font-size: 1.25rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem; font-weight: 700;
       color: var(--c-text-dim);
       text-align: center;
     }
@@ -197,14 +208,14 @@
       padding-left: 6px;
     }
     .c-pt {
-      font-family: 'Anton', sans-serif;
-      font-size: 1.45rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem; font-weight: 900;
       color: var(--c-pts);
       text-align: center;
     }
     .c-dr {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.15rem; font-weight: 700;
+      font-size: 1.2rem; font-weight: 700;
       text-align: center;
     }
     .c-dr.pos { color: #4ade80; }
@@ -218,7 +229,7 @@
     body.comp-18 .c-name  { font-size: .82rem; }
     body.comp-18 .c-pt    { font-size: 1.2rem; }
     body.comp-18 .c-dr    { font-size: 1rem; }
-    body.comp-18 .c-pos   { font-size: 1.05rem; }
+    body.comp-18 .c-pos   { font-size: 1.1rem; }
     body.comp-18 .col-head { font-size: .7rem; }
 
     /* ── LEGEND ── */
@@ -230,15 +241,14 @@
       align-items: center;
       gap: 22px;
       padding: 0 20px;
-      border-top: 1px solid var(--c-divider);
+      border-top: 1px solid rgba(255,255,255,0.08);
       margin-top: 8px;
     }
     .legend-item {
       display: flex; align-items: center; gap: 7px;
-      font-family: 'Anton', sans-serif;
-      font-size: .88rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .95rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
       color: var(--c-text-dim);
     }
     .legend-dot {
@@ -260,7 +270,6 @@
   <div class="legend" id="legend"></div>
 
 <script>
-// ── MAPPA NOMI ITALIANIZZATI ──
 const MAPPA_NOMI = {
   "juventus fc":"Juventus","juventus":"Juventus",
   "inter milan":"Inter","fc internazionale milano":"Inter","inter":"Inter","internazionale":"Inter",
@@ -335,7 +344,8 @@ function italianizzaNome(name) {
 const COMP_CONFIG = {
   SA: {
     titolo: "Serie A", longTitle: false,
-    cols: 2, perCol: 10, is18: false,
+    cols: 2, perCol: 10,
+    is18: false,
     zone: p => {
       if (p <= 4)  return "var(--c-zone-ucl)";
       if (p <= 6)  return "var(--c-zone-uel)";
@@ -352,7 +362,8 @@ const COMP_CONFIG = {
   },
   UCL: {
     titolo: "Champions League", longTitle: true,
-    cols: 2, perCol: 18, is18: true,
+    cols: 2, perCol: 18,
+    is18: true,
     zone: p => {
       if (p <= 8)  return "var(--c-zone-ucl)";
       if (p <= 24) return "var(--c-zone-uel)";
@@ -366,7 +377,8 @@ const COMP_CONFIG = {
   },
   UEL: {
     titolo: "Europa League", longTitle: true,
-    cols: 2, perCol: 18, is18: true,
+    cols: 2, perCol: 18,
+    is18: true,
     zone: p => {
       if (p <= 8)  return "var(--c-zone-ucl)";
       if (p <= 24) return "var(--c-zone-uel)";
@@ -386,8 +398,7 @@ function drVal(dr)   { return dr > 0 ? '+'+dr : ''+dr; }
 function buildRow(t, zoneColor) {
   const name = italianizzaNome(t.team);
   const isJuve = name.toLowerCase().includes('juv');
-  const logoUrl = getLogo(t.team, t.logo);
-  const logo = logoUrl ? `<img src="${logoUrl}" alt="">` : '';
+  const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
   return `<div class="row${isJuve?' juve':''}" style="--zone:${zoneColor}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${logo}</div>
@@ -411,12 +422,14 @@ function buildColHead() {
     document.body.classList.add('comp-' + key);
     if (cfg.is18) document.body.classList.add('comp-18');
 
+    // Header
     const titleEl = document.getElementById('heroTitle');
     titleEl.textContent = cfg.titolo;
     if (cfg.longTitle) titleEl.classList.add('long');
     document.getElementById('heroSub').textContent =
       `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
 
+    // Colonne
     const area = document.getElementById('tableArea');
     let html = '';
     for (let i = 0; i < cfg.cols; i++) {
@@ -431,6 +444,7 @@ function buildColHead() {
     }
     area.innerHTML = html;
 
+    // Legenda
     document.getElementById('legend').innerHTML = cfg.legend.map(l =>
       `<div class="legend-item">
         <div class="legend-dot" style="background:${l.color}"></div>${l.label}
