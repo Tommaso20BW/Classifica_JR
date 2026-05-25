@@ -12,7 +12,7 @@ TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 
 VIEWPORT_WIDTH  = 900
 VIEWPORT_HEIGHT = 1200
-SCALE           = 1.2
+SCALE           = 3
 TARGET_W        = 1080
 TARGET_H        = 1440
 OUTPUT_PATH     = "screenshot.png"
