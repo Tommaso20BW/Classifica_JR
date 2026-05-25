@@ -5,7 +5,7 @@
   <title>Classifica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800;900&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -33,9 +33,12 @@
       --c-zone-rel:  #dc2020;
       --c-juve:      #d4af37;
       --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
+      --row-h: 93px;
+      --head-h: 170px;
+      --leg-h: 52px;
     }
 
-    body.comp-UCL {
+    body.comp-UCL, body.comp-UEL {
       --c-bg-a:      #1a0560;
       --c-bg-b:      #3a0090;
       --c-bg-base:   #08002a;
@@ -49,7 +52,10 @@
       --c-zone-uel:  #e040e0;
       --c-zone-uecl: #94a3b8;
       --c-zone-rel:  #dc2020;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='20%25' cy='5%25' r='60%25'%3E%3Cstop offset='0' stop-color='%232000a0' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='80%25' cy='95%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c000ff' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g3' cx='50%25' cy='50%25' r='40%25'%3E%3Cstop offset='0' stop-color='%236000c0' stop-opacity='.2'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%2305001a'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Crect width='900' height='1200' fill='url(%23g3)'/%3E%3Cpolygon points='450,80 480,165 570,165 500,215 525,300 450,250 375,300 400,215 330,165 420,165' fill='none' stroke='%23a060ff' stroke-width='1' stroke-opacity='.12'/%3E%3Cpolygon points='450,120 472,185 540,185 487,222 507,288 450,252 393,288 413,222 360,185 428,185' fill='none' stroke='%23a060ff' stroke-width='.5' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='420' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.07'/%3E%3Ccircle cx='450' cy='600' r='300' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.05'/%3E%3C/svg%3E");
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='20%25' cy='5%25' r='60%25'%3E%3Cstop offset='0' stop-color='%232000a0' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='80%25' cy='95%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c000ff' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g3' cx='50%25' cy='50%25' r='40%25'%3E%3Cstop offset='0' stop-color='%236000c0' stop-opacity='.2'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%2305001a'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Crect width='900' height='1200' fill='url(%23g3)'/%3E%3Ccircle cx='450' cy='600' r='420' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.07'/%3E%3Ccircle cx='450' cy='600' r='300' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.05'/%3E%3C/svg%3E");
+      --row-h: 49px;
+      --head-h: 150px;
+      --leg-h: 52px;
     }
 
     body.comp-UEL {
@@ -57,19 +63,14 @@
       --c-bg-b:      #2a0800;
       --c-bg-base:   #120300;
       --c-header-hi: #ff7040;
-      --c-row-odd:   rgba(255,255,255,0.06);
-      --c-row-even:  rgba(255,255,255,0.00);
       --c-row-border:rgba(220,70,20,0.18);
       --c-text-dim:  #b05030;
       --c-pts:       #ff7040;
       --c-zone-ucl:  #d04010;
       --c-zone-uel:  #e09020;
-      --c-zone-uecl: #94a3b8;
-      --c-zone-rel:  #dc2020;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c02000' stop-opacity='.65'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%23802000' stop-opacity='.5'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0200'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Cline x1='0' y1='200' x2='900' y2='200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='400' x2='900' y2='400' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='600' x2='900' y2='600' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='800' x2='900' y2='800' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='1000' x2='900' y2='1000' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='150' y1='0' x2='150' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='300' y1='0' x2='300' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='450' y1='0' x2='450' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='600' y1='0' x2='600' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='750' y1='0' x2='750' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cpolygon points='450,500 480,590 575,590 500,645 528,735 450,680 372,735 400,645 325,590 420,590' fill='%23ff4010' fill-opacity='.04'/%3E%3C/svg%3E");
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c02000' stop-opacity='.65'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%23802000' stop-opacity='.5'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0200'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3C/svg%3E");
     }
 
-    /* ── BG con texture ── */
     body {
       font-family: 'Inter', sans-serif;
       color: var(--c-text);
@@ -78,54 +79,57 @@
       background-position: center;
       display: flex;
       flex-direction: column;
-      padding: 0;
     }
 
     /* ── HEADER ── */
     .header {
+      height: var(--head-h);
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 28px 40px 18px;
-      position: relative;
-    }
-    .header-logo {
-      width: 100px; height: 100px;
-      object-fit: contain;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 0 16px rgba(255,255,255,0.35));
+      justify-content: flex-end;
+      padding: 0 40px 14px;
     }
     .header-title {
       font-family: 'Anton', sans-serif;
-      font-size: 6rem;
-      letter-spacing: 0.12em;
+      font-size: 5.8rem;
+      letter-spacing: 0.10em;
       color: #fff;
       line-height: 1;
       text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+      text-align: center;
+      white-space: nowrap;
+    }
+    /* titoli lunghi (UCL, UEL): riduco font */
+    .header-title.long {
+      font-size: 4rem;
     }
     .header-sub {
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: .3em;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: .35em;
       text-transform: uppercase;
       color: var(--c-header-hi);
-      margin-top: 6px;
+      margin-top: 4px;
+      text-align: center;
     }
     .header-divider {
       width: 100%;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      margin-top: 18px;
+      margin-top: 12px;
     }
 
     /* ── TABLE AREA ── */
     .table-area {
       flex: 1;
       display: flex;
-      gap: 0;
-      padding: 12px 18px 0;
+      padding: 10px 18px 0;
+      gap: 10px;
       min-height: 0;
+      overflow: hidden;
     }
 
     /* ── COLUMN ── */
@@ -135,24 +139,16 @@
       flex-direction: column;
       min-width: 0;
     }
-    .col + .col { margin-left: 10px; }
-
-    .col-rows {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
 
     /* ── COL HEADER ── */
     .col-head {
       display: grid;
-      grid-template-columns: 32px 42px 1fr 46px 42px;
+      grid-template-columns: 30px 40px 1fr 44px 40px;
       align-items: center;
-      padding: 6px 8px 8px 8px;
-      margin-bottom: 6px;
+      padding: 4px 8px 6px;
+      margin-bottom: 4px;
       color: var(--c-text-dim);
-      font-size: .82rem;
+      font-size: .78rem;
       font-weight: 800;
       letter-spacing: .18em;
       text-transform: uppercase;
@@ -161,25 +157,34 @@
     .col-head div { text-align: center; }
     .col-head div:nth-child(3) { text-align: left; padding-left: 4px; }
 
+    /* ── COL-ROWS ── */
+    .col-rows {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+
     /* ── ROW ── */
     .row {
       position: relative;
       display: grid;
-      grid-template-columns: 32px 42px 1fr 46px 42px;
+      grid-template-columns: 30px 40px 1fr 44px 40px;
       align-items: center;
-      border-radius: 7px;
+      border-radius: 6px;
       padding: 0 8px;
+      border: 1px solid var(--c-row-border);
       flex: 1;
-      margin-bottom: 2px;
+      min-height: 0;
     }
     .row:nth-child(odd)  { background: var(--c-row-odd); }
     .row:nth-child(even) { background: var(--c-row-even); }
-    .row { border: 1px solid var(--c-row-border); }
 
     .row::before {
       content: "";
       position: absolute;
-      left: 0; top: 10%; height: 80%;
+      left: 0; top: 12%; height: 76%;
       width: 4px;
       border-radius: 0 3px 3px 0;
       background: var(--zone, transparent);
@@ -188,7 +193,7 @@
     /* ── CELLE ── */
     .c-pos {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.35rem; font-weight: 700;
+      font-size: 1.3rem; font-weight: 700;
       color: var(--c-text-dim);
       text-align: center;
     }
@@ -197,7 +202,7 @@
     }
     .c-logo img { width: 34px; height: 34px; object-fit: contain; }
     .c-name {
-      font-size: 1.05rem; font-weight: 700;
+      font-size: 1rem; font-weight: 700;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       color: #eef2ff;
       padding-left: 6px;
@@ -210,7 +215,7 @@
     }
     .c-dr {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.25rem; font-weight: 700;
+      font-size: 1.2rem; font-weight: 700;
       text-align: center;
     }
     .c-dr.pos { color: #4ade80; }
@@ -219,39 +224,42 @@
 
     .row.juve { border-color: var(--c-juve) !important; }
 
-    /* comp-36: font leggermente ridotti per 36 squadre */
-    body.comp-36 .c-logo img { width: 26px; height: 26px; }
-    body.comp-36 .c-name  { font-size: .9rem; }
-    body.comp-36 .c-pt    { font-size: 1.25rem; }
-    body.comp-36 .c-dr    { font-size: 1.1rem; }
-    body.comp-36 .c-pos   { font-size: 1.15rem; }
-    body.comp-36 .col-head { font-size: .72rem; }
+    /* comp-18: 2 colonne da 18 squadre — righe più compatte */
+    body.comp-18 .c-logo img { width: 26px; height: 26px; }
+    body.comp-18 .c-name  { font-size: .82rem; }
+    body.comp-18 .c-pt    { font-size: 1.2rem; }
+    body.comp-18 .c-dr    { font-size: 1rem; }
+    body.comp-18 .c-pos   { font-size: 1.1rem; }
+    body.comp-18 .col-head { font-size: .7rem; }
 
     /* ── LEGEND ── */
     .legend {
+      height: var(--leg-h);
       flex-shrink: 0;
       display: flex;
       justify-content: center;
-      gap: 20px;
-      padding: 10px 20px 14px;
+      align-items: center;
+      gap: 22px;
+      padding: 0 20px;
       border-top: 1px solid rgba(255,255,255,0.08);
       margin-top: 8px;
     }
     .legend-item {
       display: flex; align-items: center; gap: 7px;
-      font-size: .82rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .95rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
       color: var(--c-text-dim);
     }
     .legend-dot {
       width: 13px; height: 13px; border-radius: 3px;
       flex-shrink: 0;
     }
+  </style>
 </head>
 <body>
 
   <div class="header">
-    <img class="header-logo" id="heroLogo" src="" alt="">
     <div class="header-title" id="heroTitle">Classifica</div>
     <div class="header-sub"  id="heroSub">Giornata —</div>
     <div class="header-divider"></div>
@@ -262,12 +270,82 @@
   <div class="legend" id="legend"></div>
 
 <script>
+const MAPPA_NOMI = {
+  "juventus fc":"Juventus","juventus":"Juventus",
+  "inter milan":"Inter","fc internazionale milano":"Inter","inter":"Inter","internazionale":"Inter",
+  "ac milan":"Milan","milan":"Milan",
+  "ssc napoli":"Napoli","napoli":"Napoli",
+  "as roma":"Roma","roma":"Roma",
+  "ss lazio":"Lazio","lazio":"Lazio",
+  "atalanta bc":"Atalanta","atalanta":"Atalanta",
+  "bologna fc 1909":"Bologna","bologna fc":"Bologna","bologna":"Bologna",
+  "acf fiorentina":"Fiorentina","fiorentina":"Fiorentina",
+  "torino fc":"Torino","torino":"Torino",
+  "udinese calcio":"Udinese","udinese":"Udinese",
+  "empoli fc":"Empoli","empoli":"Empoli",
+  "us lecce":"Lecce","lecce":"Lecce",
+  "ac monza":"Monza","monza":"Monza",
+  "cagliari calcio":"Cagliari","cagliari":"Cagliari",
+  "genoa cfc":"Genoa","genoa":"Genoa",
+  "como 1907":"Como","como":"Como",
+  "parma calcio 1913":"Parma","parma calcio":"Parma","parma":"Parma",
+  "venezia fc":"Venezia","venezia":"Venezia",
+  "hellas verona fc":"Verona","hellas verona":"Verona","hell verona fc":"Verona",
+  "us sassuolo calcio":"Sassuolo","us sassuolo":"Sassuolo","sassuolo":"Sassuolo",
+  "us salernitana 1919":"Salernitana","us salernitana":"Salernitana","salernitana":"Salernitana",
+  "frosinone calcio":"Frosinone","frosinone":"Frosinone",
+  "us cremonese":"Cremonese","cremonese":"Cremonese",
+  "us catanzaro 1929":"Catanzaro","us catanzaro":"Catanzaro","catanzaro":"Catanzaro",
+  "palermo fc":"Palermo","palermo":"Palermo",
+  "uc sampdoria":"Sampdoria","sampdoria":"Sampdoria",
+  "brescia calcio":"Brescia","brescia":"Brescia",
+  "fc südtirol":"Südtirol","fc sudtirol":"Südtirol","südtirol":"Südtirol","sudtirol":"Südtirol",
+  "ac pisa 1909":"Pisa","pisa 1909":"Pisa","pisa sc":"Pisa","pisa calcio":"Pisa","pisa":"Pisa",
+  "uc reggiana 1919":"Reggiana","reggiana 1919":"Reggiana","reggiana":"Reggiana",
+  "modena fc 2018":"Modena","modena fc":"Modena","modena":"Modena",
+  "bari calcio":"Bari","ssc bari":"Bari","bari":"Bari",
+  "cosenza calcio":"Cosenza","cosenza":"Cosenza",
+  "spezia calcio":"Spezia","spezia":"Spezia",
+  "as cittadella":"Cittadella","cittadella":"Cittadella",
+  "ascoli calcio 1898 fc":"Ascoli","ascoli calcio":"Ascoli","ascoli":"Ascoli",
+  "ternana calcio":"Ternana","ternana":"Ternana",
+  "cesena fc":"Cesena","cesena":"Cesena",
+  "ss juve stabia":"Juve Stabia","juve stabia":"Juve Stabia",
+  "carrarese calcio 1908":"Carrarese","carrarese":"Carrarese",
+  "mantova 1911":"Mantova","mantova":"Mantova",
+  "benevento calcio":"Benevento","benevento":"Benevento",
+  "calcio catania":"Catania","catania fc":"Catania","catania":"Catania",
+  "pescara calcio":"Pescara","delfino pescara":"Pescara","pescara":"Pescara",
+  "perugia calcio":"Perugia","perugia":"Perugia",
+  "spal 2013":"SPAL","spal":"SPAL",
+  "crotone calcio":"Crotone","crotone":"Crotone",
+  "calcio foggia 1920":"Foggia","foggia calcio":"Foggia","foggia":"Foggia",
+  "taranto fc 1927":"Taranto","taranto":"Taranto",
+  "casertana fc":"Casertana","casertana":"Casertana",
+  "potenza calcio":"Potenza","potenza":"Potenza",
+  "audace cerignola":"Cerignola","cerignola":"Cerignola",
+  "az picerno":"Picerno","picerno":"Picerno",
+  "sorrento calcio":"Sorrento","sorrento":"Sorrento",
+  "giugliano 1928":"Giugliano","giugliano":"Giugliano",
+  "avellino 1912":"Avellino","us avellino":"Avellino","avellino":"Avellino",
+  "lr vicenza":"Vicenza","vicenza":"Vicenza",
+  "calcio padova":"Padova","padova":"Padova",
+  "triestina calcio 1918":"Triestina","triestina":"Triestina",
+  "atalanta u23":"Atalanta U23",
+  "juventus next gen":"Juventus Next Gen",
+  "milan futuro":"Milan Futuro"
+};
+
+function italianizzaNome(name) {
+  if (!name) return name;
+  return MAPPA_NOMI[name.toLowerCase().trim()] || name;
+}
+
 const COMP_CONFIG = {
   SA: {
-    logo:   "https://upload.wikimedia.org/wikipedia/it/e/ef/Serie_A_Enilive_25-26.svg",
-    titolo: "Serie A",
-    cols:   2, perCol: 10,
-    slim:   true,
+    titolo: "Serie A", longTitle: false,
+    cols: 2, perCol: 10,
+    is18: false,
     zone: p => {
       if (p <= 4)  return "var(--c-zone-ucl)";
       if (p <= 6)  return "var(--c-zone-uel)";
@@ -283,10 +361,9 @@ const COMP_CONFIG = {
     ]
   },
   UCL: {
-    logo:   "https://mir-s3-cdn-cf.behance.net/project_modules/max_632/d6297891682131.5e3864b00f466.png",
-    titolo: "Champions League",
-    cols:   3, perCol: 12,
-    slim:   true,
+    titolo: "Champions League", longTitle: true,
+    cols: 2, perCol: 18,
+    is18: true,
     zone: p => {
       if (p <= 8)  return "var(--c-zone-ucl)";
       if (p <= 24) return "var(--c-zone-uel)";
@@ -299,10 +376,9 @@ const COMP_CONFIG = {
     ]
   },
   UEL: {
-    logo:   "https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
-    titolo: "Europa League",
-    cols:   3, perCol: 12,
-    slim:   true,
+    titolo: "Europa League", longTitle: true,
+    cols: 2, perCol: 18,
+    is18: true,
     zone: p => {
       if (p <= 8)  return "var(--c-zone-ucl)";
       if (p <= 24) return "var(--c-zone-uel)";
@@ -316,53 +392,44 @@ const COMP_CONFIG = {
   }
 };
 
-function drClass(dr) {
-  if (dr > 0) return 'pos';
-  if (dr < 0) return 'neg';
-  return 'zer';
-}
-function drVal(dr) {
-  return dr > 0 ? '+'+dr : ''+dr;
-}
+function drClass(dr) { return dr > 0 ? 'pos' : dr < 0 ? 'neg' : 'zer'; }
+function drVal(dr)   { return dr > 0 ? '+'+dr : ''+dr; }
 
-function buildRow(t, slim, zoneColor) {
-  const isJuve = t.team.toLowerCase().includes('juv');
-  const dr = `<div class="c-dr ${drClass(t.dr)}">${drVal(t.dr)}</div>`;
+function buildRow(t, zoneColor) {
+  const name = italianizzaNome(t.team);
+  const isJuve = name.toLowerCase().includes('juv');
   const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
-  const zStyle = `--zone:${zoneColor};`;
-  const cls = `row slim ${isJuve?'juve':''}`;
-  return `<div class="${cls}" style="${zStyle}">
+  return `<div class="row${isJuve?' juve':''}" style="--zone:${zoneColor}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${logo}</div>
-    <div class="c-name">${t.team}</div>
+    <div class="c-name">${name}</div>
     <div class="c-pt">${t.pt}</div>
-    ${dr}
+    <div class="c-dr ${drClass(t.dr)}">${drVal(t.dr)}</div>
   </div>`;
 }
 
 function buildColHead() {
-  return `<div class="col-head slim">
-    <div></div><div></div><div>Squadra</div>
-    <div>Pt</div><div>DR</div>
+  return `<div class="col-head">
+    <div></div><div></div><div>Squadra</div><div>Pt</div><div>DR</div>
   </div>`;
 }
 
-(window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r => r.json()))
+(window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r=>r.json()))
   .then(data => {
     const key = (data.competition || 'SA').toUpperCase();
     const cfg = COMP_CONFIG[key] || COMP_CONFIG.SA;
 
-    // applica tema
     document.body.classList.add('comp-' + key);
-    if (cfg.slim) document.body.classList.add('comp-36');
+    if (cfg.is18) document.body.classList.add('comp-18');
 
-    // header
-    document.getElementById('heroLogo').src = cfg.logo;
-    document.getElementById('heroTitle').textContent = cfg.titolo;
+    // Header
+    const titleEl = document.getElementById('heroTitle');
+    titleEl.textContent = cfg.titolo;
+    if (cfg.longTitle) titleEl.classList.add('long');
     document.getElementById('heroSub').textContent =
       `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
 
-    // colonne
+    // Colonne
     const area = document.getElementById('tableArea');
     let html = '';
     for (let i = 0; i < cfg.cols; i++) {
@@ -371,18 +438,16 @@ function buildColHead() {
       html += `<div class="col">
         ${buildColHead()}
         <div class="col-rows">
-          ${slice.map(t => buildRow(t, cfg.slim, cfg.zone(t.pos))).join('')}
+          ${slice.map(t => buildRow(t, cfg.zone(t.pos))).join('')}
         </div>
       </div>`;
     }
     area.innerHTML = html;
 
-    // legenda
-    const leg = document.getElementById('legend');
-    leg.innerHTML = cfg.legend.map(l =>
+    // Legenda
+    document.getElementById('legend').innerHTML = cfg.legend.map(l =>
       `<div class="legend-item">
-        <div class="legend-dot" style="background:${l.color}"></div>
-        ${l.label}
+        <div class="legend-dot" style="background:${l.color}"></div>${l.label}
       </div>`
     ).join('');
   });
