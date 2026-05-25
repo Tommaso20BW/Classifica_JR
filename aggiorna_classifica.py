@@ -1,196 +1,174 @@
 import os
+import sys
 import requests
 import json
 
-# Mappatura nomi squadre
-MAPPA_NOMI = {
-    # --- SERIE A ---
-    "juventus fc": "Juventus", "juventus": "Juventus",
-    "inter milan": "Inter", "fc internazionale milano": "Inter", "inter": "Inter",
-    "ac milan": "Milan", "milan": "Milan",
-    "ssc napoli": "Napoli", "napoli": "Napoli",
-    "as roma": "Roma", "roma": "Roma",
-    "ss lazio": "Lazio", "lazio": "Lazio",
-    "atalanta bc": "Atalanta", "atalanta": "Atalanta",
-    "bologna fc 1909": "Bologna", "bologna fc": "Bologna", "bologna": "Bologna",
-    "acf fiorentina": "Fiorentina", "fiorentina": "Fiorentina",
-    "torino fc": "Torino", "torino": "Torino",
-    "udinese calcio": "Udinese", "udinese": "Udinese",
-    "empoli fc": "Empoli", "empoli": "Empoli",
-    "us lecce": "Lecce", "lecce": "Lecce",
-    "ac monza": "Monza", "monza": "Monza",
-    "cagliari calcio": "Cagliari", "cagliari": "Cagliari",
-    "genoa cfc": "Genoa", "genoa": "Genoa",
-    "como 1907": "Como", "como": "Como",
-    "parma calcio 1913": "Parma", "parma calcio": "Parma", "parma": "Parma",
-    "venezia fc": "Venezia", "venezia": "Venezia",
-    "hellas verona fc": "Verona", "hellas verona": "Verona",
-    # --- SERIE B ---
-    "us sassuolo calcio": "Sassuolo", "us sassuolo": "Sassuolo", "sassuolo": "Sassuolo",
-    "us salernitana 1919": "Salernitana", "us salernitana": "Salernitana", "salernitana": "Salernitana",
-    "frosinone calcio": "Frosinone", "frosinone": "Frosinone",
-    "us cremonese": "Cremonese", "cremonese": "Cremonese",
-    "us catanzaro 1929": "Catanzaro", "catanzaro": "Catanzaro",
-    "palermo fc": "Palermo", "palermo": "Palermo",
-    "uc sampdoria": "Sampdoria", "sampdoria": "Sampdoria",
-    "brescia calcio": "Brescia", "brescia": "Brescia",
-    "fc südtirol": "Südtirol", "fc sudtirol": "Südtirol", "südtirol": "Südtirol",
-    "ac pisa 1909": "Pisa", "pisa sc": "Pisa", "pisa": "Pisa",
-    "uc reggiana 1919": "Reggiana", "reggiana": "Reggiana",
-    "modena fc 2018": "Modena", "modena fc": "Modena", "modena": "Modena",
-    "ssc bari": "Bari", "bari": "Bari",
-    "cosenza calcio": "Cosenza", "cosenza": "Cosenza",
-    "spezia calcio": "Spezia", "spezia": "Spezia",
-    "as cittadella": "Cittadella", "cittadella": "Cittadella",
-    "cesena fc": "Cesena", "cesena": "Cesena",
-    "ss juve stabia": "Juve Stabia", "juve stabia": "Juve Stabia",
-    "carrarese calcio 1908": "Carrarese", "carrarese": "Carrarese",
-    "mantova 1911": "Mantova", "mantova": "Mantova",
-    # --- CHAMPIONS / EUROPA LEAGUE (nomi internazionali comuni) ---
-    "fc barcelona": "Barcelona", "barcelona": "Barcelona",
-    "real madrid cf": "Real Madrid", "real madrid": "Real Madrid",
-    "manchester city fc": "Man City", "manchester city": "Man City",
-    "liverpool fc": "Liverpool", "liverpool": "Liverpool",
-    "fc bayern münchen": "Bayern", "fc bayern munich": "Bayern", "bayern munich": "Bayern",
-    "borussia dortmund": "Dortmund",
-    "paris saint-germain fc": "PSG", "paris saint-germain": "PSG", "psg": "PSG",
-    "atletico de madrid": "Atlético", "atletico madrid": "Atlético",
-    "chelsea fc": "Chelsea", "chelsea": "Chelsea",
-    "arsenal fc": "Arsenal", "arsenal": "Arsenal",
-    "manchester united fc": "Man United", "manchester united": "Man United",
-    "tottenham hotspur fc": "Tottenham", "tottenham hotspur": "Tottenham",
-    "bayer 04 leverkusen": "Leverkusen", "bayer leverkusen": "Leverkusen",
-    "rb leipzig": "RB Leipzig",
-    "porto fc": "Porto", "fc porto": "Porto",
-    "benfica": "Benfica", "sl benfica": "Benfica",
-    "sporting cp": "Sporting CP",
-    "ajax": "Ajax", "afc ajax": "Ajax",
-    "psv eindhoven": "PSV",
-    "villarreal cf": "Villarreal",
-    "sevilla fc": "Sevilla", "sevilla": "Sevilla",
-    "valencia cf": "Valencia",
-    "real sociedad": "Real Sociedad",
-    "ac milan": "Milan",
-    "ssc napoli": "Napoli",
-    "juventus fc": "Juventus",
-    "fc internazionale milano": "Inter",
-    "as roma": "Roma",
-    "ss lazio": "Lazio",
-    "atalanta bc": "Atalanta",
-    "acf fiorentina": "Fiorentina",
-    "celtic fc": "Celtic", "celtic": "Celtic",
-    "rangers fc": "Rangers",
-    "club brugge kv": "Club Brugge", "club brugge": "Club Brugge",
-    "shakhtar donetsk": "Shakhtar",
-    "dynamo kyiv": "Dynamo Kyiv",
-    "red bull salzburg": "Salzburg", "fc red bull salzburg": "Salzburg",
-    "eintracht frankfurt": "Frankfurt",
-    "vfl wolfsburg": "Wolfsburg",
-    "borussia mönchengladbach": "M'gladbach",
-    "sc freiburg": "Freiburg",
-    "union berlin": "Union Berlin", "1. fc union berlin": "Union Berlin",
-    "olympique lyonnais": "Lyon", "olympique de marseille": "Marseille",
-    "stade rennais fc": "Rennes",
-    "losc lille": "Lille", "lille": "Lille",
-    "rc lens": "Lens",
-    "monaco": "Monaco", "as monaco": "Monaco",
-    "fenerbahçe sk": "Fenerbahçe", "fenerbahce sk": "Fenerbahçe",
-    "galatasaray sk": "Galatasaray",
-    "besiktas jk": "Beşiktaş",
-    "trabzonspor": "Trabzonspor",
-    "olympiakos fc": "Olympiakos",
-    "panathinaikos fc": "Panathinaikos",
-    "slavia prague": "Slavia Praha", "sk slavia prague": "Slavia Praha",
-    "sparta prague": "Sparta Praha", "ac sparta prague": "Sparta Praha",
-    "viktoria plzen": "Plzeň",
-    "fk crvena zvezda": "Stella Rossa", "red star belgrade": "Stella Rossa",
-    "fk dinamo zagreb": "Dinamo Zagreb", "gnk dinamo zagreb": "Dinamo Zagreb",
-    "bsc young boys": "Young Boys",
-    "fk shakhtar donetsk": "Shakhtar",
-    "west ham united fc": "West Ham", "west ham united": "West Ham",
-    "aston villa fc": "Aston Villa", "aston villa": "Aston Villa",
-    "newcastle united fc": "Newcastle", "newcastle united": "Newcastle",
-    "brighton & hove albion fc": "Brighton",
+# ESPN slug per competizione → nessuna API key richiesta
+COMPETIZIONI = {
+    "SA": {
+        "slug":   "ita.1",
+        "nome":   "Serie A",
+        "comp":   "SA",
+        "giornate": 38,
+    },
+    "UCL": {
+        "slug":   "uefa.champions",
+        "nome":   "Champions League",
+        "comp":   "UCL",
+        "giornate": 8,
+    },
+    "UEL": {
+        "slug":   "uefa.europa",
+        "nome":   "Europa League",
+        "comp":   "UEL",
+        "giornate": 8,
+    },
 }
 
-# Configurazione competizioni
-COMPETIZIONI = {
-    "SA":  {"codice": "SA",  "nome": "Serie A",           "giornate": 38, "squadre": 20},
-    "UCL": {"codice": "CL",  "nome": "Champions League",  "giornate": 8,  "squadre": 36},
-    "UEL": {"codice": "EL",  "nome": "Europa League",     "giornate": 8,  "squadre": 36},
+# Overrides loghi per squadre italiane (Wikipedia SVG, alta qualità)
+LOGO_OVERRIDE = {
+    "juventus":  "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
 }
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json",
+    "Referer": "https://www.espn.com/",
+}
+
+
+def get_standings_espn(slug: str) -> dict | None:
+    """
+    Chiama l'API pubblica non documentata di ESPN per le classifiche calcio.
+    Restituisce il JSON grezzo oppure None in caso di errore.
+    """
+    url = f"https://site.api.espn.com/apis/v2/sports/soccer/{slug}/standings"
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=15)
+        r.raise_for_status()
+        return r.json()
+    except requests.HTTPError as e:
+        print(f"❌ HTTP {e.response.status_code} da ESPN ({slug}): {e}")
+    except Exception as e:
+        print(f"❌ Errore di rete ESPN ({slug}): {e}")
+    return None
+
+
+def parse_standings(data: dict) -> tuple[list, int]:
+    """
+    Estrae la lista classifica e la giornata corrente dal JSON ESPN.
+    Restituisce (classifica_pulita, giornata).
+    """
+    classifica = []
+    giornata = 1
+
+    # La stagione corrente è in data['season']
+    season = data.get("season", {})
+    # ESPN non espone direttamente la matchday; la ricaviamo dai filter/note
+    # Proviamo ad ottenerla da 'notes'
+    for note in data.get("notes", []):
+        text = note.get("headline", "")
+        if "matchday" in text.lower() or "giornata" in text.lower() or "week" in text.lower():
+            import re
+            m = re.search(r"\d+", text)
+            if m:
+                giornata = int(m.group())
+                break
+
+    # Scorri i children (gruppi/fasi)
+    children = data.get("children", [data])
+    for child in children:
+        standings_obj = child.get("standings", {})
+        entries = standings_obj.get("entries", [])
+        if not entries:
+            continue
+
+        for entry in entries:
+            team = entry.get("team", {})
+            nome = team.get("displayName", team.get("name", "?"))
+
+            # Logo: ESPN CDN (alta qualità)
+            logos = team.get("logos", [])
+            logo_url = logos[0]["href"] if logos else ""
+
+            # Override logo Juventus
+            if "juventus" in nome.lower():
+                logo_url = LOGO_OVERRIDE["juventus"]
+
+            # Statistiche dalle 'stats'
+            stats = {s["name"]: s.get("value", 0) for s in entry.get("stats", [])}
+
+            pos   = int(stats.get("rank", entry.get("rank", 0)))
+            pt    = int(stats.get("points", 0))
+            pld   = int(stats.get("gamesPlayed", 0))
+            won   = int(stats.get("wins", 0))
+            draw  = int(stats.get("ties", 0))
+            lost  = int(stats.get("losses", 0))
+            gf    = int(stats.get("pointsFor", 0))
+            ga    = int(stats.get("pointsAgainst", 0))
+            dr    = int(stats.get("pointDifferential", gf - ga))
+
+            # Aggiorna giornata con il massimo delle partite giocate
+            if pld > giornata:
+                giornata = pld
+
+            classifica.append({
+                "pos":    pos,
+                "team":   nome,
+                "logo":   logo_url,
+                "pt":     pt,
+                "p":      pld,
+                "v":      won,
+                "n":      draw,
+                "p_pers": lost,
+                "gf":     gf,
+                "gs":     ga,
+                "dr":     dr,
+            })
+
+        break  # usa solo il primo gruppo valido
+
+    # Ordina per posizione
+    classifica.sort(key=lambda x: x["pos"])
+    return classifica, giornata
+
 
 def genera_json_classifica():
-    api_token = os.environ.get('FOOTBALL_API_KEY') or os.environ.get('FOOTBALL_DATA_API_TOKEN')
-    if not api_token:
-        print("❌ Errore: Nessun API Token trovato nei secrets (controlla FOOTBALL_API_KEY).")
-        return
-
     comp_key = os.environ.get("COMPETITION", "SA").upper()
     comp = COMPETIZIONI.get(comp_key)
     if not comp:
         print(f"❌ Competizione non riconosciuta: {comp_key}. Usa SA, UCL o UEL.")
-        return
+        sys.exit(1)
 
-    url = f"https://api.football-data.org/v4/competitions/{comp['codice']}/standings"
-    headers = {"X-Auth-Token": api_token}
+    print(f"📡 Recupero classifica ESPN: {comp['nome']} ({comp_key})...")
 
-    print(f"📡 Recupero classifica: {comp['nome']} ({comp['codice']})...")
+    data = get_standings_espn(comp["slug"])
+    if data is None:
+        print("❌ Impossibile recuperare i dati. Controlla la connessione.")
+        sys.exit(1)
 
-    try:
-        response = requests.get(url, headers=headers, timeout=15)
-        if response.status_code == 200:
-            data = response.json()
+    classifica, giornata = parse_standings(data)
 
-            giornata_attuale = 1
-            if 'season' in data and 'currentMatchday' in data['season']:
-                giornata_attuale = data['season']['currentMatchday']
-            elif 'filters' in data and 'matchday' in data['filters']:
-                giornata_attuale = data['filters']['matchday']
+    if not classifica:
+        print("❌ Nessuna squadra trovata nella risposta ESPN.")
+        sys.exit(1)
 
-            standings = data['standings'][0]['table']
-            classifica_pulita = []
+    output = {
+        "competition":      comp_key,
+        "competition_name": comp["nome"],
+        "giornata":         giornata,
+        "classifica":       classifica,
+    }
 
-            for team_data in standings:
-                nome_api = team_data['team']['name']
-                nome_api_lower = nome_api.lower().strip()
-                nome_it = MAPPA_NOMI.get(nome_api_lower, nome_api)
+    with open("classifica.json", "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=4)
 
-                if "juventus" in nome_api_lower or "next gen" in nome_api_lower:
-                    logo_url = "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png"
-                    if "next gen" in nome_api_lower:
-                        nome_it = "Juve Next Gen"
-                else:
-                    logo_url = team_data['team']['crest']
+    print(f"✅ JSON salvato: {comp['nome']} – Giornata {giornata} ({len(classifica)} squadre).")
 
-                classifica_pulita.append({
-                    "pos":    team_data['position'],
-                    "team":   nome_it,
-                    "logo":   logo_url,
-                    "pt":     team_data['points'],
-                    "p":      team_data['playedGames'],
-                    "v":      team_data['won'],
-                    "n":      team_data['draw'],
-                    "p_pers": team_data['lost'],
-                    "gf":     team_data['goalsFor'],
-                    "gs":     team_data['goalsAgainst'],
-                    "dr":     team_data['goalDifference']
-                })
-
-            output_finale = {
-                "competition": comp_key,
-                "competition_name": comp['nome'],
-                "giornata": giornata_attuale,
-                "classifica": classifica_pulita
-            }
-
-            with open('classifica.json', 'w', encoding='utf-8') as f:
-                json.dump(output_finale, f, ensure_ascii=False, indent=4)
-            print(f"✅ JSON salvato: {comp['nome']} – Giornata {giornata_attuale} ({len(classifica_pulita)} squadre).")
-        else:
-            print(f"❌ Errore API: {response.status_code} — {response.text}")
-    except Exception as e:
-        print(f"❌ Eccezione durante la chiamata API: {e}")
 
 if __name__ == "__main__":
     genera_json_classifica()
