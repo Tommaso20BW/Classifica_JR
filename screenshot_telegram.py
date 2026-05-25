@@ -1,6 +1,7 @@
 import os
 import asyncio
 import json
+import re
 import requests
 from playwright.async_api import async_playwright
 from pathlib import Path
@@ -51,13 +52,21 @@ async def scatta_screenshot():
         html_content = f.read()
 
     json_str = json.dumps(json_completo, ensure_ascii=False)
+    html_patched = html_content
 
-    # 1) Inject as global variable before </head>
+    # 1) Remove external font links (they 403 in CI)
+    html_patched = re.sub(r'<link[^>]+fonts\.googleapis[^>]*>', '', html_patched)
+    html_patched = re.sub(r'<link[^>]+fonts\.gstatic[^>]*>', '', html_patched)
+
+    # 2) The HTML is missing </style> — the browser needs it to parse <body> correctly.
+    #    Insert </style> right before </head> to close the open <style> block.
+    html_patched = html_patched.replace('</head>', '</style>\n</head>', 1)
+
+    # 3) Inject data script right after <body>
     inject = f"<script>\nwindow.__CLASSIFICA__ = {json_str};\n</script>"
-    html_patched = html_content.replace("</head>", inject + "\n</head>")
+    html_patched = html_patched.replace('<body>', '<body>\n' + inject, 1)
 
-    # 2) Also replace the fetch/Promise expression so data is always inline
-    #    (guards against file:// CSP blocking the inline script)
+    # 4) Replace fetch() with inline Promise so data always loads on file://
     html_patched = html_patched.replace(
         "(window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r => r.json()))",
         f"Promise.resolve({json_str})"
@@ -77,7 +86,7 @@ async def scatta_screenshot():
             device_scale_factor=SCALE,
         )
 
-        await page.goto(f"file://{temp_html}", wait_until="domcontentloaded")
+        await page.goto(f"file://{temp_html}", wait_until="load")
         await page.wait_for_selector(comp_data["wait"], timeout=30000)
         await page.wait_for_timeout(4000)
 
