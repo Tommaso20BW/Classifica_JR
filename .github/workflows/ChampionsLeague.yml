@@ -26,7 +26,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          COMPETITION: SA
+          COMPETITION: UCL
         run: python screenshot_telegram.py
       - name: Commit e Push del JSON
         run: |
