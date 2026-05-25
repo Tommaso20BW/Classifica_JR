@@ -70,7 +70,7 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
         )
 
         await page.goto(f"file://{temp_html.resolve()}", wait_until="domcontentloaded")
-        await page.wait_for_selector(comp_data["wait"], timeout=15000)
+        await page.wait_for_selector(comp_data["wait"], timeout=30000)
         await page.wait_for_timeout(4000)
 
         # Screenshot del viewport esatto (non del body intero)
