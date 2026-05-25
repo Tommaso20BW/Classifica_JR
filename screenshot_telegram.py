@@ -1,6 +1,7 @@
 import os
 import asyncio
 import json
+import time
 import requests
 from playwright.async_api import async_playwright
 from pathlib import Path
@@ -52,11 +53,15 @@ async def scatta_screenshot():
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    # Inject data AND replace fetch() with inline data so no network/file calls needed
+    # Inject data before </head>
     inject = f"""<script>
 window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
 </script>"""
     html_patched = html_content.replace("</head>", inject + "\n</head>")
+
+    # Write temp file next to index.html so relative asset paths work
+    temp_html = script_dir / "_screenshot_temp.html"
+    temp_html.write_text(html_patched, encoding="utf-8")
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(args=[
@@ -64,20 +69,63 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
             "--allow-file-access-from-files",
             "--allow-running-insecure-content",
             "--no-sandbox",
+            "--disable-site-isolation-trials",
         ])
-        context = await browser.new_context(
+        page = await browser.new_page(
             viewport={"width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT},
             device_scale_factor=SCALE,
-            # Set base URL so relative asset paths resolve correctly
-            base_url=f"file://{script_dir}/",
         )
-        page = await context.new_page()
 
         page.on("console", lambda msg: print(f"[BROWSER {msg.type}] {msg.text}"))
         page.on("pageerror", lambda err: print(f"[PAGE ERROR] {err}"))
 
-        # Use set_content with base_url so assets (images, fonts) load from script_dir
-        await page.set_content(html_patched, base_url=f"file://{script_dir}/index.html")
+        # Navigate and then inject data via evaluate (bypasses any CSP issue)
+        await page.goto(f"file://{temp_html}", wait_until="domcontentloaded")
+
+        # Force-inject the data even if the script tag didn't run
+        await page.evaluate(f"""
+            window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
+        """)
+
+        # Re-trigger the rendering function by re-running the data pipeline
+        await page.evaluate("""
+            () => {
+                const data = window.__CLASSIFICA__;
+                if (!data) return;
+
+                const COMP_CONFIG = window.COMP_CONFIG;
+                if (!COMP_CONFIG) {
+                    console.error('COMP_CONFIG not found');
+                    return;
+                }
+
+                const key = (data.competition || 'SA').toUpperCase();
+                const cfg = COMP_CONFIG[key] || COMP_CONFIG.SA;
+
+                document.body.className = '';
+                document.body.classList.add('comp-' + key);
+                if (cfg.slim) document.body.classList.add('comp-36');
+
+                document.getElementById('heroLogo').src = cfg.logo;
+                document.getElementById('heroTitle').textContent = cfg.titolo;
+                document.getElementById('heroSub').textContent =
+                    `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
+
+                const area = document.getElementById('tableArea');
+                let html = '';
+                for (let i = 0; i < cfg.cols; i++) {
+                    const slice = data.classifica.slice(i * cfg.perCol, (i+1) * cfg.perCol);
+                    if (!slice.length) continue;
+                    html += `<div class="col">
+                        ${window.buildColHead ? window.buildColHead() : ''}
+                        <div class="col-rows">
+                            ${slice.map(t => window.buildRow ? window.buildRow(t, cfg.slim, cfg.zone(t.pos)) : '').join('')}
+                        </div>
+                    </div>`;
+                }
+                area.innerHTML = html;
+            }
+        """)
 
         await page.wait_for_timeout(3000)
 
@@ -86,7 +134,10 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
         )
         col_count = await page.evaluate("document.querySelectorAll('#tableArea .col').length")
         row_count = await page.evaluate("document.querySelectorAll('#tableArea .col-rows .row').length")
+        comp_config_exists = await page.evaluate("typeof window.COMP_CONFIG !== 'undefined' ? 'YES' : 'NO'")
+        build_row_exists = await page.evaluate("typeof window.buildRow !== 'undefined' ? 'YES' : 'NO'")
         print(f"[DEBUG] __CLASSIFICA__={injected}, cols={col_count}, rows={row_count}")
+        print(f"[DEBUG] COMP_CONFIG={comp_config_exists}, buildRow={build_row_exists}")
 
         await page.wait_for_selector(comp_data["wait"], timeout=30000)
         await page.wait_for_timeout(4000)
@@ -96,6 +147,8 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
             clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT}
         )
         await browser.close()
+
+    temp_html.unlink()
 
     applica_texture("screenshot_raw.png", "texture.png", OUTPUT_PATH)
     Path("screenshot_raw.png").unlink()
