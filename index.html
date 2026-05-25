@@ -71,6 +71,23 @@
       --leg-h:       52px;
     }
 
+    /* ══ UECL ══ */
+    body.comp-UECL {
+      background: radial-gradient(ellipse 90% 40% at 50% 0%, #0a2e10 0%, transparent 55%),
+                  #030a04;
+      --c-header-hi: #3ecf6a;
+      --c-pts:       #ffffff;
+      --c-row-a:     rgba(255,255,255,0.09);
+      --c-row-b:     rgba(255,255,255,0.02);
+      --c-text-dim:  #407050;
+      --c-zone-1:    #1db954;
+      --c-zone-2:    #f5a623;
+      --c-zone-3:    #e02020;
+      --row-h:       49px;
+      --head-h:      140px;
+      --leg-h:       52px;
+    }
+
     /* ── HEADER ── */
     .header {
       height:var(--head-h);
@@ -100,7 +117,8 @@
       white-space:nowrap;
     }
     body.comp-UCL .header-title,
-    body.comp-UEL .header-title { font-size:4rem; }
+    body.comp-UEL .header-title,
+    body.comp-UECL .header-title { font-size:4rem; }
 
     .header-sub {
       font-family:'Barlow Condensed',sans-serif;
@@ -197,7 +215,8 @@
     .c-logo img { object-fit:contain; }
     body.comp-SA .c-logo img  { width:34px; height:34px; }
     body.comp-UCL .c-logo img,
-    body.comp-UEL .c-logo img { width:26px; height:26px; }
+    body.comp-UEL .c-logo img,
+    body.comp-UECL .c-logo img { width:26px; height:26px; }
 
     .c-name {
       font-weight:700;
@@ -207,7 +226,8 @@
     }
     body.comp-SA .c-name  { font-size:1rem; }
     body.comp-UCL .c-name,
-    body.comp-UEL .c-name { font-size:.83rem; }
+    body.comp-UEL .c-name,
+    body.comp-UECL .c-name { font-size:.83rem; }
 
     .c-pt {
       font-family:'Barlow Condensed',sans-serif;
@@ -216,15 +236,19 @@
     }
     body.comp-SA .c-pt  { font-size:1.5rem; color:var(--c-pts); }
     body.comp-UCL .c-pt,
-    body.comp-UEL .c-pt { font-size:1.15rem; }
+    body.comp-UEL .c-pt,
+    body.comp-UECL .c-pt { font-size:1.15rem; }
 
-    /* Colore punti per zona UCL/UEL */
+    /* Colore punti per zona UCL/UEL/UECL */
     body.comp-UCL .row[data-zone="z1"] .c-pt,
-    body.comp-UEL .row[data-zone="z1"] .c-pt { color:#1db954; }
+    body.comp-UEL .row[data-zone="z1"] .c-pt,
+    body.comp-UECL .row[data-zone="z1"] .c-pt { color:#1db954; }
     body.comp-UCL .row[data-zone="z2"] .c-pt,
-    body.comp-UEL .row[data-zone="z2"] .c-pt { color:#f5a623; }
+    body.comp-UEL .row[data-zone="z2"] .c-pt,
+    body.comp-UECL .row[data-zone="z2"] .c-pt { color:#f5a623; }
     body.comp-UCL .row[data-zone="z3"] .c-pt,
-    body.comp-UEL .row[data-zone="z3"] .c-pt { color:#e87070; }
+    body.comp-UEL .row[data-zone="z3"] .c-pt,
+    body.comp-UECL .row[data-zone="z3"] .c-pt { color:#e87070; }
 
     .c-dr {
       font-family:'Barlow Condensed',sans-serif;
@@ -233,7 +257,8 @@
     }
     body.comp-SA .c-dr  { font-size:1.2rem; }
     body.comp-UCL .c-dr,
-    body.comp-UEL .c-dr { font-size:1rem; }
+    body.comp-UEL .c-dr,
+    body.comp-UECL .c-dr { font-size:1rem; }
 
     .c-dr.pos { color:#4ade80; }
     .c-dr.neg { color:#f87171; }
@@ -418,6 +443,23 @@ const CFG = {
   UEL: {
     titolo:"Europa League",
     logo:"https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
+    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
+    cols:2, perCol:18,
+    zone: p => {
+      if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
+      if(p<=24) return {color:"var(--c-zone-2)",key:"z2"};
+      return {color:"var(--c-zone-3)",key:"z3"};
+    },
+    sepAfter:[8,24],
+    legend:[
+      {color:"#1db954",label:"R16 Diretti"},
+      {color:"#f5a623",label:"Playoff"},
+      {color:"#e02020",label:"Eliminati"},
+    ]
+  }
+,
+  UECL: {
+    titolo:"Conference League",
     subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone: p => {

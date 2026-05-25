@@ -23,6 +23,12 @@ COMPETIZIONI = {
         "comp":   "UEL",
         "giornate": 8,
     },
+    "UECL": {
+        "slug":   "uefa.europa.conf",
+        "nome":   "Conference League",
+        "comp":   "UECL",
+        "giornate": 8,
+    },
 }
 
 # Overrides loghi per squadre italiane (Wikipedia SVG, alta qualità)
@@ -141,7 +147,7 @@ def genera_json_classifica():
     comp_key = os.environ.get("COMPETITION", "SA").upper()
     comp = COMPETIZIONI.get(comp_key)
     if not comp:
-        print(f"❌ Competizione non riconosciuta: {comp_key}. Usa SA, UCL o UEL.")
+        print(f"❌ Competizione non riconosciuta: {comp_key}. Usa SA, UCL, UEL o UECL.")
         sys.exit(1)
 
     print(f"📡 Recupero classifica ESPN: {comp['nome']} ({comp_key})...")
