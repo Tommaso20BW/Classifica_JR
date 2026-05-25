@@ -20,15 +20,15 @@ OUTPUT_PATH     = "screenshot.png"
 COMP_INFO = {
     "SA":  {
         "caption": lambda g: f"<b>🇮🇹📊 Classifica Serie A - {g}ª Giornata.</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .row:last-child"
+        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
     },
     "UCL": {
         "caption": lambda g: f"<b>🏆⭐ Classifica Champions League - Giornata {g}.</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .row:last-child"
+        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
     },
     "UEL": {
         "caption": lambda g: f"<b>🟠🏆 Classifica Europa League - Giornata {g}.</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .row:last-child"
+        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
     },
 }
 
