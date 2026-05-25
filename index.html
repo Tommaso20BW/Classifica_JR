@@ -89,13 +89,6 @@
       gap:20px;
       margin-bottom:4px;
     }
-    .header-comp-logo {
-      width:64px;
-      height:64px;
-      object-fit:contain;
-      flex-shrink:0;
-    }
-    body.comp-SA .header-comp-logo { width:70px; height:70px; }
 
     .header-title {
       font-family:'Anton',sans-serif;
@@ -271,7 +264,6 @@
 
   <div class="header">
     <div class="header-top">
-      <img class="header-comp-logo" id="compLogo" src="" alt="">
       <div class="header-title" id="heroTitle">Classifica</div>
     </div>
     <div class="header-sub" id="heroSub"></div>
@@ -409,7 +401,7 @@ const CFG = {
   UCL: {
     titolo:"Champions League",
     logo:"https://mir-s3-cdn-cf.behance.net/project_modules/max_632/d6297891682131.5e3864b00f466.png",
-    subLabel: g => `After MD ${g} · 2026/27`,
+    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone: p => {
       if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
@@ -426,7 +418,7 @@ const CFG = {
   UEL: {
     titolo:"Europa League",
     logo:"https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
-    subLabel: g => `After MD ${g} · 2026/27`,
+    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone: p => {
       if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
@@ -470,9 +462,6 @@ function buildHead() {
     const cfg = CFG[key] || CFG.SA;
 
     document.body.classList.add('comp-'+key);
-
-    /* Logo competizione */
-    document.getElementById('compLogo').src = cfg.logo;
 
     /* Titolo e sottotitolo */
     document.getElementById('heroTitle').textContent = cfg.titolo;
