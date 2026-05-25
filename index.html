@@ -2,391 +2,270 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8"/>
-  <title>Classifica</title>
+  <title>Classifica TV Style</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800;900&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  
   <style>
+    :root {
+      --bg-dark: #000b3a;
+      --bg-light: #001a6b;
+      --accent-blue: #0084ff;
+      --row-even: rgba(255, 255, 255, 0.04);
+      --text-main: #ffffff;
+      --text-dim: #aab4d6;
+    }
+
     * { margin:0; padding:0; box-sizing:border-box; }
 
-    html, body {
-      width:  900px;
+    body {
+      width: 900px;
       height: 1200px;
       overflow: hidden;
-    }
-
-    /* ══ TEMI ══ */
-    body {
-      --c-bg-a:      #0a1a6e;
-      --c-bg-b:      #061050;
-      --c-bg-base:   #04093a;
-      --c-header-hi: #4a9fff;
-      --c-row-odd:   rgba(255,255,255,0.06);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(255,255,255,0.08);
-      --c-text:      #ffffff;
-      --c-text-dim:  #7a8ecc;
-      --c-pts:       #5aabff;
-      --c-zone-ucl:  #1a6bdc;
-      --c-zone-uel:  #e87010;
-      --c-zone-uecl: #22a855;
-      --c-zone-rel:  #dc2020;
-      --c-juve:      #d4af37;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
-    }
-
-    body.comp-UCL {
-      --c-bg-a:      #1a0560;
-      --c-bg-b:      #3a0090;
-      --c-bg-base:   #08002a;
-      --c-header-hi: #c080ff;
-      --c-row-odd:   rgba(255,255,255,0.06);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(160,80,255,0.15);
-      --c-text-dim:  #9070c0;
-      --c-pts:       #c080ff;
-      --c-zone-ucl:  #7040e0;
-      --c-zone-uel:  #e040e0;
-      --c-zone-uecl: #94a3b8;
-      --c-zone-rel:  #dc2020;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='20%25' cy='5%25' r='60%25'%3E%3Cstop offset='0' stop-color='%232000a0' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='80%25' cy='95%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c000ff' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g3' cx='50%25' cy='50%25' r='40%25'%3E%3Cstop offset='0' stop-color='%236000c0' stop-opacity='.2'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%2305001a'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Crect width='900' height='1200' fill='url(%23g3)'/%3E%3Cpolygon points='450,80 480,165 570,165 500,215 525,300 450,250 375,300 400,215 330,165 420,165' fill='none' stroke='%23a060ff' stroke-width='1' stroke-opacity='.12'/%3E%3Cpolygon points='450,120 472,185 540,185 487,222 507,288 450,252 393,288 413,222 360,185 428,185' fill='none' stroke='%23a060ff' stroke-width='.5' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='420' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.07'/%3E%3Ccircle cx='450' cy='600' r='300' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.05'/%3E%3C/svg%3E");
-    }
-
-    body.comp-UEL {
-      --c-bg-a:      #5a1000;
-      --c-bg-b:      #2a0800;
-      --c-bg-base:   #120300;
-      --c-header-hi: #ff7040;
-      --c-row-odd:   rgba(255,255,255,0.06);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(220,70,20,0.18);
-      --c-text-dim:  #b05030;
-      --c-pts:       #ff7040;
-      --c-zone-ucl:  #d04010;
-      --c-zone-uel:  #e09020;
-      --c-zone-uecl: #94a3b8;
-      --c-zone-rel:  #dc2020;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c02000' stop-opacity='.65'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%23802000' stop-opacity='.5'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0200'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Cline x1='0' y1='200' x2='900' y2='200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='400' x2='900' y2='400' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='600' x2='900' y2='600' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='800' x2='900' y2='800' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='1000' x2='900' y2='1000' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='150' y1='0' x2='150' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='300' y1='0' x2='300' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='450' y1='0' x2='450' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='600' y1='0' x2='600' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='750' y1='0' x2='750' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cpolygon points='450,500 480,590 575,590 500,645 528,735 450,680 372,735 400,645 325,590 420,590' fill='%23ff4010' fill-opacity='.04'/%3E%3C/svg%3E");
-    }
-
-    /* ── BG con texture ── */
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--c-text);
-      background-image: var(--c-texture);
-      background-size: cover;
-      background-position: center;
+      font-family: 'Barlow', sans-serif;
+      color: var(--text-main);
+      background: radial-gradient(circle at 50% 40%, var(--bg-light) 0%, var(--bg-dark) 100%);
       display: flex;
       flex-direction: column;
-      padding: 0;
     }
 
-    /* ── HEADER ── */
+    /* ── HEADER (Stile Sport Mediaset) ── */
     .header {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 28px 40px 18px;
-      position: relative;
-    }
-    .header-logo {
-      width: 100px; height: 100px;
-      object-fit: contain;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 0 16px rgba(255,255,255,0.35));
+      padding: 60px 0 40px;
+      text-align: center;
     }
     .header-title {
-      font-family: 'Anton', sans-serif;
-      font-size: 6rem;
-      letter-spacing: 0.12em;
-      color: #fff;
-      line-height: 1;
-      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+      font-family: 'Oswald', sans-serif;
+      font-size: 8rem;
+      font-weight: 700;
+      line-height: 0.8;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      margin-bottom: 5px;
     }
     .header-sub {
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: .3em;
+      font-size: 1.8rem;
+      font-weight: 600;
       text-transform: uppercase;
-      color: var(--c-header-hi);
-      margin-top: 6px;
-    }
-    .header-divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      margin-top: 18px;
+      letter-spacing: 8px;
+      color: var(--text-dim);
     }
 
-    /* ── TABLE AREA ── */
+    /* ── TABLE ── */
     .table-area {
       flex: 1;
       display: flex;
-      gap: 0;
-      padding: 12px 18px 0;
-      min-height: 0;
+      padding: 0 30px;
+      gap: 25px;
     }
 
-    /* ── COLUMN ── */
-    .col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .col + .col { margin-left: 10px; }
+    .col { flex: 1; display: flex; flex-direction: column; }
 
-    .col-rows {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    /* ── COL HEADER ── */
     .col-head {
       display: grid;
-      grid-template-columns: 32px 42px 1fr 46px 42px;
-      align-items: center;
-      padding: 6px 8px 8px 8px;
-      margin-bottom: 6px;
-      color: var(--c-text-dim);
-      font-size: .82rem;
+      grid-template-columns: 55px 50px 1fr 60px;
+      padding: 10px 15px;
+      font-size: 0.85rem;
       font-weight: 800;
-      letter-spacing: .18em;
+      color: var(--text-dim);
       text-transform: uppercase;
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    .col-head div { text-align: center; }
-    .col-head div:nth-child(3) { text-align: left; padding-left: 4px; }
 
     /* ── ROW ── */
     .row {
-      position: relative;
       display: grid;
-      grid-template-columns: 32px 42px 1fr 46px 42px;
+      grid-template-columns: 55px 50px 1fr 60px;
       align-items: center;
-      border-radius: 7px;
-      padding: 0 8px;
-      flex: 1;
-      margin-bottom: 2px;
+      height: 52px;
+      padding: 0 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
     }
-    .row:nth-child(odd)  { background: var(--c-row-odd); }
-    .row:nth-child(even) { background: var(--c-row-even); }
-    .row { border: 1px solid var(--c-row-border); }
+    .row:nth-child(even) { background: var(--row-even); }
 
-    .row::before {
-      content: "";
-      position: absolute;
-      left: 0; top: 10%; height: 80%;
-      width: 4px;
-      border-radius: 0 3px 3px 0;
-      background: var(--zone, transparent);
+    /* Badge Competizione */
+    .c-badge {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    .c-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-    /* ── CELLE ── */
     .c-pos {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.35rem; font-weight: 700;
-      color: var(--c-text-dim);
-      text-align: center;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: #fff;
     }
-    .c-logo {
-      display: flex; align-items: center; justify-content: center;
-    }
-    .c-logo img { width: 34px; height: 34px; object-fit: contain; }
+
+    .c-logo { display: flex; justify-content: center; }
+    .c-logo img { width: 34px; height: 34px; }
+
     .c-name {
-      font-size: 1.05rem; font-weight: 700;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      color: #eef2ff;
-      padding-left: 6px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      padding-left: 10px;
     }
+
     .c-pt {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.5rem; font-weight: 900;
-      color: var(--c-pts);
-      text-align: center;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--accent-blue);
+      text-align: right;
     }
-    .c-dr {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.25rem; font-weight: 700;
-      text-align: center;
+
+    /* Colore riga speciale (Juve) */
+    .row.highlight { background: rgba(255, 255, 255, 0.1) !important; }
+
+    /* ── FOOTER LOGO ── */
+    .footer-brand {
+      padding: 30px;
+      display: flex;
+      justify-content: center;
     }
-    .c-dr.pos { color: #4ade80; }
-    .c-dr.neg { color: #f87171; }
-    .c-dr.zer { color: var(--c-text-dim); }
-
-    .row.juve { border-color: var(--c-juve) !important; }
-
-    /* comp-36: font leggermente ridotti per 36 squadre */
-    body.comp-36 .c-logo img { width: 26px; height: 26px; }
-    body.comp-36 .c-name  { font-size: .9rem; }
-    body.comp-36 .c-pt    { font-size: 1.25rem; }
-    body.comp-36 .c-dr    { font-size: 1.1rem; }
-    body.comp-36 .c-pos   { font-size: 1.15rem; }
-    body.comp-36 .col-head { font-size: .72rem; }
+    .brand-box {
+      background: #fff;
+      padding: 5px 20px;
+      color: #000b3a;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 1.5rem;
+      border-radius: 4px;
+    }
 
     /* ── LEGEND ── */
     .legend {
-      flex-shrink: 0;
       display: flex;
       justify-content: center;
-      gap: 20px;
-      padding: 10px 20px 14px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      margin-top: 8px;
+      gap: 30px;
+      padding-bottom: 40px;
     }
-    .legend-item {
-      display: flex; align-items: center; gap: 7px;
-      font-size: .82rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
-      color: var(--c-text-dim);
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-dim);
     }
-    .legend-dot {
-      width: 13px; height: 13px; border-radius: 3px;
-      flex-shrink: 0;
-    }
+    .leg-box { width: 20px; height: 15px; border-radius: 2px; }
+  </style>
 </head>
 <body>
 
   <div class="header">
-    <img class="header-logo" id="heroLogo" src="" alt="">
-    <div class="header-title" id="heroTitle">Classifica</div>
-    <div class="header-sub"  id="heroSub">Giornata —</div>
-    <div class="header-divider"></div>
+    <div class="header-title" id="compTitle">SERIE A</div>
+    <div class="header-sub">CLASSIFICA</div>
   </div>
 
   <div class="table-area" id="tableArea"></div>
 
   <div class="legend" id="legend"></div>
 
+  <div class="footer-brand">
+    <div class="brand-box">SPORT AI</div>
+  </div>
 
 <script>
+const ASSETS = {
+  UCL: "https://upload.wikimedia.org/wikipedia/commons/b/b5/UEFA_Champions_League_logo.svg",
+  UEL: "https://upload.wikimedia.org/wikipedia/it/c/c5/UEFA_Europa_League_logo_2021.svg",
+  UECL: "https://upload.wikimedia.org/wikipedia/it/a/ae/UEFA_Conference_League_logo.svg",
+  RETRO: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='%23dc2020'/%3E%3C/svg%3E"
+};
+
 const COMP_CONFIG = {
   SA: {
-    logo:   "https://upload.wikimedia.org/wikipedia/it/e/ef/Serie_A_Enilive_25-26.svg",
-    titolo: "Serie A",
-    cols:   2, perCol: 10,
-    slim:   true,
-    zone: p => {
-      if (p <= 4)  return "var(--c-zone-ucl)";
-      if (p <= 6)  return "var(--c-zone-uel)";
-      if (p === 7) return "var(--c-zone-uecl)";
-      if (p >= 18) return "var(--c-zone-rel)";
-      return "transparent";
-    },
-    legend: [
-      { color:"var(--c-zone-ucl)",  label:"Champions League" },
-      { color:"var(--c-zone-uel)",  label:"Europa League" },
-      { color:"var(--c-zone-uecl)", label:"Conference League" },
-      { color:"var(--c-zone-rel)",  label:"Retrocesse" },
-    ]
-  },
-  UCL: {
-    logo:   "https://mir-s3-cdn-cf.behance.net/project_modules/max_632/d6297891682131.5e3864b00f466.png",
-    titolo: "Champions League",
-    cols:   3, perCol: 12,
-    slim:   true,
-    zone: p => {
-      if (p <= 8)  return "var(--c-zone-ucl)";
-      if (p <= 24) return "var(--c-zone-uel)";
-      return "var(--c-zone-rel)";
-    },
-    legend: [
-      { color:"var(--c-zone-ucl)", label:"Ottavi diretti" },
-      { color:"var(--c-zone-uel)", label:"Playoff" },
-      { color:"var(--c-zone-rel)", label:"Eliminati" },
-    ]
-  },
-  UEL: {
-    logo:   "https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
-    titolo: "Europa League",
-    cols:   3, perCol: 12,
-    slim:   true,
-    zone: p => {
-      if (p <= 8)  return "var(--c-zone-ucl)";
-      if (p <= 24) return "var(--c-zone-uel)";
-      return "var(--c-zone-rel)";
-    },
-    legend: [
-      { color:"var(--c-zone-ucl)", label:"Ottavi diretti" },
-      { color:"var(--c-zone-uel)", label:"Playoff" },
-      { color:"var(--c-zone-rel)", label:"Eliminati" },
+    title: "SERIE A",
+    zones: [
+      { max: 4, img: ASSETS.UCL, label: "Champions League", color: "#0084ff" },
+      { max: 6, img: ASSETS.UEL, label: "Europa League", color: "#ff8000" },
+      { max: 7, img: ASSETS.UECL, label: "Conference League", color: "#00d050" },
+      { min: 18, img: null, label: "Retrocesse", color: "#dc2020" }
     ]
   }
 };
 
-function drClass(dr) {
-  if (dr > 0) return 'pos';
-  if (dr < 0) return 'neg';
-  return 'zer';
-}
-function drVal(dr) {
-  return dr > 0 ? '+'+dr : ''+dr;
+function getZone(pos, cfg) {
+  return cfg.zones.find(z => (z.max && pos <= z.max) || (z.min && pos >= z.min));
 }
 
-function buildRow(t, slim, zoneColor) {
+function buildRow(t, cfg) {
+  const zone = getZone(t.pos, cfg);
+  const badgeHtml = (zone && zone.img) ? `<img src="${zone.img}" alt="">` : '';
   const isJuve = t.team.toLowerCase().includes('juv');
-  const dr = `<div class="c-dr ${drClass(t.dr)}">${drVal(t.dr)}</div>`;
-  const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
-  const zStyle = `--zone:${zoneColor};`;
-  const cls = `row slim ${isJuve?'juve':''}`;
-  return `<div class="${cls}" style="${zStyle}">
-    <div class="c-pos">${t.pos}</div>
-    <div class="c-logo">${logo}</div>
-    <div class="c-name">${t.team}</div>
-    <div class="c-pt">${t.pt}</div>
-    ${dr}
-  </div>`;
+  const ptColor = zone ? `style="color: ${zone.color}"` : '';
+
+  return `
+    <div class="row ${isJuve?'highlight':''}">
+      <div class="c-badge">${badgeHtml}</div>
+      <div class="c-pos">${t.pos}</div>
+      <div class="c-logo"><img src="${t.logo}" alt=""></div>
+      <div class="c-name">${t.team}</div>
+      <div class="c-pt" ${ptColor}>${t.pt}</div>
+    </div>`;
 }
 
-function buildColHead() {
-  return `<div class="col-head slim">
-    <div></div><div></div><div>Squadra</div>
-    <div>Pt</div><div>DR</div>
-  </div>`;
+// Simulazione Dati
+const data = {
+  competition: "SA",
+  classifica: [
+    { pos: 1, team: "Inter", pt: 87, logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg" },
+    { pos: 2, team: "Napoli", pt: 76, logo: "https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Napoli_2021.svg" },
+    { pos: 3, team: "Roma", pt: 73, logo: "https://upload.wikimedia.org/wikipedia/it/c/cf/AS_Roma_logo_2017.svg" },
+    { pos: 4, team: "Como", pt: 71, logo: "https://upload.wikimedia.org/wikipedia/it/b/be/Como_1907_logo.svg" },
+    { pos: 5, team: "Milan", pt: 70, logo: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg" },
+    { pos: 6, team: "Juventus", pt: 69, logo: "https://upload.wikimedia.org/wikipedia/commons/b/bc/Juventus_FC_2017_icon_%28black%29.svg" },
+    { pos: 7, team: "Atalanta", pt: 59, logo: "https://upload.wikimedia.org/wikipedia/it/d/d2/Atalanta_BC.svg" },
+    { pos: 8, team: "Bologna", pt: 56, logo: "https://upload.wikimedia.org/wikipedia/it/d/d8/Bologna_FC_1909_logo.svg" },
+    { pos: 9, team: "Lazio", pt: 54, logo: "https://upload.wikimedia.org/wikipedia/it/c/ce/S.S._Lazio_logo.svg" },
+    { pos: 10, team: "Udinese", pt: 50, logo: "https://upload.wikimedia.org/wikipedia/it/2/23/Udinese_Calcio_logo_2010.svg" },
+    { pos: 11, team: "Sassuolo", pt: 49, logo: "https://upload.wikimedia.org/wikipedia/it/1/1c/US_Sassuolo_Calcio_logo.svg" },
+    { pos: 12, team: "Torino", pt: 45, logo: "https://upload.wikimedia.org/wikipedia/it/2/2e/Torino_FC_logo.svg" },
+    { pos: 13, team: "Parma", pt: 45, logo: "https://upload.wikimedia.org/wikipedia/it/c/c2/Parma_Calcio_1913_logo.svg" },
+    { pos: 14, team: "Cagliari", pt: 43, logo: "https://upload.wikimedia.org/wikipedia/it/6/61/Cagliari_Calcio_1970_logo.svg" },
+    { pos: 15, team: "Fiorentina", pt: 42, logo: "https://upload.wikimedia.org/wikipedia/it/2/2d/ACF_Fiorentina_2022_logo.svg" },
+    { pos: 16, team: "Genoa", pt: 41, logo: "https://upload.wikimedia.org/wikipedia/it/6/60/Genoa_CFC_logo.svg" },
+    { pos: 17, team: "Lecce", pt: 38, logo: "https://upload.wikimedia.org/wikipedia/it/a/a0/US_Lecce_logo.svg" },
+    { pos: 18, team: "Cremonese", pt: 34, logo: "https://upload.wikimedia.org/wikipedia/it/2/22/US_Cremonese_logo.svg" },
+    { pos: 19, team: "Verona", pt: 21, logo: "https://upload.wikimedia.org/wikipedia/it/d/d2/Hellas_Verona_FC_logo_2020.svg" },
+    { pos: 20, team: "Pisa", pt: 18, logo: "https://upload.wikimedia.org/wikipedia/it/f/f6/Pisa_Sporting_Club_logo.svg" }
+  ]
+};
+
+function render() {
+  const cfg = COMP_CONFIG.SA;
+  document.getElementById('compTitle').textContent = cfg.title;
+  
+  const area = document.getElementById('tableArea');
+  const mid = Math.ceil(data.classifica.length / 2);
+  
+  const col1 = data.classifica.slice(0, mid);
+  const col2 = data.classifica.slice(mid);
+
+  const colHtml = (slice) => `
+    <div class="col">
+      <div class="col-head"><div></div><div>Pos.</div><div>Squadra</div><div>Pt</div></div>
+      ${slice.map(t => buildRow(t, cfg)).join('')}
+    </div>`;
+
+  area.innerHTML = colHtml(col1) + colHtml(col2);
+
+  // Legenda
+  document.getElementById('legend').innerHTML = cfg.zones.map(z => `
+    <div class="leg-item">
+      ${z.img ? `<img src="${z.img}" width="18">` : `<div class="leg-box" style="background:${z.color}"></div>`}
+      ${z.label}
+    </div>`).join('');
 }
 
-(window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r => r.json()))
-  .then(data => {
-    const key = (data.competition || 'SA').toUpperCase();
-    const cfg = COMP_CONFIG[key] || COMP_CONFIG.SA;
-
-    // applica tema
-    document.body.classList.add('comp-' + key);
-    if (cfg.slim) document.body.classList.add('comp-36');
-
-    // header
-    document.getElementById('heroLogo').src = cfg.logo;
-    document.getElementById('heroTitle').textContent = cfg.titolo;
-    document.getElementById('heroSub').textContent =
-      `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
-
-    // colonne
-    const area = document.getElementById('tableArea');
-    let html = '';
-    for (let i = 0; i < cfg.cols; i++) {
-      const slice = data.classifica.slice(i * cfg.perCol, (i+1) * cfg.perCol);
-      if (!slice.length) continue;
-      html += `<div class="col">
-        ${buildColHead()}
-        <div class="col-rows">
-          ${slice.map(t => buildRow(t, cfg.slim, cfg.zone(t.pos))).join('')}
-        </div>
-      </div>`;
-    }
-    area.innerHTML = html;
-
-    // legenda
-    const leg = document.getElementById('legend');
-    leg.innerHTML = cfg.legend.map(l =>
-      `<div class="legend-item">
-        <div class="legend-dot" style="background:${l.color}"></div>
-        ${l.label}
-      </div>`
-    ).join('');
-  });
+render();
 </script>
 </body>
 </html>
