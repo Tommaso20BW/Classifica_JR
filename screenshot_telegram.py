@@ -9,14 +9,13 @@ from PIL import Image
 TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 
-VIEWPORT_WIDTH  = 900    # 900 × 1.2 = 1080
-VIEWPORT_HEIGHT = 1200   # 1200 × 1.2 = 1440  →  3:4
+VIEWPORT_WIDTH  = 900
+VIEWPORT_HEIGHT = 1200
 SCALE           = 1.2
 TARGET_W        = 1080
 TARGET_H        = 1440
 OUTPUT_PATH     = "screenshot.png"
 
-# Caption e wait-selector per competizione
 COMP_INFO = {
     "SA":  {
         "caption": lambda g: f"<b>🇮🇹📊 Classifica Serie A - {g}ª Giornata.</b>\n\n👉 @Juventus_Reborn",
@@ -34,8 +33,10 @@ COMP_INFO = {
 
 
 async def scatta_screenshot():
-    html_path = Path("index.html").resolve()
-    json_path = Path("classifica.json").resolve()
+    # Resolve paths relative to this script's directory, not cwd
+    script_dir = Path(__file__).parent.resolve()
+    html_path  = script_dir / "index.html"
+    json_path  = script_dir / "classifica.json"
 
     with open(json_path, "r", encoding="utf-8") as f:
         json_completo = json.load(f)
@@ -47,7 +48,8 @@ async def scatta_screenshot():
     comp_key  = json_completo.get("competition", "SA").upper()
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
 
-    print(f"[DEBUG] competition={comp_key}, giornata={giornata}, squadre={len(json_completo.get('classifica', []))}")
+    print(f"[INFO] competition={comp_key}, giornata={giornata}, squadre={len(json_completo.get('classifica', []))}")
+    print(f"[INFO] html_path={html_path}, exists={html_path.exists()}")
 
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
@@ -57,8 +59,10 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
 </script>"""
     html_patched = html_content.replace("</head>", inject + "\n</head>")
 
-    temp_html = Path("_screenshot_temp.html")
+    # Write temp file next to index.html so relative asset paths work
+    temp_html = script_dir / "_screenshot_temp.html"
     temp_html.write_text(html_patched, encoding="utf-8")
+    print(f"[INFO] temp_html written: {temp_html}, size={temp_html.stat().st_size}")
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(args=[
@@ -71,30 +75,29 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
             device_scale_factor=SCALE
         )
 
-        # Capture browser console and errors
         page.on("console", lambda msg: print(f"[BROWSER {msg.type}] {msg.text}"))
         page.on("pageerror", lambda err: print(f"[PAGE ERROR] {err}"))
 
-        await page.goto(f"file://{temp_html.resolve()}", wait_until="domcontentloaded")
+        file_url = f"file://{temp_html}"
+        print(f"[INFO] navigating to: {file_url}")
+        await page.goto(file_url, wait_until="domcontentloaded")
 
-        # Wait for JS to execute, then debug DOM state
-        await page.wait_for_timeout(5000)
+        await page.wait_for_timeout(3000)
 
-        table_html = await page.evaluate("document.getElementById('tableArea')?.innerHTML?.slice(0, 500) || 'NOT FOUND'")
-        print(f"[DEBUG] tableArea innerHTML: {table_html}")
-
+        injected = await page.evaluate(
+            "typeof window.__CLASSIFICA__ !== 'undefined' ? 'YES len=' + window.__CLASSIFICA__.classifica.length : 'NOT INJECTED'"
+        )
         col_count = await page.evaluate("document.querySelectorAll('#tableArea .col').length")
         row_count = await page.evaluate("document.querySelectorAll('#tableArea .col-rows .row').length")
-        print(f"[DEBUG] cols={col_count}, rows={row_count}")
-
-        injected = await page.evaluate("typeof window.__CLASSIFICA__ !== 'undefined' ? 'YES len=' + window.__CLASSIFICA__.classifica.length : 'NOT INJECTED'")
-        print(f"[DEBUG] __CLASSIFICA__: {injected}")
+        print(f"[DEBUG] __CLASSIFICA__={injected}, cols={col_count}, rows={row_count}")
 
         await page.wait_for_selector(comp_data["wait"], timeout=30000)
         await page.wait_for_timeout(4000)
 
-        # Screenshot del viewport esatto (non del body intero)
-        await page.screenshot(path="screenshot_raw.png", clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT})
+        await page.screenshot(
+            path="screenshot_raw.png",
+            clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT}
+        )
         await browser.close()
 
     temp_html.unlink()
@@ -107,8 +110,7 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
 
 
 def applica_texture(base_path, texture_path, output_path):
-    base    = Image.open(base_path).convert("RGBA")
-    # Forza dimensioni esatte 2560×2268
+    base = Image.open(base_path).convert("RGBA")
     if base.size != (TARGET_W, TARGET_H):
         base = base.resize((TARGET_W, TARGET_H), Image.LANCZOS)
     texture = Image.open(texture_path).convert("RGBA")
@@ -123,7 +125,7 @@ def invia_telegram(giornata, comp_key):
         print("❌ Errore: TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID mancanti.")
         return
 
-    comp_data    = COMP_INFO.get(comp_key, COMP_INFO["SA"])
+    comp_data     = COMP_INFO.get(comp_key, COMP_INFO["SA"])
     caption_testo = comp_data["caption"](giornata)
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
