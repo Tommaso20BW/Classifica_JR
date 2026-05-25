@@ -15,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* ══ TEMI ══ */
     body {
       --c-bg-a:      #0a1a6e;
       --c-bg-b:      #061050;
@@ -32,48 +31,59 @@
       --c-zone-uecl: #22a855;
       --c-zone-rel:  #dc2020;
       --c-juve:      #d4af37;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
       --row-h: 93px;
       --head-h: 170px;
       --leg-h: 52px;
     }
 
-    body.comp-UCL, body.comp-UEL {
-      --c-bg-a:      #1a0560;
-      --c-bg-b:      #3a0090;
-      --c-bg-base:   #08002a;
-      --c-header-hi: #c080ff;
-      --c-row-odd:   rgba(255,255,255,0.06);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(160,80,255,0.15);
-      --c-text-dim:  #9070c0;
-      --c-pts:       #c080ff;
-      --c-zone-ucl:  #7040e0;
-      --c-zone-uel:  #e040e0;
-      --c-zone-uecl: #94a3b8;
-      --c-zone-rel:  #dc2020;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='20%25' cy='5%25' r='60%25'%3E%3Cstop offset='0' stop-color='%232000a0' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='80%25' cy='95%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c000ff' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g3' cx='50%25' cy='50%25' r='40%25'%3E%3Cstop offset='0' stop-color='%236000c0' stop-opacity='.2'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%2305001a'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Crect width='900' height='1200' fill='url(%23g3)'/%3E%3Ccircle cx='450' cy='600' r='420' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.07'/%3E%3Ccircle cx='450' cy='600' r='300' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.05'/%3E%3C/svg%3E");
-      --row-h: 49px;
-      --head-h: 150px;
-      --leg-h: 52px;
+    /* ══ SERIE A tema (default) ══ */
+    body.comp-SA {
+      --c-texture: url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
     }
 
+    /* ══ UCL tema ══ */
+    body.comp-UCL {
+      --c-bg-a:      #0a0a1a;
+      --c-bg-b:      #050510;
+      --c-bg-base:   #020208;
+      --c-header-hi: #4a9fff;
+      --c-row-odd:   rgba(255,255,255,0.05);
+      --c-row-even:  rgba(255,255,255,0.00);
+      --c-row-border:rgba(255,255,255,0.07);
+      --c-text-dim:  #6080a0;
+      --c-pts:       #ffffff;
+      --c-zone-top:  #1db954; /* verde R16 diretto */
+      --c-zone-mid:  #f5a623; /* giallo/arancio playoff */
+      --c-zone-bot:  #e02020; /* rosso eliminati */
+      --row-h: 49px;
+      --head-h: 130px;
+      --leg-h: 58px;
+      --c-texture: url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='ga' cx='50%25' cy='0%25' r='60%25'%3E%3Cstop offset='0' stop-color='%230a1540' stop-opacity='.9'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23050510'/%3E%3Crect width='900' height='1200' fill='url(%23ga)'/%3E%3C/svg%3E");
+    }
+
+    /* ══ UEL tema ══ */
     body.comp-UEL {
-      --c-bg-a:      #5a1000;
-      --c-bg-b:      #2a0800;
-      --c-bg-base:   #120300;
-      --c-header-hi: #ff7040;
-      --c-row-border:rgba(220,70,20,0.18);
-      --c-text-dim:  #b05030;
-      --c-pts:       #ff7040;
-      --c-zone-ucl:  #d04010;
-      --c-zone-uel:  #e09020;
-      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c02000' stop-opacity='.65'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%23802000' stop-opacity='.5'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0200'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3C/svg%3E");
+      --c-bg-a:      #1a0800;
+      --c-bg-b:      #0f0500;
+      --c-bg-base:   #080300;
+      --c-header-hi: #ff6a00;
+      --c-row-odd:   rgba(255,255,255,0.05);
+      --c-row-even:  rgba(255,255,255,0.00);
+      --c-row-border:rgba(255,255,255,0.07);
+      --c-text-dim:  #9a6040;
+      --c-pts:       #ffffff;
+      --c-zone-top:  #1db954;
+      --c-zone-mid:  #f5a623;
+      --c-zone-bot:  #e02020;
+      --row-h: 49px;
+      --head-h: 130px;
+      --leg-h: 58px;
+      --c-texture: url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='ga' cx='50%25' cy='0%25' r='70%25'%3E%3Cstop offset='0' stop-color='%23301000' stop-opacity='.8'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0400'/%3E%3Crect width='900' height='1200' fill='url(%23ga)'/%3E%3C/svg%3E");
     }
 
     body {
       font-family: 'Inter', sans-serif;
-      color: var(--c-text);
+      color: var(--c-text, #fff);
       background-image: var(--c-texture);
       background-size: cover;
       background-position: center;
@@ -91,6 +101,30 @@
       justify-content: flex-end;
       padding: 0 40px 14px;
     }
+
+    /* Header SA */
+    .header-logo-sa {
+      display: none;
+    }
+    body.comp-SA .header-logo-sa { display: block; }
+
+    /* Header UCL/UEL: logo + titolo affiancati */
+    .header-ucl-row {
+      display: none;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 6px;
+    }
+    body.comp-UCL .header-ucl-row,
+    body.comp-UEL .header-ucl-row { display: flex; }
+
+    .header-ucl-emblem {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      opacity: 0.95;
+    }
+
     .header-title {
       font-family: 'Anton', sans-serif;
       font-size: 5.8rem;
@@ -101,10 +135,8 @@
       text-align: center;
       white-space: nowrap;
     }
-    /* titoli lunghi (UCL, UEL): riduco font */
-    .header-title.long {
-      font-size: 4rem;
-    }
+    .header-title.long { font-size: 3.4rem; }
+
     .header-sub {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 1.05rem;
@@ -132,7 +164,6 @@
       overflow: hidden;
     }
 
-    /* ── COLUMN ── */
     .col {
       flex: 1;
       display: flex;
@@ -157,7 +188,6 @@
     .col-head div { text-align: center; }
     .col-head div:nth-child(3) { text-align: left; padding-left: 4px; }
 
-    /* ── COL-ROWS ── */
     .col-rows {
       flex: 1;
       display: flex;
@@ -172,7 +202,7 @@
       display: grid;
       grid-template-columns: 30px 40px 1fr 44px 40px;
       align-items: center;
-      border-radius: 6px;
+      border-radius: 4px;
       padding: 0 8px;
       border: 1px solid var(--c-row-border);
       flex: 1;
@@ -181,13 +211,20 @@
     .row:nth-child(odd)  { background: var(--c-row-odd); }
     .row:nth-child(even) { background: var(--c-row-even); }
 
+    /* Barra sinistra zona */
     .row::before {
       content: "";
       position: absolute;
-      left: 0; top: 12%; height: 76%;
+      left: 0; top: 0; bottom: 0;
       width: 4px;
-      border-radius: 0 3px 3px 0;
+      border-radius: 4px 0 0 4px;
       background: var(--zone, transparent);
+    }
+
+    /* Separatore orizzontale tra zone */
+    .row.zone-sep {
+      border-top: 1px solid rgba(255,255,255,0.15);
+      margin-top: 2px;
     }
 
     /* ── CELLE ── */
@@ -200,7 +237,7 @@
     .c-logo {
       display: flex; align-items: center; justify-content: center;
     }
-    .c-logo img { width: 34px; height: 34px; object-fit: contain; }
+    .c-logo img { width: 28px; height: 28px; object-fit: contain; }
     .c-name {
       font-size: 1rem; font-weight: 700;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -222,15 +259,49 @@
     .c-dr.neg { color: #f87171; }
     .c-dr.zer { color: var(--c-text-dim); }
 
-    .row.juve { border-color: var(--c-juve) !important; }
+    /* SA-specific: righe grandi */
+    body.comp-SA .c-logo img { width: 34px; height: 34px; }
+    body.comp-SA .c-pt    { font-size: 1.5rem; }
+    body.comp-SA .c-name  { font-size: 1rem; }
+    body.comp-SA .c-pos   { font-size: 1.3rem; }
 
-    /* comp-18: 2 colonne da 18 squadre — righe più compatte */
-    body.comp-18 .c-logo img { width: 26px; height: 26px; }
-    body.comp-18 .c-name  { font-size: .82rem; }
-    body.comp-18 .c-pt    { font-size: 1.2rem; }
-    body.comp-18 .c-dr    { font-size: 1rem; }
-    body.comp-18 .c-pos   { font-size: 1.1rem; }
-    body.comp-18 .col-head { font-size: .7rem; }
+    /* UCL/UEL: righe compatte */
+    body.comp-UCL .c-logo img,
+    body.comp-UEL .c-logo img { width: 26px; height: 26px; }
+    body.comp-UCL .c-name,
+    body.comp-UEL .c-name  { font-size: .82rem; }
+    body.comp-UCL .c-pt,
+    body.comp-UEL .c-pt    { font-size: 1.2rem; }
+    body.comp-UCL .c-dr,
+    body.comp-UEL .c-dr    { font-size: 1rem; }
+    body.comp-UCL .c-pos,
+    body.comp-UEL .c-pos   { font-size: 1.1rem; }
+    body.comp-UCL .col-head,
+    body.comp-UEL .col-head { font-size: .7rem; }
+
+    /* UCL/UEL: punti evidenziati nella stessa colonna con badge colorato */
+    body.comp-UCL .c-pt,
+    body.comp-UEL .c-pt {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    /* Badge punti per UCL/UEL (zona top: verde, zona mid: arancio, zona bot: rosso) */
+    body.comp-UCL .row[data-zone="top"] .c-pt,
+    body.comp-UEL .row[data-zone="top"] .c-pt {
+      color: #1db954;
+    }
+    body.comp-UCL .row[data-zone="mid"] .c-pt,
+    body.comp-UEL .row[data-zone="mid"] .c-pt {
+      color: #f5a623;
+    }
+    body.comp-UCL .row[data-zone="bot"] .c-pt,
+    body.comp-UEL .row[data-zone="bot"] .c-pt {
+      color: #e87070;
+    }
+
+    .row.juve { border-color: var(--c-juve) !important; }
 
     /* ── LEGEND ── */
     .legend {
@@ -255,13 +326,30 @@
       width: 13px; height: 13px; border-radius: 3px;
       flex-shrink: 0;
     }
+
+    /* Linea separatrice tra zone UCL/UEL */
+    body.comp-UCL .col-rows .zone-divider,
+    body.comp-UEL .col-rows .zone-divider {
+      height: 2px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 1px;
+      flex-shrink: 0;
+      margin: 1px 0;
+    }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <div class="header-title" id="heroTitle">Classifica</div>
-    <div class="header-sub"  id="heroSub">Giornata —</div>
+    <div class="header-ucl-row">
+      <img class="header-ucl-emblem" id="headerEmblem" src="" alt="">
+      <div>
+        <div class="header-title long" id="heroTitle">Champions League</div>
+        <div class="header-sub" id="heroSub">Giornata —</div>
+      </div>
+    </div>
+    <div class="header-title" id="heroTitleSA" style="display:none">Serie A</div>
+    <div class="header-sub" id="heroSubSA" style="display:none">Giornata —</div>
     <div class="header-divider"></div>
   </div>
 
@@ -291,49 +379,67 @@ const MAPPA_NOMI = {
   "parma calcio 1913":"Parma","parma calcio":"Parma","parma":"Parma",
   "venezia fc":"Venezia","venezia":"Venezia",
   "hellas verona fc":"Verona","hellas verona":"Verona","hell verona fc":"Verona",
-  "us sassuolo calcio":"Sassuolo","us sassuolo":"Sassuolo","sassuolo":"Sassuolo",
-  "us salernitana 1919":"Salernitana","us salernitana":"Salernitana","salernitana":"Salernitana",
-  "frosinone calcio":"Frosinone","frosinone":"Frosinone",
-  "us cremonese":"Cremonese","cremonese":"Cremonese",
-  "us catanzaro 1929":"Catanzaro","us catanzaro":"Catanzaro","catanzaro":"Catanzaro",
-  "palermo fc":"Palermo","palermo":"Palermo",
-  "uc sampdoria":"Sampdoria","sampdoria":"Sampdoria",
-  "brescia calcio":"Brescia","brescia":"Brescia",
-  "fc südtirol":"Südtirol","fc sudtirol":"Südtirol","südtirol":"Südtirol","sudtirol":"Südtirol",
-  "ac pisa 1909":"Pisa","pisa 1909":"Pisa","pisa sc":"Pisa","pisa calcio":"Pisa","pisa":"Pisa",
-  "uc reggiana 1919":"Reggiana","reggiana 1919":"Reggiana","reggiana":"Reggiana",
-  "modena fc 2018":"Modena","modena fc":"Modena","modena":"Modena",
-  "bari calcio":"Bari","ssc bari":"Bari","bari":"Bari",
-  "cosenza calcio":"Cosenza","cosenza":"Cosenza",
-  "spezia calcio":"Spezia","spezia":"Spezia",
-  "as cittadella":"Cittadella","cittadella":"Cittadella",
-  "ascoli calcio 1898 fc":"Ascoli","ascoli calcio":"Ascoli","ascoli":"Ascoli",
-  "ternana calcio":"Ternana","ternana":"Ternana",
-  "cesena fc":"Cesena","cesena":"Cesena",
-  "ss juve stabia":"Juve Stabia","juve stabia":"Juve Stabia",
-  "carrarese calcio 1908":"Carrarese","carrarese":"Carrarese",
-  "mantova 1911":"Mantova","mantova":"Mantova",
-  "benevento calcio":"Benevento","benevento":"Benevento",
-  "calcio catania":"Catania","catania fc":"Catania","catania":"Catania",
-  "pescara calcio":"Pescara","delfino pescara":"Pescara","pescara":"Pescara",
-  "perugia calcio":"Perugia","perugia":"Perugia",
-  "spal 2013":"SPAL","spal":"SPAL",
-  "crotone calcio":"Crotone","crotone":"Crotone",
-  "calcio foggia 1920":"Foggia","foggia calcio":"Foggia","foggia":"Foggia",
-  "taranto fc 1927":"Taranto","taranto":"Taranto",
-  "casertana fc":"Casertana","casertana":"Casertana",
-  "potenza calcio":"Potenza","potenza":"Potenza",
-  "audace cerignola":"Cerignola","cerignola":"Cerignola",
-  "az picerno":"Picerno","picerno":"Picerno",
-  "sorrento calcio":"Sorrento","sorrento":"Sorrento",
-  "giugliano 1928":"Giugliano","giugliano":"Giugliano",
-  "avellino 1912":"Avellino","us avellino":"Avellino","avellino":"Avellino",
-  "lr vicenza":"Vicenza","vicenza":"Vicenza",
-  "calcio padova":"Padova","padova":"Padova",
-  "triestina calcio 1918":"Triestina","triestina":"Triestina",
-  "atalanta u23":"Atalanta U23",
-  "juventus next gen":"Juventus Next Gen",
-  "milan futuro":"Milan Futuro"
+  "liverpool fc":"Liverpool","liverpool":"Liverpool",
+  "barcelona":"Barcellona","fc barcelona":"Barcellona",
+  "real madrid":"Real Madrid","real madrid cf":"Real Madrid",
+  "manchester city":"Man City","manchester city fc":"Man City",
+  "arsenal fc":"Arsenal","arsenal":"Arsenal",
+  "chelsea fc":"Chelsea","chelsea":"Chelsea",
+  "tottenham hotspur":"Tottenham","tottenham":"Tottenham",
+  "bayer leverkusen":"Leverkusen","bayer 04 leverkusen":"Leverkusen",
+  "borussia dortmund":"B. Dortmund","bvb":"B. Dortmund",
+  "fc bayern münchen":"Bayern Monaco","fc bayern munich":"Bayern Monaco","bayern munich":"Bayern Monaco","bayern münchen":"Bayern Monaco",
+  "atletico madrid":"Atleti","atlético de madrid":"Atleti",
+  "aston villa":"Aston Villa","aston villa fc":"Aston Villa",
+  "benfica":"Benfica","sl benfica":"Benfica",
+  "feyenoord":"Feyenoord",
+  "monaco":"Monaco","as monaco":"Monaco",
+  "sporting cp":"Sporting CP","sporting clube de portugal":"Sporting CP",
+  "celtic fc":"Celtic","celtic":"Celtic",
+  "club brugge":"Club Brugge","club brugge kv":"Club Brugge",
+  "psg":"Paris","paris saint-germain":"Paris","paris sg":"Paris",
+  "brest":"Brest","stade brestois 29":"Brest",
+  "gnk dinamo":"GNK Dinamo","dinamo zagreb":"GNK Dinamo",
+  "rb salzburg":"Salzburg","fc red bull salzburg":"Salzburg",
+  "psveindhoven":"PSV","psv eindhoven":"PSV","psv":"PSV",
+  "juventus":"Juventus","juventus fc":"Juventus",
+  "vfb stuttgart":"Stuttgart","vfb stuttgart 1893":"Stuttgart","stuttgart":"Stuttgart",
+  "sparta prague":"Sparta Praha","ac sparta prague":"Sparta Praha","sparta praha":"Sparta Praha",
+  "sturm graz":"Sturm Graz","sk sturm graz":"Sturm Graz",
+  "girona fc":"Girona","girona":"Girona",
+  "crvena zvezda":"Crvena Zvezda","red star belgrade":"Crvena Zvezda",
+  "young boys":"Young Boys","bsc young boys":"Young Boys",
+  "shakhtar donetsk":"Shakhtar","shakhtar":"Shakhtar",
+  "rb leipzig":"Leipzig","rasenballsport leipzig":"Leipzig",
+  "slovan bratislava":"S. Bratislava","sk slovan bratislava":"S. Bratislava",
+  "lille osc":"Lille","losc lille":"Lille","lille":"Lille",
+  "lyon":"Lyon","olympique lyonnais":"Lyon","ol":"Lyon",
+  "midtjylland":"Midtjylland","fc midtjylland":"Midtjylland",
+  "aston villa":"Aston Villa",
+  "freiburg":"Freiburg","sc freiburg":"Freiburg",
+  "real betis":"Real Betis","real betis balompié":"Real Betis",
+  "ferencváros":"Ferencváros","ferencvaros tc":"Ferencváros","ferencvaros":"Ferencváros",
+  "braga":"Braga","sc braga":"Braga","sporting braga":"Braga",
+  "porto":"Porto","fc porto":"Porto",
+  "genk":"Genk","krc genk":"Genk",
+  "celta":"Celta","rc celta":"Celta","celta vigo":"Celta",
+  "viktoria plzeň":"Viktoria Plzeň","fc viktoria plzen":"Viktoria Plzeň","viktoria plzen":"Viktoria Plzeň",
+  "panathinaikos":"Panathinaikos","panathinaikos fc":"Panathinaikos",
+  "nottingham forest":"Nott'm Forest","nottm forest":"Nott'm Forest",
+  "paok":"PAOK","paok fc":"PAOK",
+  "brann":"Brann","sk brann":"Brann",
+  "fenerbahçe":"Fenerbahçe","fenerbahce":"Fenerbahçe","fenerbahçe sk":"Fenerbahçe",
+  "celtic":"Celtic","celtic fc":"Celtic",
+  "gnk dinamo":"GNK Dinamo","nk dinamo zagreb":"GNK Dinamo",
+  "basel":"Basel","fc basel 1893":"Basel","fc basel":"Basel",
+  "ludogorets":"Ludogorets","pfc ludogorets razgrad":"Ludogorets",
+  "go ahead eagles":"Go Ahead Eagles","de graafschap":"Go Ahead Eagles",
+  "fcsb":"FCSB",
+  "utrecht":"Utrecht","fc utrecht":"Utrecht",
+  "rangers":"Rangers","rangers fc":"Rangers",
+  "malmö":"Malmö","malmö ff":"Malmö","malmo ff":"Malmö",
+  "maccabi tel-aviv":"M. Tel-Aviv","maccabi tel aviv":"M. Tel-Aviv",
+  "nice":"Nice","ogc nice":"Nice",
 };
 
 function italianizzaNome(name) {
@@ -341,18 +447,30 @@ function italianizzaNome(name) {
   return MAPPA_NOMI[name.toLowerCase().trim()] || name;
 }
 
+/* Emblemi SVG inline per UCL/UEL quando non disponibili */
+const UCL_EMBLEM = `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+  <circle cx="30" cy="30" r="28" fill="none" stroke="#4a9fff" stroke-width="1.5" opacity=".6"/>
+  <text x="30" y="36" text-anchor="middle" font-family="Anton,sans-serif" font-size="11" fill="#4a9fff" letter-spacing="1">UCL</text>
+</svg>`;
+
+const UEL_EMBLEM = `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+  <circle cx="30" cy="30" r="28" fill="none" stroke="#ff6a00" stroke-width="1.5" opacity=".6"/>
+  <text x="30" y="36" text-anchor="middle" font-family="Anton,sans-serif" font-size="11" fill="#ff6a00" letter-spacing="1">UEL</text>
+</svg>`;
+
 const COMP_CONFIG = {
   SA: {
     titolo: "Serie A", longTitle: false,
     cols: 2, perCol: 10,
-    is18: false,
+    mode: "sa",
     zone: p => {
-      if (p <= 4)  return "var(--c-zone-ucl)";
-      if (p <= 6)  return "var(--c-zone-uel)";
-      if (p === 7) return "var(--c-zone-uecl)";
-      if (p >= 18) return "var(--c-zone-rel)";
-      return "transparent";
+      if (p <= 4)  return { color: "var(--c-zone-ucl)", key: "top" };
+      if (p <= 6)  return { color: "var(--c-zone-uel)", key: "mid" };
+      if (p === 7) return { color: "var(--c-zone-uecl)", key: "uecl" };
+      if (p >= 18) return { color: "var(--c-zone-rel)", key: "bot" };
+      return { color: "transparent", key: "" };
     },
+    sepAfter: [4, 6, 7, 17],
     legend: [
       { color:"var(--c-zone-ucl)",  label:"Champions League" },
       { color:"var(--c-zone-uel)",  label:"Europa League" },
@@ -363,31 +481,37 @@ const COMP_CONFIG = {
   UCL: {
     titolo: "Champions League", longTitle: true,
     cols: 2, perCol: 18,
-    is18: true,
+    mode: "ucl",
+    emblem: UCL_EMBLEM,
+    giornataLabel: "AFTER MD",
     zone: p => {
-      if (p <= 8)  return "var(--c-zone-ucl)";
-      if (p <= 24) return "var(--c-zone-uel)";
-      return "var(--c-zone-rel)";
+      if (p <= 8)  return { color: "var(--c-zone-top)", key: "top" };
+      if (p <= 24) return { color: "var(--c-zone-mid)", key: "mid" };
+      return { color: "var(--c-zone-bot)", key: "bot" };
     },
+    sepAfter: [8, 24],
     legend: [
-      { color:"var(--c-zone-ucl)", label:"Ottavi diretti" },
-      { color:"var(--c-zone-uel)", label:"Playoff" },
-      { color:"var(--c-zone-rel)", label:"Eliminati" },
+      { color:"#1db954", label:"R16 diretti" },
+      { color:"#f5a623", label:"Playoff" },
+      { color:"#e02020", label:"Eliminati" },
     ]
   },
   UEL: {
     titolo: "Europa League", longTitle: true,
     cols: 2, perCol: 18,
-    is18: true,
+    mode: "uel",
+    emblem: UEL_EMBLEM,
+    giornataLabel: "AFTER MD",
     zone: p => {
-      if (p <= 8)  return "var(--c-zone-ucl)";
-      if (p <= 24) return "var(--c-zone-uel)";
-      return "var(--c-zone-rel)";
+      if (p <= 8)  return { color: "var(--c-zone-top)", key: "top" };
+      if (p <= 24) return { color: "var(--c-zone-mid)", key: "mid" };
+      return { color: "var(--c-zone-bot)", key: "bot" };
     },
+    sepAfter: [8, 24],
     legend: [
-      { color:"var(--c-zone-ucl)", label:"Ottavi diretti" },
-      { color:"var(--c-zone-uel)", label:"Playoff" },
-      { color:"var(--c-zone-rel)", label:"Eliminati" },
+      { color:"#1db954", label:"R16 diretti" },
+      { color:"#f5a623", label:"Playoff" },
+      { color:"#e02020", label:"Eliminati" },
     ]
   }
 };
@@ -395,11 +519,11 @@ const COMP_CONFIG = {
 function drClass(dr) { return dr > 0 ? 'pos' : dr < 0 ? 'neg' : 'zer'; }
 function drVal(dr)   { return dr > 0 ? '+'+dr : ''+dr; }
 
-function buildRow(t, zoneColor) {
+function buildRow(t, zoneInfo, cfg) {
   const name = italianizzaNome(t.team);
   const isJuve = name.toLowerCase().includes('juv');
   const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
-  return `<div class="row${isJuve?' juve':''}" style="--zone:${zoneColor}">
+  return `<div class="row${isJuve?' juve':''}" style="--zone:${zoneInfo.color}" data-zone="${zoneInfo.key}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${logo}</div>
     <div class="c-name">${name}</div>
@@ -410,7 +534,7 @@ function buildRow(t, zoneColor) {
 
 function buildColHead() {
   return `<div class="col-head">
-    <div></div><div></div><div>Squadra</div><div>Pt</div><div>DR</div>
+    <div></div><div></div><div>Squadra</div><div>Pt</div><div>GD</div>
   </div>`;
 }
 
@@ -420,31 +544,63 @@ function buildColHead() {
     const cfg = COMP_CONFIG[key] || COMP_CONFIG.SA;
 
     document.body.classList.add('comp-' + key);
-    if (cfg.is18) document.body.classList.add('comp-18');
 
-    // Header
-    const titleEl = document.getElementById('heroTitle');
-    titleEl.textContent = cfg.titolo;
-    if (cfg.longTitle) titleEl.classList.add('long');
-    document.getElementById('heroSub').textContent =
-      `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
+    /* ── Header ── */
+    if (cfg.mode === 'sa') {
+      document.getElementById('heroTitleSA').style.display = '';
+      document.getElementById('heroTitleSA').textContent = cfg.titolo;
+      document.getElementById('heroSubSA').style.display = '';
+      document.getElementById('heroSubSA').textContent = `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
+      document.querySelector('.header-ucl-row').style.display = 'none';
+    } else {
+      document.getElementById('heroTitleSA').style.display = 'none';
+      document.getElementById('heroSubSA').style.display = 'none';
 
-    // Colonne
+      const heroTitle = document.getElementById('heroTitle');
+      heroTitle.textContent = cfg.titolo;
+
+      /* Emblem */
+      const emblemEl = document.getElementById('headerEmblem');
+      if (t => emblemEl) {
+        const blob = new Blob([cfg.emblem], {type:'image/svg+xml'});
+        emblemEl.src = URL.createObjectURL(blob);
+      }
+
+      document.getElementById('heroSub').textContent =
+        `${cfg.giornataLabel || 'Giornata'} ${data.giornata || '—'} · 2025/26`;
+    }
+
+    /* ── Costruzione tabella ── */
     const area = document.getElementById('tableArea');
     let html = '';
+
     for (let i = 0; i < cfg.cols; i++) {
       const slice = data.classifica.slice(i * cfg.perCol, (i+1) * cfg.perCol);
       if (!slice.length) continue;
+
+      let rowsHtml = '';
+      slice.forEach((t, idx) => {
+        const posGlobal = i * cfg.perCol + idx + 1;
+        const zoneInfo = cfg.zone(posGlobal);
+        rowsHtml += buildRow(t, zoneInfo, cfg);
+
+        /* Separatore tra zone */
+        if (cfg.sepAfter && cfg.sepAfter.includes(posGlobal)) {
+          const nextPos = posGlobal + 1;
+          if (nextPos <= cfg.perCol * cfg.cols) {
+            rowsHtml += `<div class="zone-divider"></div>`;
+          }
+        }
+      });
+
       html += `<div class="col">
         ${buildColHead()}
-        <div class="col-rows">
-          ${slice.map(t => buildRow(t, cfg.zone(t.pos))).join('')}
-        </div>
+        <div class="col-rows">${rowsHtml}</div>
       </div>`;
     }
     area.innerHTML = html;
 
-    // Legenda
+    /* ── Legenda ── */
     document.getElementById('legend').innerHTML = cfg.legend.map(l =>
       `<div class="legend-item">
         <div class="legend-dot" style="background:${l.color}"></div>${l.label}
