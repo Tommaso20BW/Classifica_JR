@@ -5,8 +5,8 @@
     "classifica": [
         {
             "pos": 1,
-            "team": "Inter",
-            "logo": "https://crests.football-data.org/108.png",
+            "team": "Internazionale",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
             "pt": 87,
             "p": 38,
             "v": 27,
@@ -19,7 +19,7 @@
         {
             "pos": 2,
             "team": "Napoli",
-            "logo": "https://crests.football-data.org/113.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/114.png",
             "pt": 76,
             "p": 38,
             "v": 23,
@@ -31,8 +31,8 @@
         },
         {
             "pos": 3,
-            "team": "Roma",
-            "logo": "https://crests.football-data.org/100.png",
+            "team": "AS Roma",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/104.png",
             "pt": 73,
             "p": 38,
             "v": 23,
@@ -45,7 +45,7 @@
         {
             "pos": 4,
             "team": "Como",
-            "logo": "https://crests.football-data.org/7397.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png",
             "pt": 71,
             "p": 38,
             "v": 20,
@@ -57,8 +57,8 @@
         },
         {
             "pos": 5,
-            "team": "Milan",
-            "logo": "https://crests.football-data.org/98.png",
+            "team": "AC Milan",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
             "pt": 70,
             "p": 38,
             "v": 20,
@@ -72,19 +72,19 @@
             "pos": 6,
             "team": "Juventus",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
-            "pt": 68,
-            "p": 37,
+            "pt": 69,
+            "p": 38,
             "v": 19,
-            "n": 11,
+            "n": 12,
             "p_pers": 7,
-            "gf": 59,
-            "gs": 32,
+            "gf": 61,
+            "gs": 34,
             "dr": 27
         },
         {
             "pos": 7,
             "team": "Atalanta",
-            "logo": "https://crests.football-data.org/102.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/105.png",
             "pt": 59,
             "p": 38,
             "v": 15,
@@ -97,7 +97,7 @@
         {
             "pos": 8,
             "team": "Bologna",
-            "logo": "https://crests.football-data.org/103.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
             "pt": 56,
             "p": 38,
             "v": 16,
@@ -110,7 +110,7 @@
         {
             "pos": 9,
             "team": "Lazio",
-            "logo": "https://crests.football-data.org/110.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
             "pt": 54,
             "p": 38,
             "v": 14,
@@ -123,7 +123,7 @@
         {
             "pos": 10,
             "team": "Udinese",
-            "logo": "https://crests.football-data.org/115.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/118.png",
             "pt": 50,
             "p": 38,
             "v": 14,
@@ -136,7 +136,7 @@
         {
             "pos": 11,
             "team": "Sassuolo",
-            "logo": "https://crests.football-data.org/471.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png",
             "pt": 49,
             "p": 38,
             "v": 14,
@@ -148,8 +148,21 @@
         },
         {
             "pos": 12,
+            "team": "Torino",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/239.png",
+            "pt": 45,
+            "p": 38,
+            "v": 12,
+            "n": 9,
+            "p_pers": 17,
+            "gf": 44,
+            "gs": 63,
+            "dr": -19
+        },
+        {
+            "pos": 13,
             "team": "Parma",
-            "logo": "https://crests.football-data.org/112.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png",
             "pt": 45,
             "p": 38,
             "v": 11,
@@ -160,22 +173,9 @@
             "dr": -18
         },
         {
-            "pos": 13,
-            "team": "Torino",
-            "logo": "https://crests.football-data.org/586.png",
-            "pt": 44,
-            "p": 37,
-            "v": 12,
-            "n": 8,
-            "p_pers": 17,
-            "gf": 42,
-            "gs": 61,
-            "dr": -19
-        },
-        {
             "pos": 14,
             "team": "Cagliari",
-            "logo": "https://crests.football-data.org/104.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2925.png",
             "pt": 43,
             "p": 38,
             "v": 11,
@@ -188,7 +188,7 @@
         {
             "pos": 15,
             "team": "Fiorentina",
-            "logo": "https://crests.football-data.org/99.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/109.png",
             "pt": 42,
             "p": 38,
             "v": 9,
@@ -201,7 +201,7 @@
         {
             "pos": 16,
             "team": "Genoa",
-            "logo": "https://crests.football-data.org/107.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3263.png",
             "pt": 41,
             "p": 38,
             "v": 10,
@@ -214,7 +214,7 @@
         {
             "pos": 17,
             "team": "Lecce",
-            "logo": "https://crests.football-data.org/5890.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png",
             "pt": 38,
             "p": 38,
             "v": 10,
@@ -227,7 +227,7 @@
         {
             "pos": 18,
             "team": "Cremonese",
-            "logo": "https://crests.football-data.org/457.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/4050.png",
             "pt": 34,
             "p": 38,
             "v": 8,
@@ -239,8 +239,8 @@
         },
         {
             "pos": 19,
-            "team": "Verona",
-            "logo": "https://crests.football-data.org/450.png",
+            "team": "Hellas Verona",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/119.png",
             "pt": 21,
             "p": 38,
             "v": 3,
@@ -253,7 +253,7 @@
         {
             "pos": 20,
             "team": "Pisa",
-            "logo": "https://crests.football-data.org/487.png",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3956.png",
             "pt": 18,
             "p": 38,
             "v": 2,
