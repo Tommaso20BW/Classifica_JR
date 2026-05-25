@@ -1,7 +1,9 @@
 import os
 import asyncio
 import json
-import time
+import threading
+import http.server
+import socketserver
 import requests
 from playwright.async_api import async_playwright
 from pathlib import Path
@@ -16,6 +18,7 @@ SCALE           = 1.2
 TARGET_W        = 1080
 TARGET_H        = 1440
 OUTPUT_PATH     = "screenshot.png"
+HTTP_PORT       = 18923
 
 COMP_INFO = {
     "SA":  {
@@ -31,6 +34,27 @@ COMP_INFO = {
         "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
     },
 }
+
+
+def avvia_server(directory: Path, port: int) -> socketserver.TCPServer:
+    """Start a simple HTTP server serving `directory` on `port`."""
+    handler = http.server.SimpleHTTPRequestHandler
+    # Silence request logs
+    handler.log_message = lambda *a: None
+    server = socketserver.TCPServer(("127.0.0.1", port), handler)
+    server.allow_reuse_address = True
+    # Change cwd of the handler to our directory
+    import os as _os
+    original_dir = _os.getcwd()
+
+    def serve():
+        _os.chdir(directory)
+        server.serve_forever()
+        _os.chdir(original_dir)
+
+    t = threading.Thread(target=serve, daemon=True)
+    t.start()
+    return server
 
 
 async def scatta_screenshot():
@@ -53,102 +77,52 @@ async def scatta_screenshot():
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    # Inject data before </head>
+    # Inject __CLASSIFICA__ before </head>
     inject = f"""<script>
 window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
 </script>"""
     html_patched = html_content.replace("</head>", inject + "\n</head>")
 
-    # Write temp file next to index.html so relative asset paths work
+    # Write patched HTML into the same directory so assets resolve correctly
     temp_html = script_dir / "_screenshot_temp.html"
     temp_html.write_text(html_patched, encoding="utf-8")
 
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(args=[
-            "--disable-web-security",
-            "--allow-file-access-from-files",
-            "--allow-running-insecure-content",
-            "--no-sandbox",
-            "--disable-site-isolation-trials",
-        ])
-        page = await browser.new_page(
-            viewport={"width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT},
-            device_scale_factor=SCALE,
-        )
+    # Start local HTTP server serving script_dir
+    server = avvia_server(script_dir, HTTP_PORT)
+    url = f"http://127.0.0.1:{HTTP_PORT}/_screenshot_temp.html"
+    print(f"[INFO] serving via HTTP: {url}")
 
-        page.on("console", lambda msg: print(f"[BROWSER {msg.type}] {msg.text}"))
-        page.on("pageerror", lambda err: print(f"[PAGE ERROR] {err}"))
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(args=["--no-sandbox"])
+            page = await browser.new_page(
+                viewport={"width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT},
+                device_scale_factor=SCALE,
+            )
 
-        # Navigate and then inject data via evaluate (bypasses any CSP issue)
-        await page.goto(f"file://{temp_html}", wait_until="domcontentloaded")
+            page.on("console", lambda msg: print(f"[BROWSER {msg.type}] {msg.text}"))
+            page.on("pageerror", lambda err: print(f"[PAGE ERROR] {err}"))
 
-        # Force-inject the data even if the script tag didn't run
-        await page.evaluate(f"""
-            window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
-        """)
+            await page.goto(url, wait_until="networkidle")
 
-        # Re-trigger the rendering function by re-running the data pipeline
-        await page.evaluate("""
-            () => {
-                const data = window.__CLASSIFICA__;
-                if (!data) return;
+            injected = await page.evaluate(
+                "typeof window.__CLASSIFICA__ !== 'undefined' ? 'YES len=' + window.__CLASSIFICA__.classifica.length : 'NOT INJECTED'"
+            )
+            col_count = await page.evaluate("document.querySelectorAll('#tableArea .col').length")
+            row_count = await page.evaluate("document.querySelectorAll('#tableArea .col-rows .row').length")
+            print(f"[DEBUG] __CLASSIFICA__={injected}, cols={col_count}, rows={row_count}")
 
-                const COMP_CONFIG = window.COMP_CONFIG;
-                if (!COMP_CONFIG) {
-                    console.error('COMP_CONFIG not found');
-                    return;
-                }
+            await page.wait_for_selector(comp_data["wait"], timeout=30000)
+            await page.wait_for_timeout(2000)
 
-                const key = (data.competition || 'SA').toUpperCase();
-                const cfg = COMP_CONFIG[key] || COMP_CONFIG.SA;
-
-                document.body.className = '';
-                document.body.classList.add('comp-' + key);
-                if (cfg.slim) document.body.classList.add('comp-36');
-
-                document.getElementById('heroLogo').src = cfg.logo;
-                document.getElementById('heroTitle').textContent = cfg.titolo;
-                document.getElementById('heroSub').textContent =
-                    `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
-
-                const area = document.getElementById('tableArea');
-                let html = '';
-                for (let i = 0; i < cfg.cols; i++) {
-                    const slice = data.classifica.slice(i * cfg.perCol, (i+1) * cfg.perCol);
-                    if (!slice.length) continue;
-                    html += `<div class="col">
-                        ${window.buildColHead ? window.buildColHead() : ''}
-                        <div class="col-rows">
-                            ${slice.map(t => window.buildRow ? window.buildRow(t, cfg.slim, cfg.zone(t.pos)) : '').join('')}
-                        </div>
-                    </div>`;
-                }
-                area.innerHTML = html;
-            }
-        """)
-
-        await page.wait_for_timeout(3000)
-
-        injected = await page.evaluate(
-            "typeof window.__CLASSIFICA__ !== 'undefined' ? 'YES len=' + window.__CLASSIFICA__.classifica.length : 'NOT INJECTED'"
-        )
-        col_count = await page.evaluate("document.querySelectorAll('#tableArea .col').length")
-        row_count = await page.evaluate("document.querySelectorAll('#tableArea .col-rows .row').length")
-        comp_config_exists = await page.evaluate("typeof window.COMP_CONFIG !== 'undefined' ? 'YES' : 'NO'")
-        build_row_exists = await page.evaluate("typeof window.buildRow !== 'undefined' ? 'YES' : 'NO'")
-        print(f"[DEBUG] __CLASSIFICA__={injected}, cols={col_count}, rows={row_count}")
-        print(f"[DEBUG] COMP_CONFIG={comp_config_exists}, buildRow={build_row_exists}")
-
-        await page.wait_for_selector(comp_data["wait"], timeout=30000)
-        await page.wait_for_timeout(4000)
-
-        await page.screenshot(
-            path="screenshot_raw.png",
-            clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT}
-        )
-        await browser.close()
-
-    temp_html.unlink()
+            await page.screenshot(
+                path="screenshot_raw.png",
+                clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT}
+            )
+            await browser.close()
+    finally:
+        server.shutdown()
+        temp_html.unlink(missing_ok=True)
 
     applica_texture("screenshot_raw.png", "texture.png", OUTPUT_PATH)
     Path("screenshot_raw.png").unlink()
