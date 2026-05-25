@@ -9,7 +9,6 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
 
-    /* ── 3:4 canvas: 900×1200 CSS px ── */
     html, body {
       width:  900px;
       height: 1200px;
@@ -18,82 +17,68 @@
 
     /* ══ TEMI ══ */
     body {
-      /* Serie A default */
       --c-bg-a:      #0a1a6e;
       --c-bg-b:      #061050;
       --c-bg-base:   #04093a;
-      --c-accent:    #1a3fc4;
       --c-header-hi: #4a9fff;
-      --c-row-odd:   rgba(255,255,255,0.04);
+      --c-row-odd:   rgba(255,255,255,0.06);
       --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(255,255,255,0.06);
+      --c-row-border:rgba(255,255,255,0.08);
       --c-text:      #ffffff;
-      --c-text-dim:  #8898cc;
-      --c-pts:       #4a9fff;
+      --c-text-dim:  #7a8ecc;
+      --c-pts:       #5aabff;
       --c-zone-ucl:  #1a6bdc;
       --c-zone-uel:  #e87010;
       --c-zone-uecl: #22a855;
       --c-zone-rel:  #dc2020;
-      --c-strip:     #1a3fc4;
       --c-juve:      #d4af37;
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
     }
 
     body.comp-UCL {
       --c-bg-a:      #1a0560;
       --c-bg-b:      #3a0090;
       --c-bg-base:   #08002a;
-      --c-accent:    #6020c0;
       --c-header-hi: #c080ff;
-      --c-row-odd:   rgba(255,255,255,0.05);
+      --c-row-odd:   rgba(255,255,255,0.06);
       --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(160,80,255,0.12);
-      --c-text:      #ffffff;
+      --c-row-border:rgba(160,80,255,0.15);
       --c-text-dim:  #9070c0;
       --c-pts:       #c080ff;
       --c-zone-ucl:  #7040e0;
       --c-zone-uel:  #e040e0;
       --c-zone-uecl: #94a3b8;
       --c-zone-rel:  #dc2020;
-      --c-strip:     #7040e0;
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='20%25' cy='5%25' r='60%25'%3E%3Cstop offset='0' stop-color='%232000a0' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='80%25' cy='95%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c000ff' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g3' cx='50%25' cy='50%25' r='40%25'%3E%3Cstop offset='0' stop-color='%236000c0' stop-opacity='.2'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%2305001a'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Crect width='900' height='1200' fill='url(%23g3)'/%3E%3Cpolygon points='450,80 480,165 570,165 500,215 525,300 450,250 375,300 400,215 330,165 420,165' fill='none' stroke='%23a060ff' stroke-width='1' stroke-opacity='.12'/%3E%3Cpolygon points='450,120 472,185 540,185 487,222 507,288 450,252 393,288 413,222 360,185 428,185' fill='none' stroke='%23a060ff' stroke-width='.5' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='420' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.07'/%3E%3Ccircle cx='450' cy='600' r='300' fill='none' stroke='%238040d0' stroke-width='1' stroke-opacity='.05'/%3E%3C/svg%3E");
     }
 
     body.comp-UEL {
       --c-bg-a:      #5a1000;
       --c-bg-b:      #2a0800;
       --c-bg-base:   #120300;
-      --c-accent:    #c03000;
       --c-header-hi: #ff7040;
-      --c-row-odd:   rgba(255,255,255,0.05);
+      --c-row-odd:   rgba(255,255,255,0.06);
       --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(220,70,20,0.15);
-      --c-text:      #ffffff;
+      --c-row-border:rgba(220,70,20,0.18);
       --c-text-dim:  #b05030;
       --c-pts:       #ff7040;
       --c-zone-ucl:  #d04010;
       --c-zone-uel:  #e09020;
       --c-zone-uecl: #94a3b8;
       --c-zone-rel:  #dc2020;
-      --c-strip:     #c03000;
+      --c-texture:   url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='60%25'%3E%3Cstop offset='0' stop-color='%23c02000' stop-opacity='.65'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%23802000' stop-opacity='.5'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0200'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Cline x1='0' y1='200' x2='900' y2='200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='400' x2='900' y2='400' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='600' x2='900' y2='600' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='800' x2='900' y2='800' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='0' y1='1000' x2='900' y2='1000' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.06'/%3E%3Cline x1='150' y1='0' x2='150' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='300' y1='0' x2='300' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='450' y1='0' x2='450' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='600' y1='0' x2='600' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cline x1='750' y1='0' x2='750' y2='1200' stroke='%23ff5010' stroke-width='.5' stroke-opacity='.04'/%3E%3Cpolygon points='450,500 480,590 575,590 500,645 528,735 450,680 372,735 400,645 325,590 420,590' fill='%23ff4010' fill-opacity='.04'/%3E%3C/svg%3E");
     }
 
-    /* ── BG ── */
+    /* ── BG con texture ── */
     body {
       font-family: 'Inter', sans-serif;
       color: var(--c-text);
-      background:
-        radial-gradient(ellipse at 20% 0%,   var(--c-bg-a) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 100%, var(--c-bg-b) 0%, transparent 55%),
-        var(--c-bg-base);
+      background-image: var(--c-texture);
+      background-size: cover;
+      background-position: center;
       display: flex;
       flex-direction: column;
       padding: 0;
-    }
-
-    /* ── TOP STRIP ── */
-    .top-strip {
-      height: 6px;
-      background: var(--c-strip);
-      flex-shrink: 0;
     }
 
     /* ── HEADER ── */
@@ -102,27 +87,27 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 22px 40px 16px;
+      padding: 28px 40px 18px;
       position: relative;
     }
     .header-logo {
-      width: 90px; height: 90px;
+      width: 100px; height: 100px;
       object-fit: contain;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 16px rgba(255,255,255,0.35));
     }
     .header-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 5.2rem;
-      letter-spacing: 0.1em;
+      font-size: 6rem;
+      letter-spacing: 0.12em;
       color: #fff;
       line-height: 1;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
     }
     .header-sub {
-      font-size: .85rem;
+      font-size: 1rem;
       font-weight: 800;
-      letter-spacing: .35em;
+      letter-spacing: .3em;
       text-transform: uppercase;
       color: var(--c-header-hi);
       margin-top: 6px;
@@ -131,7 +116,7 @@
       width: 100%;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
     /* ── TABLE AREA ── */
@@ -139,7 +124,7 @@
       flex: 1;
       display: flex;
       gap: 0;
-      padding: 10px 20px 0;
+      padding: 12px 18px 0;
       min-height: 0;
     }
 
@@ -152,7 +137,6 @@
     }
     .col + .col { margin-left: 10px; }
 
-    /* col-head fisso, rows si espandono */
     .col-rows {
       flex: 1;
       display: flex;
@@ -163,46 +147,40 @@
     /* ── COL HEADER ── */
     .col-head {
       display: grid;
+      grid-template-columns: 32px 42px 1fr 46px 42px;
       align-items: center;
-      padding: 8px 6px 8px 36px;
-      margin-bottom: 5px;
+      padding: 6px 8px 8px 8px;
+      margin-bottom: 6px;
       color: var(--c-text-dim);
-      font-size: .7rem;
+      font-size: .82rem;
       font-weight: 800;
-      letter-spacing: .2em;
+      letter-spacing: .18em;
       text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    /* SA: pos + logo + name + pt + p + v + n + s + dr */
-    .col-head.full { grid-template-columns: 28px 36px 1fr 38px 28px 24px 24px 24px 32px; }
-    /* UCL/UEL: pos + logo + name + pt + dr (solo 2 stat) */
-    .col-head.slim { grid-template-columns: 28px 36px 1fr 42px 38px; }
-
     .col-head div { text-align: center; }
-    .col-head div:nth-child(3) { text-align: left; }
+    .col-head div:nth-child(3) { text-align: left; padding-left: 4px; }
 
     /* ── ROW ── */
     .row {
       position: relative;
       display: grid;
+      grid-template-columns: 32px 42px 1fr 46px 42px;
       align-items: center;
-      border-radius: 6px;
-      padding: 0 6px;
+      border-radius: 7px;
+      padding: 0 8px;
+      flex: 1;
       margin-bottom: 2px;
     }
-    .row.full { grid-template-columns: 28px 36px 1fr 38px 28px 24px 24px 24px 32px; }
-    .row.slim { grid-template-columns: 28px 36px 1fr 42px 38px; }
-
     .row:nth-child(odd)  { background: var(--c-row-odd); }
     .row:nth-child(even) { background: var(--c-row-even); }
     .row { border: 1px solid var(--c-row-border); }
 
-    /* zona: barra sinistra colorata */
     .row::before {
       content: "";
       position: absolute;
       left: 0; top: 10%; height: 80%;
-      width: 3px;
+      width: 4px;
       border-radius: 0 3px 3px 0;
       background: var(--zone, transparent);
     }
@@ -210,84 +188,67 @@
     /* ── CELLE ── */
     .c-pos {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.15rem; font-weight: 700;
+      font-size: 1.35rem; font-weight: 700;
       color: var(--c-text-dim);
       text-align: center;
     }
     .c-logo {
       display: flex; align-items: center; justify-content: center;
     }
-    .c-logo img { width: 36px; height: 36px; object-fit: contain; }
+    .c-logo img { width: 34px; height: 34px; object-fit: contain; }
     .c-name {
-      font-size: .92rem; font-weight: 700;
+      font-size: 1.05rem; font-weight: 700;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      color: #e8eeff;
-      padding-left: 4px;
+      color: #eef2ff;
+      padding-left: 6px;
     }
     .c-pt {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.3rem; font-weight: 900;
+      font-size: 1.5rem; font-weight: 900;
       color: var(--c-pts);
-      text-align: center;
-    }
-    .c-num {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.05rem; font-weight: 600;
-      color: var(--c-text-dim);
       text-align: center;
     }
     .c-dr {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.05rem; font-weight: 700;
+      font-size: 1.25rem; font-weight: 700;
       text-align: center;
     }
     .c-dr.pos { color: #4ade80; }
     .c-dr.neg { color: #f87171; }
     .c-dr.zer { color: var(--c-text-dim); }
 
-    /* Juventus row highlight */
     .row.juve { border-color: var(--c-juve) !important; }
 
-    /* ── ROW HEIGHT: si espandono con flex ── */
-    .row { flex: 1; }
-    body.comp-36 .c-logo img { width: 28px; height: 28px; }
-    body.comp-36 .c-name  { font-size: .82rem; }
-    body.comp-36 .c-pt    { font-size: 1.15rem; }
-    body.comp-36 .c-dr    { font-size: 1rem; }
-    body.comp-36 .c-pos   { font-size: 1rem; }
+    /* comp-36: font leggermente ridotti per 36 squadre */
+    body.comp-36 .c-logo img { width: 26px; height: 26px; }
+    body.comp-36 .c-name  { font-size: .9rem; }
+    body.comp-36 .c-pt    { font-size: 1.25rem; }
+    body.comp-36 .c-dr    { font-size: 1.1rem; }
+    body.comp-36 .c-pos   { font-size: 1.15rem; }
+    body.comp-36 .col-head { font-size: .72rem; }
 
     /* ── LEGEND ── */
     .legend {
       flex-shrink: 0;
       display: flex;
       justify-content: center;
-      gap: 18px;
-      padding: 10px 20px 8px;
+      gap: 20px;
+      padding: 10px 20px 14px;
       border-top: 1px solid rgba(255,255,255,0.08);
-      margin-top: 6px;
+      margin-top: 8px;
     }
     .legend-item {
-      display: flex; align-items: center; gap: 6px;
-      font-size: .72rem; font-weight: 700;
+      display: flex; align-items: center; gap: 7px;
+      font-size: .82rem; font-weight: 700;
       letter-spacing: .08em; text-transform: uppercase;
       color: var(--c-text-dim);
     }
     .legend-dot {
-      width: 12px; height: 12px; border-radius: 2px;
+      width: 13px; height: 13px; border-radius: 3px;
       flex-shrink: 0;
     }
-
-    /* ── BOTTOM STRIP ── */
-    .bottom-strip {
-      height: 5px;
-      background: var(--c-strip);
-      flex-shrink: 0;
-    }
-  </style>
 </head>
 <body>
-
-  <div class="top-strip"></div>
 
   <div class="header">
     <img class="header-logo" id="heroLogo" src="" alt="">
@@ -300,7 +261,6 @@
 
   <div class="legend" id="legend"></div>
 
-  <div class="bottom-strip"></div>
 
 <script>
 const COMP_CONFIG = {
@@ -308,7 +268,7 @@ const COMP_CONFIG = {
     logo:   "https://upload.wikimedia.org/wikipedia/it/e/ef/Serie_A_Enilive_25-26.svg",
     titolo: "Serie A",
     cols:   2, perCol: 10,
-    slim:   false,
+    slim:   true,
     zone: p => {
       if (p <= 4)  return "var(--c-zone-ucl)";
       if (p <= 6)  return "var(--c-zone-uel)";
@@ -324,7 +284,7 @@ const COMP_CONFIG = {
     ]
   },
   UCL: {
-    logo:   "https://upload.wikimedia.org/wikipedia/it/thumb/b/bf/UEFA_Champions_League_logo_2.svg/600px-UEFA_Champions_League_logo_2.svg.png",
+    logo:   "https://mir-s3-cdn-cf.behance.net/project_modules/max_632/d6297891682131.5e3864b00f466.png",
     titolo: "Champions League",
     cols:   3, perCol: 12,
     slim:   true,
@@ -340,7 +300,7 @@ const COMP_CONFIG = {
     ]
   },
   UEL: {
-    logo:   "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/UEFA_Europa_League_logo_%282021%E2%80%93present%29.svg/600px-UEFA_Europa_League_logo_%282021%E2%80%93present%29.svg.png",
+    logo:   "https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
     titolo: "Europa League",
     cols:   3, perCol: 12,
     slim:   true,
@@ -371,38 +331,20 @@ function buildRow(t, slim, zoneColor) {
   const dr = `<div class="c-dr ${drClass(t.dr)}">${drVal(t.dr)}</div>`;
   const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
   const zStyle = `--zone:${zoneColor};`;
-  const cls = `row ${slim?'slim':'full'} ${isJuve?'juve':''}`;
-
-  if (slim) {
-    return `<div class="${cls}" style="${zStyle}">
-      <div class="c-pos">${t.pos}</div>
-      <div class="c-logo">${logo}</div>
-      <div class="c-name">${t.team}</div>
-      <div class="c-pt">${t.pt}</div>
-      ${dr}
-    </div>`;
-  }
+  const cls = `row slim ${isJuve?'juve':''}`;
   return `<div class="${cls}" style="${zStyle}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${logo}</div>
     <div class="c-name">${t.team}</div>
     <div class="c-pt">${t.pt}</div>
-    <div class="c-num">${t.p}</div>
-    <div class="c-num">${t.v}</div>
-    <div class="c-num">${t.n}</div>
-    <div class="c-num">${t.p_pers}</div>
     ${dr}
   </div>`;
 }
 
-function buildColHead(slim) {
-  if (slim) return `<div class="col-head slim">
+function buildColHead() {
+  return `<div class="col-head slim">
     <div></div><div></div><div>Squadra</div>
     <div>Pt</div><div>DR</div>
-  </div>`;
-  return `<div class="col-head full">
-    <div></div><div></div><div>Squadra</div>
-    <div>Pt</div><div>P</div><div>V</div><div>N</div><div>S</div><div>DR</div>
   </div>`;
 }
 
@@ -428,7 +370,7 @@ function buildColHead(slim) {
       const slice = data.classifica.slice(i * cfg.perCol, (i+1) * cfg.perCol);
       if (!slice.length) continue;
       html += `<div class="col">
-        ${buildColHead(cfg.slim)}
+        ${buildColHead()}
         <div class="col-rows">
           ${slice.map(t => buildRow(t, cfg.slim, cfg.zone(t.pos))).join('')}
         </div>
