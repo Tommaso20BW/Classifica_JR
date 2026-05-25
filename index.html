@@ -179,9 +179,9 @@
       min-height:0;
       border-left:4px solid var(--zone,transparent);
     }
-    /* Alternanza righe ben visibile */
-    .row:nth-child(odd)  { background:var(--c-row-a); }
-    .row:nth-child(even) { background:var(--c-row-b); }
+    /* Alternanza righe — gestita via JS con classi .odd/.even */
+    .row.odd  { background:var(--c-row-a); }
+    .row.even { background:var(--c-row-b); }
 
     /* Bordo Juve oro */
     .row.juve { outline:1px solid #d4af37; outline-offset:-1px; }
@@ -437,11 +437,12 @@ const CFG = {
 function drCls(v){ return v>0?'pos':v<0?'neg':'zer'; }
 function drVal(v){ return v>0?'+'+v:''+v; }
 
-function buildRow(t, zInfo) {
+function buildRow(t, zInfo, parity) {
   const n = nome(t.team);
   const isJ = n.toLowerCase().includes('juv');
   const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
-  return `<div class="row${isJ?' juve':''}" style="--zone:${zInfo.color}" data-zone="${zInfo.key}">
+  const cls = parity % 2 === 0 ? 'even' : 'odd';
+  return `<div class="row ${cls}${isJ?' juve':''}" style="--zone:${zInfo.color}" data-zone="${zInfo.key}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${logo}</div>
     <div class="c-name">${n}</div>
@@ -474,10 +475,12 @@ function buildHead() {
       const slice = data.classifica.slice(i*cfg.perCol,(i+1)*cfg.perCol);
       if(!slice.length) continue;
       let rows='';
+      let parity=0;
       slice.forEach((t,idx)=>{
         const posG = i*cfg.perCol + idx + 1;
         const zi = cfg.zone(posG);
-        rows += buildRow(t, zi);
+        rows += buildRow(t, zi, parity);
+        parity++;
         if(cfg.sepAfter && cfg.sepAfter.includes(posG)){
           rows += `<div class="zone-divider"></div>`;
         }
