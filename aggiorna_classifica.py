@@ -1,180 +1,88 @@
 import os
-import sys
-import requests
 import json
+import requests
 
-# ESPN slug per competizione → nessuna API key richiesta
-COMPETIZIONI = {
-    "SA": {
-        "slug":   "ita.1",
-        "nome":   "Serie A",
-        "comp":   "SA",
-        "giornate": 38,
-    },
-    "UCL": {
-        "slug":   "uefa.champions",
-        "nome":   "Champions League",
-        "comp":   "UCL",
-        "giornate": 8,
-    },
-    "UEL": {
-        "slug":   "uefa.europa",
-        "nome":   "Europa League",
-        "comp":   "UEL",
-        "giornate": 8,
-    },
-    "UECL": {
-        "slug":   "uefa.europa.conf",
-        "nome":   "Conference League",
-        "comp":   "UECL",
-        "giornate": 8,
-    },
+# Fornisce "SA" come fallback se la variabile d'ambiente COMPETITION non è impostata
+COMP_KEY = os.environ.get("COMPETITION", "SA").upper()
+
+COMP_IDS = {
+    "SA": "ita.1",
+    "UCL": "uefa.champions",
+    "UEL": "uefa.europa",
+    "UECL": "uefa.europa.conf"
 }
 
-# Overrides loghi per squadre italiane (Wikipedia SVG, alta qualità)
-LOGO_OVERRIDE = {
-    "juventus":  "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
-}
-
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/124.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json",
-    "Referer": "https://www.espn.com/",
-}
-
-
-def get_standings_espn(slug: str) -> dict | None:
-    """
-    Chiama l'API pubblica non documentata di ESPN per le classifiche calcio.
-    Restituisce il JSON grezzo oppure None in caso di errore.
-    """
-    url = f"https://site.api.espn.com/apis/v2/sports/soccer/{slug}/standings"
+def scarica_dati_classifica(comp_key):
+    print(f"📡 Recupero classifica ESPN per la competizione: {comp_key}...")
+    comp_id = COMP_IDS.get(comp_key, COMP_IDS["SA"])
+    
+    url = f"https://site.api.espn.com/apis/v2/sports/soccer/all/leagues/{comp_id}/standings"
+    res = requests.get(url)
+    
+    if res.status_code != 200:
+        raise Exception(f"Errore API ESPN: {res.status_code}")
+        
+    data = res.json()
+    
+    # Tentativo di estrarre la giornata (matchweek) attuale dai dati della lega
+    giornata = "—"
     try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
-        r.raise_for_status()
-        return r.json()
-    except requests.HTTPError as e:
-        print(f"❌ HTTP {e.response.status_code} da ESPN ({slug}): {e}")
+        # Spesso ESPN espone la giornata corrente in data['season']['types'][0]['groups'][0]...
+        # o simili. Per sicurezza, cerchiamo nel finto "season" o usiamo un fallback.
+        if "season" in data and "year" in data["season"]:
+            # Se l'API non ha un campo diretto "matchweek", lasciamo "—" o gestiamolo
+            pass
+    except:
+        pass
+
+    # Se è una coppa europea (fase a gironi o classifica unica), adattiamo la struttura
+    standings_list = data.get("children", [data])[0].get("standings", {}).get("entries", [])
+    
+    table_data = []
+    for entry in standings_list:
+        stats = {s["name"]: s["value"] for s in entry.get("stats", [])}
+        team  = entry.get("team", {})
+        
+        # Estrazione dei dettagli principali
+        table_data.append({
+            "position": entry.get("stats", [{}])[0].get("value", len(table_data)+1), # fallback posizione
+            "team_name": team.get("displayName", "Sconosciuto"),
+            "team_logo": team.get("logos", [{}])[0].get("href", ""),
+            "played": int(stats.get("gamesPlayed", 0)),
+            "wins": int(stats.get("wins", 0)),
+            "draws": int(stats.get("ties", 0)),
+            "losses": int(stats.get("losses", 0)),
+            "goals_for": int(stats.get("pointsFor", 0)),
+            "goals_against": int(stats.get("pointsAgainst", 0)),
+            "goal_diff": int(stats.get("pointDifferential", 0)),
+            "points": int(stats.get("points", 0))
+        })
+        
+    # Ordina per posizione numerica corretta
+    table_data.sort(key=lambda x: x["position"])
+    
+    return table_data, giornata
+
+def main():
+    print(f"🚀 Avvio aggiorna_classifica.py per: {COMP_KEY}")
+    
+    try:
+        tabella, giornata = scarica_dati_classifica(COMP_KEY)
     except Exception as e:
-        print(f"❌ Errore di rete ESPN ({slug}): {e}")
-    return None
+        print(f"❌ Errore durante il recupero dei dati: {e}")
+        return
 
-
-def parse_standings(data: dict) -> tuple[list, int]:
-    """
-    Estrae la lista classifica e la giornata corrente dal JSON ESPN.
-    Restituisce (classifica_pulita, giornata).
-    """
-    classifica = []
-    giornata = 1
-
-    # La stagione corrente è in data['season']
-    season = data.get("season", {})
-    # ESPN non espone direttamente la matchday; la ricaviamo dai filter/note
-    # Proviamo ad ottenerla da 'notes'
-    for note in data.get("notes", []):
-        text = note.get("headline", "")
-        if "matchday" in text.lower() or "giornata" in text.lower() or "week" in text.lower():
-            import re
-            m = re.search(r"\d+", text)
-            if m:
-                giornata = int(m.group())
-                break
-
-    # Scorri i children (gruppi/fasi)
-    children = data.get("children", [data])
-    for child in children:
-        standings_obj = child.get("standings", {})
-        entries = standings_obj.get("entries", [])
-        if not entries:
-            continue
-
-        for entry in entries:
-            team = entry.get("team", {})
-            nome = team.get("displayName", team.get("name", "?"))
-
-            # Logo: ESPN CDN (alta qualità)
-            logos = team.get("logos", [])
-            logo_url = logos[0]["href"] if logos else ""
-
-            # Override logo Juventus
-            if "juventus" in nome.lower():
-                logo_url = LOGO_OVERRIDE["juventus"]
-
-            # Statistiche dalle 'stats'
-            stats = {s["name"]: s.get("value", 0) for s in entry.get("stats", [])}
-
-            pos   = int(stats.get("rank", entry.get("rank", 0)))
-            pt    = int(stats.get("points", 0))
-            pld   = int(stats.get("gamesPlayed", 0))
-            won   = int(stats.get("wins", 0))
-            draw  = int(stats.get("ties", 0))
-            lost  = int(stats.get("losses", 0))
-            gf    = int(stats.get("pointsFor", 0))
-            ga    = int(stats.get("pointsAgainst", 0))
-            dr    = int(stats.get("pointDifferential", gf - ga))
-
-            # Aggiorna giornata con il massimo delle partite giocate
-            if pld > giornata:
-                giornata = pld
-
-            classifica.append({
-                "pos":    pos,
-                "team":   nome,
-                "logo":   logo_url,
-                "pt":     pt,
-                "p":      pld,
-                "v":      won,
-                "n":      draw,
-                "p_pers": lost,
-                "gf":     gf,
-                "gs":     ga,
-                "dr":     dr,
-            })
-
-        break  # usa solo il primo gruppo valido
-
-    # Ordina per posizione
-    classifica.sort(key=lambda x: x["pos"])
-    return classifica, giornata
-
-
-def genera_json_classifica():
-    comp_key = os.environ.get("COMPETITION", "SA").upper()
-    comp = COMPETIZIONI.get(comp_key)
-    if not comp:
-        print(f"❌ Competizione non riconosciuta: {comp_key}. Usa SA, UCL, UEL o UECL.")
-        sys.exit(1)
-
-    print(f"📡 Recupero classifica ESPN: {comp['nome']} ({comp_key})...")
-
-    data = get_standings_espn(comp["slug"])
-    if data is None:
-        print("❌ Impossibile recuperare i dati. Controlla la connessione.")
-        sys.exit(1)
-
-    classifica, giornata = parse_standings(data)
-
-    if not classifica:
-        print("❌ Nessuna squadra trovata nella risposta ESPN.")
-        sys.exit(1)
-
+    # Salva il file classifica.json strutturato per index.html
     output = {
-        "competition":      comp_key,
-        "competition_name": comp["nome"],
-        "giornata":         giornata,
-        "classifica":       classifica,
+        "competition": COMP_KEY,
+        "giornata": giornata,
+        "table": tabella
     }
-
+    
     with open("classifica.json", "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=4)
-
-    print(f"✅ JSON salvato: {comp['nome']} – Giornata {giornata} ({len(classifica)} squadre).")
-
+        json.dump(output, f, indent=4, ensure_ascii=False)
+        
+    print(f"💾 File classifica.json generato con successo ({len(tabella)} squadre).")
 
 if __name__ == "__main__":
-    genera_json_classifica()
+    main()
