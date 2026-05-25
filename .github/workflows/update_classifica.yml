@@ -37,7 +37,6 @@ jobs:
 
       - name: Esegui Script Classifica
         env:
-          FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
           COMPETITION: ${{ github.event.inputs.competition }}
         run: python aggiorna_classifica.py
 
@@ -45,7 +44,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          COMPETITION: ${{ inputs.competition }}
+          COMPETITION: ${{ github.event.inputs.competition }}
         run: python screenshot_telegram.py
 
       - name: Commit e Push del JSON
@@ -53,4 +52,4 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add classifica.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m 'Classifica aggiornata automaticamente (${{ github.event.inputs.competition }})' && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m 'Classifica aggiornata in automatico' && git push)
