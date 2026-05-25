@@ -1,0 +1,36 @@
+name: Aggiorna Classifica Live - Serie A
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Configura Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Installa Dipendenze
+        run: pip install requests playwright pillow
+      - name: Installa Browser Playwright
+        run: playwright install chromium --with-deps
+      - name: Esegui Script Classifica
+        env:
+          FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
+          COMPETITION: UCL
+        run: python aggiorna_classifica.py
+      - name: Invia Screenshot su Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          COMPETITION: SA
+        run: python screenshot_telegram.py
+      - name: Commit e Push del JSON
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add classifica.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m 'Classifica aggiornata automaticamente (SA)' && git push)
