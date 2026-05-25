@@ -30,6 +30,10 @@ COMP_INFO = {
         "caption": lambda g: f"<b>🟠🏆 Classifica Europa League - Giornata {g}.</b>\n\n👉 @Juventus_Reborn",
         "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
     },
+    "UECL": {
+        "caption": lambda g: f"<b>🟢🏆 Classifica Conference League - Giornata {g}.</b>\n\n👉 @Juventus_Reborn",
+        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
+    },
 }
 
 
