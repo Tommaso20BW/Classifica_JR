@@ -47,6 +47,8 @@ async def scatta_screenshot():
     comp_key  = json_completo.get("competition", "SA").upper()
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
 
+    print(f"[DEBUG] competition={comp_key}, giornata={giornata}, squadre={len(json_completo.get('classifica', []))}")
+
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
@@ -69,7 +71,25 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
             device_scale_factor=SCALE
         )
 
+        # Capture browser console and errors
+        page.on("console", lambda msg: print(f"[BROWSER {msg.type}] {msg.text}"))
+        page.on("pageerror", lambda err: print(f"[PAGE ERROR] {err}"))
+
         await page.goto(f"file://{temp_html.resolve()}", wait_until="domcontentloaded")
+
+        # Wait for JS to execute, then debug DOM state
+        await page.wait_for_timeout(5000)
+
+        table_html = await page.evaluate("document.getElementById('tableArea')?.innerHTML?.slice(0, 500) || 'NOT FOUND'")
+        print(f"[DEBUG] tableArea innerHTML: {table_html}")
+
+        col_count = await page.evaluate("document.querySelectorAll('#tableArea .col').length")
+        row_count = await page.evaluate("document.querySelectorAll('#tableArea .col-rows .row').length")
+        print(f"[DEBUG] cols={col_count}, rows={row_count}")
+
+        injected = await page.evaluate("typeof window.__CLASSIFICA__ !== 'undefined' ? 'YES len=' + window.__CLASSIFICA__.classifica.length : 'NOT INJECTED'")
+        print(f"[DEBUG] __CLASSIFICA__: {injected}")
+
         await page.wait_for_selector(comp_data["wait"], timeout=30000)
         await page.wait_for_timeout(4000)
 
