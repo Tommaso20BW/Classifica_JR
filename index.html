@@ -8,357 +8,282 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:900px; height:1200px; overflow:hidden; }
 
-    html, body {
-      width:  900px;
-      height: 1200px;
-      overflow: hidden;
-    }
-
+    /* ══ VARIABILI BASE ══ */
     body {
-      --c-bg-a:      #0a1a6e;
-      --c-bg-b:      #061050;
-      --c-bg-base:   #04093a;
-      --c-header-hi: #4a9fff;
-      --c-row-odd:   rgba(255,255,255,0.06);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(255,255,255,0.08);
-      --c-text:      #ffffff;
-      --c-text-dim:  #7a8ecc;
-      --c-pts:       #5aabff;
-      --c-zone-ucl:  #1a6bdc;
-      --c-zone-uel:  #e87010;
-      --c-zone-uecl: #22a855;
-      --c-zone-rel:  #dc2020;
-      --c-juve:      #d4af37;
-      --row-h: 93px;
-      --head-h: 170px;
-      --leg-h: 52px;
+      font-family:'Inter',sans-serif;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
     }
 
-    /* ══ SERIE A tema (default) ══ */
+    /* ══ SERIE A ══ */
     body.comp-SA {
-      --c-texture: url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='15%25' cy='10%25' r='55%25'%3E%3Cstop offset='0' stop-color='%231a3fc4' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3CradialGradient id='g2' cx='85%25' cy='90%25' r='55%25'%3E%3Cstop offset='0' stop-color='%230d2090' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23040930'/%3E%3Crect width='900' height='1200' fill='url(%23g1)'/%3E%3Crect width='900' height='1200' fill='url(%23g2)'/%3E%3Ccircle cx='450' cy='600' r='380' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.08'/%3E%3Ccircle cx='450' cy='600' r='280' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.06'/%3E%3Ccircle cx='450' cy='600' r='180' fill='none' stroke='%231a3fc4' stroke-width='1' stroke-opacity='.04'/%3E%3Cline x1='0' y1='0' x2='900' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3Cline x1='900' y1='0' x2='0' y2='1200' stroke='%231a3fc4' stroke-width='.5' stroke-opacity='.05'/%3E%3C/svg%3E");
+      background: radial-gradient(ellipse 80% 60% at 20% 0%, #1a3fc4 0%, transparent 60%),
+                  radial-gradient(ellipse 70% 50% at 80% 100%, #0d2090 0%, transparent 60%),
+                  #04093a;
+      --c-header-hi: #60aaff;
+      --c-pts:       #60aaff;
+      --c-row-a:     rgba(255,255,255,0.10);
+      --c-row-b:     rgba(255,255,255,0.03);
+      --c-text-dim:  #6a80cc;
+      --c-zone-1:    #1a6bdc;
+      --c-zone-2:    #e87010;
+      --c-zone-3:    #22a855;
+      --c-zone-4:    #dc2020;
+      --row-h:       93px;
+      --head-h:      155px;
+      --leg-h:       52px;
     }
 
-    /* ══ UCL tema ══ */
+    /* ══ UCL ══ */
     body.comp-UCL {
-      --c-bg-a:      #0a0a1a;
-      --c-bg-b:      #050510;
-      --c-bg-base:   #020208;
-      --c-header-hi: #4a9fff;
-      --c-row-odd:   rgba(255,255,255,0.05);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(255,255,255,0.07);
-      --c-text-dim:  #6080a0;
+      background: radial-gradient(ellipse 90% 40% at 50% 0%, #0d1f4a 0%, transparent 55%),
+                  #050510;
+      --c-header-hi: #5ab4ff;
       --c-pts:       #ffffff;
-      --c-zone-top:  #1db954; /* verde R16 diretto */
-      --c-zone-mid:  #f5a623; /* giallo/arancio playoff */
-      --c-zone-bot:  #e02020; /* rosso eliminati */
-      --row-h: 49px;
-      --head-h: 130px;
-      --leg-h: 58px;
-      --c-texture: url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='ga' cx='50%25' cy='0%25' r='60%25'%3E%3Cstop offset='0' stop-color='%230a1540' stop-opacity='.9'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%23050510'/%3E%3Crect width='900' height='1200' fill='url(%23ga)'/%3E%3C/svg%3E");
+      --c-row-a:     rgba(255,255,255,0.09);
+      --c-row-b:     rgba(255,255,255,0.02);
+      --c-text-dim:  #507090;
+      --c-zone-1:    #1db954;
+      --c-zone-2:    #f5a623;
+      --c-zone-3:    #e02020;
+      --row-h:       49px;
+      --head-h:      140px;
+      --leg-h:       52px;
     }
 
-    /* ══ UEL tema ══ */
+    /* ══ UEL ══ */
     body.comp-UEL {
-      --c-bg-a:      #1a0800;
-      --c-bg-b:      #0f0500;
-      --c-bg-base:   #080300;
-      --c-header-hi: #ff6a00;
-      --c-row-odd:   rgba(255,255,255,0.05);
-      --c-row-even:  rgba(255,255,255,0.00);
-      --c-row-border:rgba(255,255,255,0.07);
-      --c-text-dim:  #9a6040;
+      background: radial-gradient(ellipse 90% 40% at 50% 0%, #3a1000 0%, transparent 55%),
+                  #080300;
+      --c-header-hi: #ff7030;
       --c-pts:       #ffffff;
-      --c-zone-top:  #1db954;
-      --c-zone-mid:  #f5a623;
-      --c-zone-bot:  #e02020;
-      --row-h: 49px;
-      --head-h: 130px;
-      --leg-h: 58px;
-      --c-texture: url("data:image/svg+xml,%3Csvg width='900' height='1200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='ga' cx='50%25' cy='0%25' r='70%25'%3E%3Cstop offset='0' stop-color='%23301000' stop-opacity='.8'/%3E%3Cstop offset='1' stop-color='transparent'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='900' height='1200' fill='%230a0400'/%3E%3Crect width='900' height='1200' fill='url(%23ga)'/%3E%3C/svg%3E");
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--c-text, #fff);
-      background-image: var(--c-texture);
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
+      --c-row-a:     rgba(255,255,255,0.09);
+      --c-row-b:     rgba(255,255,255,0.02);
+      --c-text-dim:  #906040;
+      --c-zone-1:    #1db954;
+      --c-zone-2:    #f5a623;
+      --c-zone-3:    #e02020;
+      --row-h:       49px;
+      --head-h:      140px;
+      --leg-h:       52px;
     }
 
     /* ── HEADER ── */
     .header {
-      height: var(--head-h);
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 40px 14px;
+      height:var(--head-h);
+      flex-shrink:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:0 40px 10px;
+      gap:0;
     }
-
-    /* Header SA */
-    .header-logo-sa {
-      display: none;
+    .header-top {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:20px;
+      margin-bottom:4px;
     }
-    body.comp-SA .header-logo-sa { display: block; }
-
-    /* Header UCL/UEL: logo + titolo affiancati */
-    .header-ucl-row {
-      display: none;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 6px;
+    .header-comp-logo {
+      width:64px;
+      height:64px;
+      object-fit:contain;
+      flex-shrink:0;
     }
-    body.comp-UCL .header-ucl-row,
-    body.comp-UEL .header-ucl-row { display: flex; }
-
-    .header-ucl-emblem {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      opacity: 0.95;
-    }
+    body.comp-SA .header-comp-logo { width:70px; height:70px; }
 
     .header-title {
-      font-family: 'Anton', sans-serif;
-      font-size: 5.8rem;
-      letter-spacing: 0.10em;
-      color: #fff;
-      line-height: 1;
-      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
-      text-align: center;
-      white-space: nowrap;
+      font-family:'Anton',sans-serif;
+      font-size:5.6rem;
+      letter-spacing:0.06em;
+      color:#fff;
+      line-height:1;
+      text-shadow:0 2px 30px rgba(0,0,0,0.7);
+      white-space:nowrap;
     }
-    .header-title.long { font-size: 3.4rem; }
+    body.comp-UCL .header-title,
+    body.comp-UEL .header-title { font-size:4rem; }
 
     .header-sub {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 900;
-      letter-spacing: .35em;
-      text-transform: uppercase;
-      color: var(--c-header-hi);
-      margin-top: 4px;
-      text-align: center;
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:1.1rem;
+      font-weight:900;
+      letter-spacing:.4em;
+      text-transform:uppercase;
+      color:var(--c-header-hi);
+      text-align:center;
+      margin-top:6px;
     }
     .header-divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      margin-top: 12px;
+      width:100%;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+      margin-top:10px;
     }
 
     /* ── TABLE AREA ── */
     .table-area {
-      flex: 1;
-      display: flex;
-      padding: 10px 18px 0;
-      gap: 10px;
-      min-height: 0;
-      overflow: hidden;
+      flex:1;
+      display:flex;
+      padding:8px 16px 0;
+      gap:10px;
+      min-height:0;
+      overflow:hidden;
     }
-
     .col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      min-width:0;
     }
 
     /* ── COL HEADER ── */
     .col-head {
-      display: grid;
-      grid-template-columns: 30px 40px 1fr 44px 40px;
-      align-items: center;
-      padding: 4px 8px 6px;
-      margin-bottom: 4px;
-      color: var(--c-text-dim);
-      font-size: .78rem;
-      font-weight: 800;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display:grid;
+      grid-template-columns:28px 38px 1fr 44px 40px;
+      align-items:center;
+      padding:4px 8px 6px;
+      margin-bottom:3px;
+      color:var(--c-text-dim);
+      font-size:.75rem;
+      font-weight:800;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      border-bottom:1px solid rgba(255,255,255,0.12);
     }
-    .col-head div { text-align: center; }
-    .col-head div:nth-child(3) { text-align: left; padding-left: 4px; }
+    .col-head div { text-align:center; }
+    .col-head div:nth-child(3) { text-align:left; padding-left:4px; }
 
     .col-rows {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      overflow: hidden;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:0;
+      overflow:hidden;
+    }
+
+    /* Separatore zona */
+    .zone-divider {
+      height:2px;
+      background:rgba(255,255,255,0.15);
+      flex-shrink:0;
+      margin:2px 0;
     }
 
     /* ── ROW ── */
     .row {
-      position: relative;
-      display: grid;
-      grid-template-columns: 30px 40px 1fr 44px 40px;
-      align-items: center;
-      border-radius: 4px;
-      padding: 0 8px;
-      border: 1px solid var(--c-row-border);
-      flex: 1;
-      min-height: 0;
+      position:relative;
+      display:grid;
+      grid-template-columns:28px 38px 1fr 44px 40px;
+      align-items:center;
+      padding:0 8px;
+      flex:1;
+      min-height:0;
+      border-left:4px solid var(--zone,transparent);
     }
-    .row:nth-child(odd)  { background: var(--c-row-odd); }
-    .row:nth-child(even) { background: var(--c-row-even); }
+    /* Alternanza righe ben visibile */
+    .row:nth-child(odd)  { background:var(--c-row-a); }
+    .row:nth-child(even) { background:var(--c-row-b); }
 
-    /* Barra sinistra zona */
-    .row::before {
-      content: "";
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 4px;
-      border-radius: 4px 0 0 4px;
-      background: var(--zone, transparent);
-    }
-
-    /* Separatore orizzontale tra zone */
-    .row.zone-sep {
-      border-top: 1px solid rgba(255,255,255,0.15);
-      margin-top: 2px;
-    }
+    /* Bordo Juve oro */
+    .row.juve { outline:1px solid #d4af37; outline-offset:-1px; }
 
     /* ── CELLE ── */
     .c-pos {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.3rem; font-weight: 700;
-      color: var(--c-text-dim);
-      text-align: center;
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:1.2rem; font-weight:700;
+      color:var(--c-text-dim);
+      text-align:center;
     }
-    .c-logo {
-      display: flex; align-items: center; justify-content: center;
-    }
-    .c-logo img { width: 28px; height: 28px; object-fit: contain; }
-    .c-name {
-      font-size: 1rem; font-weight: 700;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      color: #eef2ff;
-      padding-left: 6px;
-    }
-    .c-pt {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.5rem; font-weight: 900;
-      color: var(--c-pts);
-      text-align: center;
-    }
-    .c-dr {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.2rem; font-weight: 700;
-      text-align: center;
-    }
-    .c-dr.pos { color: #4ade80; }
-    .c-dr.neg { color: #f87171; }
-    .c-dr.zer { color: var(--c-text-dim); }
-
-    /* SA-specific: righe grandi */
-    body.comp-SA .c-logo img { width: 34px; height: 34px; }
-    body.comp-SA .c-pt    { font-size: 1.5rem; }
-    body.comp-SA .c-name  { font-size: 1rem; }
-    body.comp-SA .c-pos   { font-size: 1.3rem; }
-
-    /* UCL/UEL: righe compatte */
+    .c-logo { display:flex; align-items:center; justify-content:center; }
+    .c-logo img { object-fit:contain; }
+    body.comp-SA .c-logo img  { width:34px; height:34px; }
     body.comp-UCL .c-logo img,
-    body.comp-UEL .c-logo img { width: 26px; height: 26px; }
+    body.comp-UEL .c-logo img { width:26px; height:26px; }
+
+    .c-name {
+      font-weight:700;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      color:#eef2ff;
+      padding-left:6px;
+    }
+    body.comp-SA .c-name  { font-size:1rem; }
     body.comp-UCL .c-name,
-    body.comp-UEL .c-name  { font-size: .82rem; }
+    body.comp-UEL .c-name { font-size:.83rem; }
+
+    .c-pt {
+      font-family:'Barlow Condensed',sans-serif;
+      font-weight:900;
+      text-align:center;
+    }
+    body.comp-SA .c-pt  { font-size:1.5rem; color:var(--c-pts); }
     body.comp-UCL .c-pt,
-    body.comp-UEL .c-pt    { font-size: 1.2rem; }
+    body.comp-UEL .c-pt { font-size:1.15rem; }
+
+    /* Colore punti per zona UCL/UEL */
+    body.comp-UCL .row[data-zone="z1"] .c-pt,
+    body.comp-UEL .row[data-zone="z1"] .c-pt { color:#1db954; }
+    body.comp-UCL .row[data-zone="z2"] .c-pt,
+    body.comp-UEL .row[data-zone="z2"] .c-pt { color:#f5a623; }
+    body.comp-UCL .row[data-zone="z3"] .c-pt,
+    body.comp-UEL .row[data-zone="z3"] .c-pt { color:#e87070; }
+
+    .c-dr {
+      font-family:'Barlow Condensed',sans-serif;
+      font-weight:700;
+      text-align:center;
+    }
+    body.comp-SA .c-dr  { font-size:1.2rem; }
     body.comp-UCL .c-dr,
-    body.comp-UEL .c-dr    { font-size: 1rem; }
-    body.comp-UCL .c-pos,
-    body.comp-UEL .c-pos   { font-size: 1.1rem; }
-    body.comp-UCL .col-head,
-    body.comp-UEL .col-head { font-size: .7rem; }
+    body.comp-UEL .c-dr { font-size:1rem; }
 
-    /* UCL/UEL: punti evidenziati nella stessa colonna con badge colorato */
-    body.comp-UCL .c-pt,
-    body.comp-UEL .c-pt {
-      font-size: 1.1rem;
-      font-weight: 900;
-      color: #ffffff;
-    }
-
-    /* Badge punti per UCL/UEL (zona top: verde, zona mid: arancio, zona bot: rosso) */
-    body.comp-UCL .row[data-zone="top"] .c-pt,
-    body.comp-UEL .row[data-zone="top"] .c-pt {
-      color: #1db954;
-    }
-    body.comp-UCL .row[data-zone="mid"] .c-pt,
-    body.comp-UEL .row[data-zone="mid"] .c-pt {
-      color: #f5a623;
-    }
-    body.comp-UCL .row[data-zone="bot"] .c-pt,
-    body.comp-UEL .row[data-zone="bot"] .c-pt {
-      color: #e87070;
-    }
-
-    .row.juve { border-color: var(--c-juve) !important; }
+    .c-dr.pos { color:#4ade80; }
+    .c-dr.neg { color:#f87171; }
+    .c-dr.zer { color:var(--c-text-dim); }
 
     /* ── LEGEND ── */
     .legend {
-      height: var(--leg-h);
-      flex-shrink: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 22px;
-      padding: 0 20px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      margin-top: 8px;
+      height:var(--leg-h);
+      flex-shrink:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:24px;
+      padding:0 20px;
+      border-top:1px solid rgba(255,255,255,0.08);
     }
     .legend-item {
-      display: flex; align-items: center; gap: 7px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .95rem; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--c-text-dim);
+      display:flex; align-items:center; gap:8px;
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:1rem; font-weight:700;
+      letter-spacing:.15em; text-transform:uppercase;
+      color:rgba(255,255,255,0.5);
     }
-    .legend-dot {
-      width: 13px; height: 13px; border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    /* Linea separatrice tra zone UCL/UEL */
-    body.comp-UCL .col-rows .zone-divider,
-    body.comp-UEL .col-rows .zone-divider {
-      height: 2px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 1px;
-      flex-shrink: 0;
-      margin: 1px 0;
-    }
+    .legend-dot { width:14px; height:14px; border-radius:3px; flex-shrink:0; }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <div class="header-ucl-row">
-      <img class="header-ucl-emblem" id="headerEmblem" src="" alt="">
-      <div>
-        <div class="header-title long" id="heroTitle">Champions League</div>
-        <div class="header-sub" id="heroSub">Giornata —</div>
-      </div>
+    <div class="header-top">
+      <img class="header-comp-logo" id="compLogo" src="" alt="">
+      <div class="header-title" id="heroTitle">Classifica</div>
     </div>
-    <div class="header-title" id="heroTitleSA" style="display:none">Serie A</div>
-    <div class="header-sub" id="heroSubSA" style="display:none">Giornata —</div>
+    <div class="header-sub" id="heroSub"></div>
     <div class="header-divider"></div>
   </div>
 
   <div class="table-area" id="tableArea"></div>
-
   <div class="legend" id="legend"></div>
 
 <script>
-const MAPPA_NOMI = {
+/* ══ MAPPA NOMI ══ */
+const NOMI = {
   "juventus fc":"Juventus","juventus":"Juventus",
   "inter milan":"Inter","fc internazionale milano":"Inter","inter":"Inter","internazionale":"Inter",
   "ac milan":"Milan","milan":"Milan",
@@ -376,232 +301,204 @@ const MAPPA_NOMI = {
   "cagliari calcio":"Cagliari","cagliari":"Cagliari",
   "genoa cfc":"Genoa","genoa":"Genoa",
   "como 1907":"Como","como":"Como",
-  "parma calcio 1913":"Parma","parma calcio":"Parma","parma":"Parma",
+  "parma calcio 1913":"Parma","parma":"Parma",
   "venezia fc":"Venezia","venezia":"Venezia",
-  "hellas verona fc":"Verona","hellas verona":"Verona","hell verona fc":"Verona",
+  "hellas verona fc":"Verona","hellas verona":"Verona",
+  "us sassuolo calcio":"Sassuolo","sassuolo":"Sassuolo",
+  "ac pisa 1909":"Pisa","pisa":"Pisa",
+  "us cremonese":"Cremonese","cremonese":"Cremonese",
   "liverpool fc":"Liverpool","liverpool":"Liverpool",
-  "barcelona":"Barcellona","fc barcelona":"Barcellona",
-  "real madrid":"Real Madrid","real madrid cf":"Real Madrid",
-  "manchester city":"Man City","manchester city fc":"Man City",
+  "fc barcelona":"Barcellona","barcelona":"Barcellona",
+  "real madrid cf":"Real Madrid","real madrid":"Real Madrid",
+  "manchester city fc":"Man City","manchester city":"Man City",
   "arsenal fc":"Arsenal","arsenal":"Arsenal",
   "chelsea fc":"Chelsea","chelsea":"Chelsea",
   "tottenham hotspur":"Tottenham","tottenham":"Tottenham",
-  "bayer leverkusen":"Leverkusen","bayer 04 leverkusen":"Leverkusen",
-  "borussia dortmund":"B. Dortmund","bvb":"B. Dortmund",
+  "bayer 04 leverkusen":"Leverkusen","bayer leverkusen":"Leverkusen","leverkusen":"Leverkusen",
+  "borussia dortmund":"B. Dortmund","borussia dortmund":"B. Dortmund",
   "fc bayern münchen":"Bayern Monaco","fc bayern munich":"Bayern Monaco","bayern munich":"Bayern Monaco","bayern münchen":"Bayern Monaco",
-  "atletico madrid":"Atleti","atlético de madrid":"Atleti",
-  "aston villa":"Aston Villa","aston villa fc":"Aston Villa",
-  "benfica":"Benfica","sl benfica":"Benfica",
-  "feyenoord":"Feyenoord",
-  "monaco":"Monaco","as monaco":"Monaco",
+  "atlético de madrid":"Atlético Madrid","atletico madrid":"Atlético Madrid","atleti":"Atlético Madrid",
+  "aston villa fc":"Aston Villa","aston villa":"Aston Villa",
+  "sl benfica":"Benfica","benfica":"Benfica",
+  "feyenoord":"Feyenoord Rotterdam","feyenoord rotterdam":"Feyenoord Rotterdam",
+  "as monaco":"Monaco","monaco":"Monaco",
   "sporting cp":"Sporting CP","sporting clube de portugal":"Sporting CP",
   "celtic fc":"Celtic","celtic":"Celtic",
-  "club brugge":"Club Brugge","club brugge kv":"Club Brugge",
-  "psg":"Paris","paris saint-germain":"Paris","paris sg":"Paris",
-  "brest":"Brest","stade brestois 29":"Brest",
+  "club brugge kv":"Club Brugge","club brugge":"Club Brugge",
+  "paris saint-germain":"Paris","paris sg":"Paris","psg":"Paris",
+  "stade brestois 29":"Brest","brest":"Brest",
   "gnk dinamo":"GNK Dinamo","dinamo zagreb":"GNK Dinamo",
-  "rb salzburg":"Salzburg","fc red bull salzburg":"Salzburg",
-  "psveindhoven":"PSV","psv eindhoven":"PSV","psv":"PSV",
-  "juventus":"Juventus","juventus fc":"Juventus",
-  "vfb stuttgart":"Stuttgart","vfb stuttgart 1893":"Stuttgart","stuttgart":"Stuttgart",
-  "sparta prague":"Sparta Praha","ac sparta prague":"Sparta Praha","sparta praha":"Sparta Praha",
-  "sturm graz":"Sturm Graz","sk sturm graz":"Sturm Graz",
+  "fc red bull salzburg":"Salzburg","rb salzburg":"Salzburg","salzburg":"Salzburg",
+  "psv eindhoven":"PSV","psv":"PSV",
+  "vfb stuttgart":"Stuttgart","stuttgart":"Stuttgart",
+  "ac sparta prague":"Sparta Praha","sparta prague":"Sparta Praha","sparta praha":"Sparta Praha",
+  "sk sturm graz":"Sturm Graz","sturm graz":"Sturm Graz",
   "girona fc":"Girona","girona":"Girona",
   "crvena zvezda":"Crvena Zvezda","red star belgrade":"Crvena Zvezda",
-  "young boys":"Young Boys","bsc young boys":"Young Boys",
+  "bsc young boys":"Young Boys","young boys":"Young Boys",
   "shakhtar donetsk":"Shakhtar","shakhtar":"Shakhtar",
   "rb leipzig":"Leipzig","rasenballsport leipzig":"Leipzig",
-  "slovan bratislava":"S. Bratislava","sk slovan bratislava":"S. Bratislava",
-  "lille osc":"Lille","losc lille":"Lille","lille":"Lille",
-  "lyon":"Lyon","olympique lyonnais":"Lyon","ol":"Lyon",
-  "midtjylland":"Midtjylland","fc midtjylland":"Midtjylland",
-  "aston villa":"Aston Villa",
-  "freiburg":"Freiburg","sc freiburg":"Freiburg",
-  "real betis":"Real Betis","real betis balompié":"Real Betis",
-  "ferencváros":"Ferencváros","ferencvaros tc":"Ferencváros","ferencvaros":"Ferencváros",
-  "braga":"Braga","sc braga":"Braga","sporting braga":"Braga",
-  "porto":"Porto","fc porto":"Porto",
-  "genk":"Genk","krc genk":"Genk",
-  "celta":"Celta","rc celta":"Celta","celta vigo":"Celta",
-  "viktoria plzeň":"Viktoria Plzeň","fc viktoria plzen":"Viktoria Plzeň","viktoria plzen":"Viktoria Plzeň",
-  "panathinaikos":"Panathinaikos","panathinaikos fc":"Panathinaikos",
+  "sk slovan bratislava":"S. Bratislava","slovan bratislava":"S. Bratislava",
+  "losc lille":"Lille","lille osc":"Lille","lille":"Lille",
+  "olympique lyonnais":"Lyon","lyon":"Lyon",
+  "fc midtjylland":"Midtjylland","midtjylland":"Midtjylland",
+  "sc freiburg":"Freiburg","freiburg":"Freiburg",
+  "real betis balompié":"Real Betis","real betis":"Real Betis",
+  "ferencváros tc":"Ferencváros","ferencvaros":"Ferencváros","ferencváros":"Ferencváros",
+  "sc braga":"Braga","braga":"Braga",
+  "fc porto":"Porto","porto":"Porto",
+  "krc genk":"Racing Genk","genk":"Racing Genk",
+  "fc viktoria plzen":"Viktoria Plzeň","viktoria plzen":"Viktoria Plzeň","viktoria plzeň":"Viktoria Plzeň",
+  "panathinaikos fc":"Panathinaikos","panathinaikos":"Panathinaikos",
   "nottingham forest":"Nott'm Forest","nottm forest":"Nott'm Forest",
-  "paok":"PAOK","paok fc":"PAOK",
-  "brann":"Brann","sk brann":"Brann",
-  "fenerbahçe":"Fenerbahçe","fenerbahce":"Fenerbahçe","fenerbahçe sk":"Fenerbahçe",
-  "celtic":"Celtic","celtic fc":"Celtic",
-  "gnk dinamo":"GNK Dinamo","nk dinamo zagreb":"GNK Dinamo",
-  "basel":"Basel","fc basel 1893":"Basel","fc basel":"Basel",
-  "ludogorets":"Ludogorets","pfc ludogorets razgrad":"Ludogorets",
-  "go ahead eagles":"Go Ahead Eagles","de graafschap":"Go Ahead Eagles",
+  "paok fc":"PAOK Salonika","paok":"PAOK Salonika",
+  "sk brann":"Brann","brann":"Brann",
+  "fenerbahçe sk":"Fenerbahçe","fenerbahce":"Fenerbahçe","fenerbahçe":"Fenerbahçe",
+  "fc basel 1893":"Basel","fc basel":"Basel","basel":"Basel",
+  "pfc ludogorets razgrad":"Ludogorets Razgrad","ludogorets":"Ludogorets Razgrad",
+  "go ahead eagles":"Go Ahead Eagles",
   "fcsb":"FCSB",
-  "utrecht":"Utrecht","fc utrecht":"Utrecht",
-  "rangers":"Rangers","rangers fc":"Rangers",
-  "malmö":"Malmö","malmö ff":"Malmö","malmo ff":"Malmö",
+  "fc utrecht":"Utrecht","utrecht":"Utrecht",
+  "rangers fc":"Rangers","rangers":"Rangers",
+  "malmö ff":"Malmö","malmo ff":"Malmö","malmö":"Malmö",
   "maccabi tel-aviv":"M. Tel-Aviv","maccabi tel aviv":"M. Tel-Aviv",
-  "nice":"Nice","ogc nice":"Nice",
+  "ogc nice":"Nice","nice":"Nice",
+  "newcastle united":"Newcastle United","newcastle":"Newcastle United",
+  "galatasaray":"Galatasaray","galatasaray sk":"Galatasaray",
+  "fk qarabag":"FK Qarabag","qarabag":"FK Qarabag",
+  "bodo/glimt":"Bodo/Glimt","fk bodø/glimt":"Bodo/Glimt",
+  "olympique de marseille":"Marseille","marseille":"Marseille",
+  "pafos fc":"Pafos","pafos":"Pafos",
+  "royale union saint-gilloise":"Union St.-Gilloise","union st-gilloise":"Union St.-Gilloise",
+  "athletic club":"Athletic Club","athletic bilbao":"Athletic Club",
+  "fc copenhagen":"F.C. København","fc københavn":"F.C. København","copenhagen":"F.C. København",
+  "ajax amsterdam":"Ajax Amsterdam","ajax":"Ajax Amsterdam",
+  "eintracht frankfurt":"Eintracht Frankfurt",
+  "sk slavia prague":"Slavia Prague","slavia prague":"Slavia Prague",
+  "villarreal cf":"Villarreal","villarreal":"Villarreal",
+  "fc kairat almaty":"Kairat Almaty","kairat almaty":"Kairat Almaty",
+  "olympiacos fc":"Olympiacos","olympiacos":"Olympiacos",
 };
 
-function italianizzaNome(name) {
-  if (!name) return name;
-  return MAPPA_NOMI[name.toLowerCase().trim()] || name;
+function nome(n) {
+  return n ? (NOMI[n.toLowerCase().trim()] || n) : n;
 }
 
-/* Emblemi SVG inline per UCL/UEL quando non disponibili */
-const UCL_EMBLEM = `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
-  <circle cx="30" cy="30" r="28" fill="none" stroke="#4a9fff" stroke-width="1.5" opacity=".6"/>
-  <text x="30" y="36" text-anchor="middle" font-family="Anton,sans-serif" font-size="11" fill="#4a9fff" letter-spacing="1">UCL</text>
-</svg>`;
-
-const UEL_EMBLEM = `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
-  <circle cx="30" cy="30" r="28" fill="none" stroke="#ff6a00" stroke-width="1.5" opacity=".6"/>
-  <text x="30" y="36" text-anchor="middle" font-family="Anton,sans-serif" font-size="11" fill="#ff6a00" letter-spacing="1">UEL</text>
-</svg>`;
-
-const COMP_CONFIG = {
+/* ══ CONFIG COMPETIZIONI ══ */
+const CFG = {
   SA: {
-    titolo: "Serie A", longTitle: false,
-    cols: 2, perCol: 10,
-    mode: "sa",
+    titolo:"Serie A",
+    logo:"https://upload.wikimedia.org/wikipedia/it/thumb/e/ef/Serie_A_Enilive_25-26.svg/500px-Serie_A_Enilive_25-26.svg.png",
+    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
+    cols:2, perCol:10,
     zone: p => {
-      if (p <= 4)  return { color: "var(--c-zone-ucl)", key: "top" };
-      if (p <= 6)  return { color: "var(--c-zone-uel)", key: "mid" };
-      if (p === 7) return { color: "var(--c-zone-uecl)", key: "uecl" };
-      if (p >= 18) return { color: "var(--c-zone-rel)", key: "bot" };
-      return { color: "transparent", key: "" };
+      if(p<=4)  return {color:"var(--c-zone-1)",key:"z1"};
+      if(p<=6)  return {color:"var(--c-zone-2)",key:"z2"};
+      if(p===7) return {color:"var(--c-zone-3)",key:"z3"};
+      if(p>=18) return {color:"var(--c-zone-4)",key:"z4"};
+      return {color:"transparent",key:""};
     },
-    sepAfter: [4, 6, 7, 17],
-    legend: [
-      { color:"var(--c-zone-ucl)",  label:"Champions League" },
-      { color:"var(--c-zone-uel)",  label:"Europa League" },
-      { color:"var(--c-zone-uecl)", label:"Conference League" },
-      { color:"var(--c-zone-rel)",  label:"Retrocesse" },
+    sepAfter:[4,6,7,17],
+    legend:[
+      {color:"var(--c-zone-1)",label:"Champions League"},
+      {color:"var(--c-zone-2)",label:"Europa League"},
+      {color:"var(--c-zone-3)",label:"Conference League"},
+      {color:"var(--c-zone-4)",label:"Retrocesse"},
     ]
   },
   UCL: {
-    titolo: "Champions League", longTitle: true,
-    cols: 2, perCol: 18,
-    mode: "ucl",
-    emblem: UCL_EMBLEM,
-    giornataLabel: "AFTER MD",
+    titolo:"Champions League",
+    logo:"https://mir-s3-cdn-cf.behance.net/project_modules/max_632/d6297891682131.5e3864b00f466.png",
+    subLabel: g => `After MD ${g} · 2026/27`,
+    cols:2, perCol:18,
     zone: p => {
-      if (p <= 8)  return { color: "var(--c-zone-top)", key: "top" };
-      if (p <= 24) return { color: "var(--c-zone-mid)", key: "mid" };
-      return { color: "var(--c-zone-bot)", key: "bot" };
+      if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
+      if(p<=24) return {color:"var(--c-zone-2)",key:"z2"};
+      return {color:"var(--c-zone-3)",key:"z3"};
     },
-    sepAfter: [8, 24],
-    legend: [
-      { color:"#1db954", label:"R16 diretti" },
-      { color:"#f5a623", label:"Playoff" },
-      { color:"#e02020", label:"Eliminati" },
+    sepAfter:[8,24],
+    legend:[
+      {color:"#1db954",label:"R16 Diretti"},
+      {color:"#f5a623",label:"Playoff"},
+      {color:"#e02020",label:"Eliminati"},
     ]
   },
   UEL: {
-    titolo: "Europa League", longTitle: true,
-    cols: 2, perCol: 18,
-    mode: "uel",
-    emblem: UEL_EMBLEM,
-    giornataLabel: "AFTER MD",
+    titolo:"Europa League",
+    logo:"https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
+    subLabel: g => `After MD ${g} · 2026/27`,
+    cols:2, perCol:18,
     zone: p => {
-      if (p <= 8)  return { color: "var(--c-zone-top)", key: "top" };
-      if (p <= 24) return { color: "var(--c-zone-mid)", key: "mid" };
-      return { color: "var(--c-zone-bot)", key: "bot" };
+      if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
+      if(p<=24) return {color:"var(--c-zone-2)",key:"z2"};
+      return {color:"var(--c-zone-3)",key:"z3"};
     },
-    sepAfter: [8, 24],
-    legend: [
-      { color:"#1db954", label:"R16 diretti" },
-      { color:"#f5a623", label:"Playoff" },
-      { color:"#e02020", label:"Eliminati" },
+    sepAfter:[8,24],
+    legend:[
+      {color:"#1db954",label:"R16 Diretti"},
+      {color:"#f5a623",label:"Playoff"},
+      {color:"#e02020",label:"Eliminati"},
     ]
   }
 };
 
-function drClass(dr) { return dr > 0 ? 'pos' : dr < 0 ? 'neg' : 'zer'; }
-function drVal(dr)   { return dr > 0 ? '+'+dr : ''+dr; }
+function drCls(v){ return v>0?'pos':v<0?'neg':'zer'; }
+function drVal(v){ return v>0?'+'+v:''+v; }
 
-function buildRow(t, zoneInfo, cfg) {
-  const name = italianizzaNome(t.team);
-  const isJuve = name.toLowerCase().includes('juv');
+function buildRow(t, zInfo) {
+  const n = nome(t.team);
+  const isJ = n.toLowerCase().includes('juv');
   const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
-  return `<div class="row${isJuve?' juve':''}" style="--zone:${zoneInfo.color}" data-zone="${zoneInfo.key}">
+  return `<div class="row${isJ?' juve':''}" style="--zone:${zInfo.color}" data-zone="${zInfo.key}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${logo}</div>
-    <div class="c-name">${name}</div>
+    <div class="c-name">${n}</div>
     <div class="c-pt">${t.pt}</div>
-    <div class="c-dr ${drClass(t.dr)}">${drVal(t.dr)}</div>
+    <div class="c-dr ${drCls(t.dr)}">${drVal(t.dr)}</div>
   </div>`;
 }
 
-function buildColHead() {
+function buildHead() {
   return `<div class="col-head">
-    <div></div><div></div><div>Squadra</div><div>Pt</div><div>GD</div>
+    <div></div><div></div><div>Squadra</div><div>PT</div><div>GD</div>
   </div>`;
 }
 
 (window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r=>r.json()))
   .then(data => {
-    const key = (data.competition || 'SA').toUpperCase();
-    const cfg = COMP_CONFIG[key] || COMP_CONFIG.SA;
+    const key = (data.competition||'SA').toUpperCase();
+    const cfg = CFG[key] || CFG.SA;
 
-    document.body.classList.add('comp-' + key);
+    document.body.classList.add('comp-'+key);
 
-    /* ── Header ── */
-    if (cfg.mode === 'sa') {
-      document.getElementById('heroTitleSA').style.display = '';
-      document.getElementById('heroTitleSA').textContent = cfg.titolo;
-      document.getElementById('heroSubSA').style.display = '';
-      document.getElementById('heroSubSA').textContent = `Classifica · Giornata ${data.giornata || '—'} · 2025/26`;
-      document.querySelector('.header-ucl-row').style.display = 'none';
-    } else {
-      document.getElementById('heroTitleSA').style.display = 'none';
-      document.getElementById('heroSubSA').style.display = 'none';
+    /* Logo competizione */
+    document.getElementById('compLogo').src = cfg.logo;
 
-      const heroTitle = document.getElementById('heroTitle');
-      heroTitle.textContent = cfg.titolo;
+    /* Titolo e sottotitolo */
+    document.getElementById('heroTitle').textContent = cfg.titolo;
+    document.getElementById('heroSub').textContent = cfg.subLabel(data.giornata || '—');
 
-      /* Emblem */
-      const emblemEl = document.getElementById('headerEmblem');
-      if (t => emblemEl) {
-        const blob = new Blob([cfg.emblem], {type:'image/svg+xml'});
-        emblemEl.src = URL.createObjectURL(blob);
-      }
-
-      document.getElementById('heroSub').textContent =
-        `${cfg.giornataLabel || 'Giornata'} ${data.giornata || '—'} · 2025/26`;
-    }
-
-    /* ── Costruzione tabella ── */
+    /* Tabella */
     const area = document.getElementById('tableArea');
     let html = '';
-
-    for (let i = 0; i < cfg.cols; i++) {
-      const slice = data.classifica.slice(i * cfg.perCol, (i+1) * cfg.perCol);
-      if (!slice.length) continue;
-
-      let rowsHtml = '';
-      slice.forEach((t, idx) => {
-        const posGlobal = i * cfg.perCol + idx + 1;
-        const zoneInfo = cfg.zone(posGlobal);
-        rowsHtml += buildRow(t, zoneInfo, cfg);
-
-        /* Separatore tra zone */
-        if (cfg.sepAfter && cfg.sepAfter.includes(posGlobal)) {
-          const nextPos = posGlobal + 1;
-          if (nextPos <= cfg.perCol * cfg.cols) {
-            rowsHtml += `<div class="zone-divider"></div>`;
-          }
+    for(let i=0; i<cfg.cols; i++){
+      const slice = data.classifica.slice(i*cfg.perCol,(i+1)*cfg.perCol);
+      if(!slice.length) continue;
+      let rows='';
+      slice.forEach((t,idx)=>{
+        const posG = i*cfg.perCol + idx + 1;
+        const zi = cfg.zone(posG);
+        rows += buildRow(t, zi);
+        if(cfg.sepAfter && cfg.sepAfter.includes(posG)){
+          rows += `<div class="zone-divider"></div>`;
         }
       });
-
-      html += `<div class="col">
-        ${buildColHead()}
-        <div class="col-rows">${rowsHtml}</div>
-      </div>`;
+      html += `<div class="col">${buildHead()}<div class="col-rows">${rows}</div></div>`;
     }
     area.innerHTML = html;
 
-    /* ── Legenda ── */
-    document.getElementById('legend').innerHTML = cfg.legend.map(l =>
+    /* Legenda */
+    document.getElementById('legend').innerHTML = cfg.legend.map(l=>
       `<div class="legend-item">
         <div class="legend-dot" style="background:${l.color}"></div>${l.label}
       </div>`
