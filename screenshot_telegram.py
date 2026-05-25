@@ -49,19 +49,17 @@ async def scatta_screenshot():
         )
         page = await context.new_page()
         
-        # Carica il file HTML locale
         await page.goto(html_path.as_uri())
         
-        # Carica il file JSON per leggere giornata e competizione attuale
+        # Legge la competizione reale salvata nel file json dello step precedente
         with open("classifica.json", "r", encoding="utf-8") as f:
             data = json.load(f)
-        
+            
         comp_key = data.get("competition", "SA").upper()
         giornata = data.get("giornata", "—")
         
         cfg = COMP_INFO.get(comp_key, COMP_INFO["SA"])
         
-        # Attende che la tabella sia renderizzata a schermo prima dello scatto
         await page.wait_for_selector(cfg["wait"])
         await asyncio.sleep(1)
         
@@ -71,7 +69,7 @@ async def scatta_screenshot():
         if Path("screenshot_raw.png").exists():
             return giornata, comp_key
         else:
-            raise FileNotFoundError("Impossibile generare screenshot_raw.png")
+            raise FileNotFoundError("Impossibile generare lo screenshot raw.")
 
 
 def applica_texture(base_path, texture_path, output_path):
@@ -87,7 +85,7 @@ def applica_texture(base_path, texture_path, output_path):
 
 def invia_telegram(giornata, comp_key):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print("❌ Errore: TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID mancanti.")
+        print("❌ Errore: Credenziali Telegram non configurate nei secrets.")
         return
 
     comp_data     = COMP_INFO.get(comp_key, COMP_INFO["SA"])
@@ -102,24 +100,20 @@ def invia_telegram(giornata, comp_key):
         )
     
     if response.status_code == 200:
-        print(f"📡 Messaggio inviato correttamente su Telegram per {comp_key}!")
+        print(f"📡 Post inviato con successo su Telegram ({comp_key})!")
     else:
-        print(f"❌ Errore invio Telegram: {response.status_code} - {response.text}")
+        print(f"❌ Errore API Telegram: {response.status_code} - {response.text}")
 
 
 async def main():
+    # Rileva la competizione per i log iniziali
     comp_key = os.environ.get("COMPETITION", "SA").upper()
-    print(f"🚀 Avvio screenshot per competizione: {comp_key}")
+    print(f"🚀 Avvio processo di cattura per: {comp_key}")
     
     giornata, comp_reale = await scatta_screenshot()
-    
-    # Applica texture di sfondo
     applica_texture("screenshot_raw.png", "texture.png", OUTPUT_PATH)
-    
-    # Spedisce l'immagine finale elaborata
     invia_telegram(giornata, comp_reale)
     
-    # Pulizia file temporaneo raw
     if Path("screenshot_raw.png").exists():
         Path("screenshot_raw.png").unlink()
 
