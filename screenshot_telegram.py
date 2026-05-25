@@ -33,7 +33,6 @@ COMP_INFO = {
 
 
 async def scatta_screenshot():
-    # Resolve paths relative to this script's directory, not cwd
     script_dir = Path(__file__).parent.resolve()
     html_path  = script_dir / "index.html"
     json_path  = script_dir / "classifica.json"
@@ -49,38 +48,36 @@ async def scatta_screenshot():
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
 
     print(f"[INFO] competition={comp_key}, giornata={giornata}, squadre={len(json_completo.get('classifica', []))}")
-    print(f"[INFO] html_path={html_path}, exists={html_path.exists()}")
 
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
+    # Inject data AND replace fetch() with inline data so no network/file calls needed
     inject = f"""<script>
 window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
 </script>"""
     html_patched = html_content.replace("</head>", inject + "\n</head>")
 
-    # Write temp file next to index.html so relative asset paths work
-    temp_html = script_dir / "_screenshot_temp.html"
-    temp_html.write_text(html_patched, encoding="utf-8")
-    print(f"[INFO] temp_html written: {temp_html}, size={temp_html.stat().st_size}")
-
     async with async_playwright() as p:
         browser = await p.chromium.launch(args=[
             "--disable-web-security",
             "--allow-file-access-from-files",
-            "--allow-running-insecure-content"
+            "--allow-running-insecure-content",
+            "--no-sandbox",
         ])
-        page = await browser.new_page(
+        context = await browser.new_context(
             viewport={"width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT},
-            device_scale_factor=SCALE
+            device_scale_factor=SCALE,
+            # Set base URL so relative asset paths resolve correctly
+            base_url=f"file://{script_dir}/",
         )
+        page = await context.new_page()
 
         page.on("console", lambda msg: print(f"[BROWSER {msg.type}] {msg.text}"))
         page.on("pageerror", lambda err: print(f"[PAGE ERROR] {err}"))
 
-        file_url = f"file://{temp_html}"
-        print(f"[INFO] navigating to: {file_url}")
-        await page.goto(file_url, wait_until="domcontentloaded")
+        # Use set_content with base_url so assets (images, fonts) load from script_dir
+        await page.set_content(html_patched, base_url=f"file://{script_dir}/index.html")
 
         await page.wait_for_timeout(3000)
 
@@ -99,8 +96,6 @@ window.__CLASSIFICA__ = {json.dumps(json_completo, ensure_ascii=False)};
             clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT}
         )
         await browser.close()
-
-    temp_html.unlink()
 
     applica_texture("screenshot_raw.png", "texture.png", OUTPUT_PATH)
     Path("screenshot_raw.png").unlink()
