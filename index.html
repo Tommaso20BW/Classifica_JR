@@ -246,18 +246,7 @@
     .row.even { background:var(--c-row-b); }
 
     /* Bordo Juve oro */
-    .row.juve {
-      outline:1px solid rgba(212,175,55,0.6);
-      outline-offset:-1px;
-      border-left-color: transparent !important;
-    }
-    .row.juve::after {
-      content:'';
-      position:absolute;
-      inset:0; right:auto;
-      width:3px;
-      background:linear-gradient(180deg,#d4af37,#a88620);
-    }
+    .row.juve { outline:none; }
 
     /* ── CELLE ── */
     .c-pos {
@@ -274,6 +263,8 @@
     body.comp-UEL .c-logo img,
     body.comp-UECL .c-logo img { width:24px; height:24px; }
 
+    .row.juve .c-name { color:#d4af37; }
+
     .c-name {
       font-weight:600;
       font-size:.92rem;
@@ -281,6 +272,7 @@
       color:rgba(230,238,255,0.92);
       padding-left:8px;
       letter-spacing:.01em;
+      text-transform:uppercase;
     }
     body.comp-SA .c-name  { font-size:.97rem; font-weight:700; }
     body.comp-UCL .c-name,
@@ -524,7 +516,6 @@ const CFG = {
 ,
   UECL: {
     titolo:"CONFERENCE LEAGUE",
-    logo:"https://r2.thesportsdb.com/images/media/league/badge/ymfo5j1718775759.png/medium",
     subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone: p => {
