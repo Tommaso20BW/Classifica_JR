@@ -246,7 +246,11 @@
     .row.even { background:var(--c-row-b); }
 
     /* Bordo Juve oro */
-    .row.juve { outline:1px solid rgba(212,175,55,0.6); outline-offset:-1px; }
+    .row.juve {
+      outline:1px solid rgba(212,175,55,0.6);
+      outline-offset:-1px;
+      border-left-color: transparent !important;
+    }
     .row.juve::after {
       content:'';
       position:absolute;
