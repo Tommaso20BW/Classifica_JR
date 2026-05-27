@@ -5,14 +5,14 @@
   <title>Classifica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body { width:900px; height:1200px; overflow:hidden; }
 
     /* ══ VARIABILI BASE ══ */
     body {
-      font-family:'Roboto Condensed',sans-serif;
+      font-family:'Inter',sans-serif;
       color:#fff;
       display:flex;
       flex-direction:column;
@@ -152,12 +152,13 @@
       text-shadow:0 0 60px rgba(100,160,255,0.25), 0 3px 20px rgba(0,0,0,0.8);
       white-space:nowrap;
     }
-    body.comp-UCL .header-title,
-    body.comp-UEL .header-title,
-    body.comp-UECL .header-title { font-size:4.2rem; }
+    body.comp-UCL .header-title  { font-size:4.2rem; letter-spacing:0.06em; }
+    body.comp-UEL .header-title  { font-size:4.2rem; letter-spacing:0.06em; }
+    body.comp-UECL .header-title { font-size:3.5rem; letter-spacing:0.03em; }
 
     .header-sub {
       font-family:'Barlow Condensed',sans-serif;
+      font-size:0.85rem;
       font-weight:700;
       letter-spacing:.55em;
       text-transform:uppercase;
@@ -270,18 +271,17 @@
     body.comp-UECL .c-logo img { width:24px; height:24px; }
 
     .c-name {
-      font-family:'Oswald',sans-serif;
-      font-weight:500;
+      font-weight:600;
       font-size:.92rem;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
       color:rgba(230,238,255,0.92);
       padding-left:8px;
       letter-spacing:.01em;
     }
-    body.comp-SA .c-name  { font-size:1.02rem; font-weight:600; }
+    body.comp-SA .c-name  { font-size:.97rem; font-weight:700; }
     body.comp-UCL .c-name,
     body.comp-UEL .c-name,
-    body.comp-UECL .c-name { font-size:.86rem; }
+    body.comp-UECL .c-name { font-size:.80rem; }
 
     .c-pt {
       font-family:'Barlow Condensed',sans-serif;
