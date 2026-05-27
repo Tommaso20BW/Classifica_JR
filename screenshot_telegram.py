@@ -37,6 +37,54 @@ COMP_INFO = {
 }
 
 
+def scarica_font_base64() -> str:
+    """
+    Scarica i font da Google Fonts e li restituisce come blocco CSS @font-face
+    con sorgenti base64 inline. Se il download fallisce (es. CI senza rete),
+    torna una stringa vuota e i font di sistema vengono usati come fallback.
+    """
+    import base64
+
+    GOOGLE_FONTS_CSS = (
+        "https://fonts.googleapis.com/css2?"
+        "family=Bebas+Neue"
+        "&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700"
+        "&family=Inter:wght@400;600;700;800;900"
+        "&display=swap"
+    )
+    UA = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    )
+
+    try:
+        css_resp = requests.get(GOOGLE_FONTS_CSS, headers={"User-Agent": UA}, timeout=15)
+        css_resp.raise_for_status()
+        css_text = css_resp.text
+
+        # Trova tutti gli url() nei @font-face e sostituiscili con data URI base64
+        font_urls = re.findall(r'url\((https://[^)]+)\)', css_text)
+        for url in font_urls:
+            try:
+                font_resp = requests.get(url, headers={"User-Agent": UA}, timeout=15)
+                font_resp.raise_for_status()
+                b64 = base64.b64encode(font_resp.content).decode("ascii")
+                # Determina il formato dal URL
+                fmt = "woff2" if "woff2" in url else "woff" if "woff" in url else "truetype"
+                data_uri = f"data:font/{fmt};base64,{b64}"
+                css_text = css_text.replace(url, data_uri)
+            except Exception as e:
+                print(f"⚠️  Font non scaricato ({url}): {e}")
+
+        print("✅ Font incorporati come base64.")
+        return css_text
+
+    except Exception as e:
+        print(f"⚠️  Impossibile scaricare i font da Google: {e}. Verranno usati i font di sistema.")
+        return ""
+
+
 async def scatta_screenshot():
     script_dir = Path(__file__).parent.resolve()
     html_path  = script_dir / "index.html"
@@ -58,9 +106,13 @@ async def scatta_screenshot():
     json_str = json.dumps(json_completo, ensure_ascii=False)
     html_patched = html_content
 
-    # 1) Remove external font links (they 403 in CI)
+    # 1) Replace external Google Fonts links with locally-embedded @font-face (base64)
+    #    This avoids 403 errors in CI where google fonts are blocked.
     html_patched = re.sub(r'<link[^>]+fonts\.googleapis[^>]*>', '', html_patched)
     html_patched = re.sub(r'<link[^>]+fonts\.gstatic[^>]*>', '', html_patched)
+    font_css = scarica_font_base64()
+    if font_css:
+        html_patched = html_patched.replace('<head>', f'<head>\n<style>\n{font_css}\n</style>', 1)
 
     # 2) The HTML is missing </style> — the browser needs it to parse <body> correctly.
     #    Insert </style> right before </head> to close the open <style> block.
