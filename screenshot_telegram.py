@@ -114,11 +114,7 @@ async def scatta_screenshot():
     if font_css:
         html_patched = html_patched.replace('<head>', f'<head>\n<style>\n{font_css}\n</style>', 1)
 
-    # 2) The HTML is missing </style> — the browser needs it to parse <body> correctly.
-    #    Insert </style> right before </head> to close the open <style> block.
-    html_patched = html_patched.replace('</head>', '</style>\n</head>', 1)
-
-    # 3) Inject data script right after <body>
+    # 2) Inject data script right after <body>
     inject = f"<script>\nwindow.__CLASSIFICA__ = {json_str};\n</script>"
     html_patched = html_patched.replace('<body>', '<body>\n' + inject, 1)
 
