@@ -47,9 +47,9 @@ Classifica_JR/
 | Variabile `COMPETITION` | Campionato | Emoji |
 |---|---|---|
 | `SA` | Serie A | 🇮🇹 |
-| `UCL` | Champions League | 🏆⭐ |
-| `UEL` | Europa League | 🟠🏆 |
-| `UECL` | Conference League | 🟢🏆 |
+| `UCL` | Champions League | 🇪🇺 |
+| `UEL` | Europa League | 🇪🇺 |
+| `UECL` | Conference League | 🇪🇺 |
 
 ---
 
