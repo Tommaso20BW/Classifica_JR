@@ -21,18 +21,22 @@
     background:linear-gradient(165deg,#2f78ff 0%,#1240cc 58%,#0c2ea6 100%);
     --f-display:'Archivo'; --f-body:'Archivo'; --f-num:'Archivo';
     --ink:#ffffff; --ink-dim:rgba(255,255,255,.66);
-    --row-odd:rgba(255,255,255,.08); --line:rgba(255,255,255,.15); --zone-line:rgba(255,255,255,.36);
-    --chip-bg:rgba(255,255,255,.18); --chip-fg:#fff; --scrim:rgba(0,0,0,.16);
+    --row-odd:rgba(255,255,255,.08); --line:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.16);
+    --chip-bg:rgba(255,255,255,.18); --chip-fg:#fff;
     --dr-pos:#a8ffca; --dr-neg:#ffbcbc;
+    --z1:#34e3ff; --z2:#ff9540; --z3:#36d870; --z4:#ff5d5d;
+    --hi-soft:rgba(255,255,255,.20);
     --head-h:172px; --leg-h:60px;
   }
   /* ════ CHAMPIONS LEAGUE — navy ════ */
   body.comp-UCL{
     background:linear-gradient(165deg,#1c40b0 0%,#0e2068 58%,#0a1550 100%);
     --ink:#ffffff; --ink-dim:rgba(255,255,255,.64);
-    --row-odd:rgba(255,255,255,.07); --line:rgba(255,255,255,.14); --zone-line:rgba(255,255,255,.32);
-    --chip-bg:rgba(255,255,255,.16); --chip-fg:#fff; --scrim:rgba(0,0,0,.20);
+    --row-odd:rgba(255,255,255,.07); --line:rgba(255,255,255,.14); --scrim:rgba(0,0,0,.20);
+    --chip-bg:rgba(255,255,255,.16); --chip-fg:#fff;
     --dr-pos:#9dffbf; --dr-neg:#ffb4b4;
+    --z1:#2bd46f; --z2:#ffc94f; --z3:#ff6e6e;
+    --hi-soft:rgba(255,255,255,.18);
     --head-h:164px; --leg-h:58px;
   }
   /* ════ EUROPA LEAGUE — arancione ════ */
@@ -40,9 +44,11 @@
     background:linear-gradient(165deg,#ff941f 0%,#f56600 58%,#e35700 100%);
     --f-display:'Oswald'; --f-body:'Oswald'; --f-num:'Oswald';
     --ink:#241200; --ink-dim:rgba(36,18,0,.62);
-    --row-odd:rgba(0,0,0,.055); --line:rgba(0,0,0,.14); --zone-line:rgba(0,0,0,.32);
-    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.72); --scrim:rgba(0,0,0,.10);
+    --row-odd:rgba(0,0,0,.055); --line:rgba(0,0,0,.16); --scrim:rgba(0,0,0,.10);
+    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.72);
     --dr-pos:#0c5a2a; --dr-neg:#8a1414;
+    --z1:#07c95f; --z2:#fff14d; --z3:#e21515;
+    --hi-soft:rgba(0,0,0,.15);
     --head-h:164px; --leg-h:58px;
   }
   /* ════ CONFERENCE LEAGUE — verde ════ */
@@ -50,11 +56,15 @@
     background:linear-gradient(165deg,#27cc6c 0%,#129b4f 58%,#0c8645 100%);
     --f-display:'Fredoka'; --f-body:'Nunito'; --f-num:'Fredoka';
     --ink:#06220f; --ink-dim:rgba(6,34,15,.60);
-    --row-odd:rgba(0,0,0,.06); --line:rgba(0,0,0,.13); --zone-line:rgba(0,0,0,.30);
-    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.70); --scrim:rgba(0,0,0,.10);
+    --row-odd:rgba(0,0,0,.06); --line:rgba(0,0,0,.13); --scrim:rgba(0,0,0,.10);
+    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.70);
     --dr-pos:#06220f; --dr-neg:#7a1414;
+    --z1:#063; --z2:#ffd24f; --z3:#e21515;
+    --hi-soft:rgba(0,0,0,.15);
     --head-h:164px; --leg-h:58px;
   }
+  /* sovrascrivo z1 UECL con un verde scuro che stacca dal fondo */
+  body.comp-UECL{ --z1:#06351c; }
 
   /* ──────── HEADER ──────── */
   .header{
@@ -85,7 +95,8 @@
   .col + .col{border-left:1px solid var(--line);}
 
   .col-head{
-    display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;padding:0 8px 9px;
+    display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;
+    border-left:5px solid transparent;padding:0 8px 9px;
     color:var(--ink-dim);
     font-family:'Barlow Semi Condensed',sans-serif;
     font-size:.66rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
@@ -95,14 +106,20 @@
 
   .col-rows{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 
-  /* linea netta tra le zone di qualificazione */
-  .zone-divider{height:0;border-top:2px solid var(--zone-line);flex-shrink:0;}
-
   .row{
     position:relative;display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;
     padding:0 8px;flex:1;min-height:0;
+    border-left:5px solid transparent;
   }
   .row.odd{background:var(--row-odd);}
+  /* colore zona (barretta a sinistra) */
+  .row[data-zone="z1"]{border-left-color:var(--z1);}
+  .row[data-zone="z2"]{border-left-color:var(--z2);}
+  .row[data-zone="z3"]{border-left-color:var(--z3);}
+  .row[data-zone="z4"]{border-left-color:var(--z4);}
+  /* evidenziazione squadra (morbida) */
+  .row.hl{background:var(--hi-soft);}
+  .row.hl .c-name{font-weight:800;}
 
   .c-pos{
     font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;
@@ -152,16 +169,16 @@
   /* ──────── LEGEND ──────── */
   .legend{
     height:var(--leg-h);flex-shrink:0;display:flex;justify-content:center;align-items:center;
-    gap:26px;padding:0 24px;border-top:1px solid var(--line);background:var(--scrim);
+    gap:24px;padding:0 24px;border-top:1px solid var(--line);background:var(--scrim);
   }
   .legend-item{
     display:flex;align-items:center;gap:8px;
     font-family:'Barlow Semi Condensed',sans-serif;
-    font-size:.86rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink);opacity:.82;
+    font-size:.84rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink);opacity:.86;
   }
   body.comp-UECL .legend-item{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:.04em;}
-  .legend-bul{width:8px;height:8px;border-radius:2px;background:var(--ink);opacity:.5;flex-shrink:0;}
+  .legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1px var(--line);}
 
   /* ──────── preview switch (solo demo) ──────── */
   .preview-bar{
@@ -295,6 +312,9 @@ const NOMI = {
 function nome(n){ return n ? (NOMI[n.toLowerCase().trim()] || n) : n; }
 function initial(n){ return (n||'?').trim().charAt(0).toUpperCase(); }
 
+/* squadra/e da evidenziare ovunque compaiano (match sul nome normalizzato) */
+const HIGHLIGHT = new Set(["Juventus"]);
+
 /* ══ CONFIG ══ */
 const CFG = {
   SA:{
@@ -302,32 +322,28 @@ const CFG = {
     subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:10,
     zone:p=>{ if(p<=4)return"z1"; if(p<=6)return"z2"; if(p===7)return"z3"; if(p>=18)return"z4"; return""; },
-    sepAfter:[4,6,7,17],
-    legend:["1–4 Champions","5–6 Europa","7 Conference","18–20 Retrocesse"]
+    legend:[{c:"var(--z1)",l:"Champions"},{c:"var(--z2)",l:"Europa"},{c:"var(--z3)",l:"Conference"},{c:"var(--z4)",l:"Retrocesse"}]
   },
   UCL:{
     titolo:"CHAMPIONS LEAGUE",
     subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
-    sepAfter:[8,24],
-    legend:["1–8 Ottavi diretti","9–24 Playoff","25–36 Eliminate"]
+    legend:[{c:"var(--z1)",l:"Ottavi diretti"},{c:"var(--z2)",l:"Playoff"},{c:"var(--z3)",l:"Eliminate"}]
   },
   UEL:{
     titolo:"EUROPA LEAGUE",
     subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
-    sepAfter:[8,24],
-    legend:["1–8 Ottavi diretti","9–24 Playoff","25–36 Eliminate"]
+    legend:[{c:"var(--z1)",l:"Ottavi diretti"},{c:"var(--z2)",l:"Playoff"},{c:"var(--z3)",l:"Eliminate"}]
   },
   UECL:{
     titolo:"CONFERENCE LEAGUE",
     subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
     zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
-    sepAfter:[8,24],
-    legend:["1–8 Ottavi diretti","9–24 Playoff","25–36 Eliminate"]
+    legend:[{c:"var(--z1)",l:"Ottavi diretti"},{c:"var(--z2)",l:"Playoff"},{c:"var(--z3)",l:"Eliminate"}]
   }
 };
 
@@ -335,11 +351,12 @@ const CFG = {
 function drCls(v){ return v>0?'pos':v<0?'neg':'zer'; }
 function drVal(v){ return v>0?'+'+v:''+v; }
 
-function buildRow(t, parity){
+function buildRow(t, parity, zone){
   const n = nome(t.team);
   const cls = parity % 2 === 0 ? 'even' : 'odd';
+  const hl = HIGHLIGHT.has(n) ? ' hl' : '';
   const badge = t.logo ? `<img src="${t.logo}" alt="">` : `<span class="c-init">${initial(n)}</span>`;
-  return `<div class="row ${cls}">
+  return `<div class="row ${cls}${hl}" data-zone="${zone}">
     <div class="c-pos">${t.pos}</div>
     <div class="c-logo">${badge}</div>
     <div class="c-name">${n}</div>
@@ -364,19 +381,17 @@ function render(data){
   for(let i=0;i<cfg.cols;i++){
     const slice = data.classifica.slice(i*cfg.perCol,(i+1)*cfg.perCol);
     if(!slice.length) continue;
-    let rows=''; let parity=0;
+    let rows='';
     slice.forEach((t,idx)=>{
       const posG = i*cfg.perCol + idx + 1;
-      rows += buildRow(t, parity);
-      parity++;
-      if(cfg.sepAfter && cfg.sepAfter.includes(posG)) rows += `<div class="zone-divider"></div>`;
+      rows += buildRow(t, idx, cfg.zone(posG));
     });
     html += `<div class="col">${buildHead()}<div class="col-rows">${rows}</div></div>`;
   }
   area.innerHTML = html;
 
   document.getElementById('legend').innerHTML = cfg.legend.map(l=>
-    `<div class="legend-item"><span class="legend-bul"></span>${l}</div>`
+    `<div class="legend-item"><span class="legend-dot" style="background:${l.c}"></span>${l.l}</div>`
   ).join('');
 }
 
