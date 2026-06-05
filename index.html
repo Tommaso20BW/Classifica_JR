@@ -1,354 +1,194 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8"/>
-  <title>Classifica</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:900px; height:1200px; overflow:hidden; }
+<meta charset="UTF-8"/>
+<title>Classifica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Saira:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:900px;height:1200px;overflow:hidden;}
 
-    /* ══ VARIABILI BASE ══ */
-    body {
-      font-family:'Inter',sans-serif;
-      color:#fff;
-      display:flex;
-      flex-direction:column;
-    }
+  body{
+    color:var(--ink);display:flex;flex-direction:column;position:relative;
+    font-family:'Saira',sans-serif;
+    --f-display:'Saira'; --f-body:'Saira'; --f-num:'Saira';
+  }
 
-    /* ══ SERIE A ══ */
-    body.comp-SA {
-      background:
-        radial-gradient(ellipse 55% 45% at 15% -5%, rgba(41,82,220,0.75) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 88% 105%, rgba(15,36,160,0.65) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 35% at 50% 50%, rgba(5,15,70,0.4) 0%, transparent 70%),
-        #03071e;
-      --c-header-hi: #7db8ff;
-      --c-pts:       #7db8ff;
-      --c-row-a:     rgba(255,255,255,0.07);
-      --c-row-b:     rgba(0,0,0,0.12);
-      --c-text-dim:  #5570bb;
-      --c-zone-1:    #2b7fff;
-      --c-zone-2:    #f07820;
-      --c-zone-3:    #28c464;
-      --c-zone-4:    #e52222;
-      --row-h:       93px;
-      --head-h:      160px;
-      --leg-h:       56px;
-      --col-gap:     14px;
-    }
+  /* ════ SERIE A — blu ════ */
+  body.comp-SA{
+    background:linear-gradient(165deg,#2f78ff 0%,#1240cc 58%,#0c2ea6 100%);
+    --f-display:'Archivo'; --f-body:'Archivo'; --f-num:'Archivo';
+    --ink:#ffffff; --ink-dim:rgba(255,255,255,.66);
+    --row-odd:rgba(255,255,255,.08); --line:rgba(255,255,255,.15); --zone-line:rgba(255,255,255,.36);
+    --chip-bg:rgba(255,255,255,.18); --chip-fg:#fff; --scrim:rgba(0,0,0,.16);
+    --dr-pos:#a8ffca; --dr-neg:#ffbcbc;
+    --head-h:172px; --leg-h:60px;
+  }
+  /* ════ CHAMPIONS LEAGUE — navy ════ */
+  body.comp-UCL{
+    background:linear-gradient(165deg,#1c40b0 0%,#0e2068 58%,#0a1550 100%);
+    --ink:#ffffff; --ink-dim:rgba(255,255,255,.64);
+    --row-odd:rgba(255,255,255,.07); --line:rgba(255,255,255,.14); --zone-line:rgba(255,255,255,.32);
+    --chip-bg:rgba(255,255,255,.16); --chip-fg:#fff; --scrim:rgba(0,0,0,.20);
+    --dr-pos:#9dffbf; --dr-neg:#ffb4b4;
+    --head-h:164px; --leg-h:58px;
+  }
+  /* ════ EUROPA LEAGUE — arancione ════ */
+  body.comp-UEL{
+    background:linear-gradient(165deg,#ff941f 0%,#f56600 58%,#e35700 100%);
+    --f-display:'Oswald'; --f-body:'Oswald'; --f-num:'Oswald';
+    --ink:#241200; --ink-dim:rgba(36,18,0,.62);
+    --row-odd:rgba(0,0,0,.055); --line:rgba(0,0,0,.14); --zone-line:rgba(0,0,0,.32);
+    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.72); --scrim:rgba(0,0,0,.10);
+    --dr-pos:#0c5a2a; --dr-neg:#8a1414;
+    --head-h:164px; --leg-h:58px;
+  }
+  /* ════ CONFERENCE LEAGUE — verde ════ */
+  body.comp-UECL{
+    background:linear-gradient(165deg,#27cc6c 0%,#129b4f 58%,#0c8645 100%);
+    --f-display:'Fredoka'; --f-body:'Nunito'; --f-num:'Fredoka';
+    --ink:#06220f; --ink-dim:rgba(6,34,15,.60);
+    --row-odd:rgba(0,0,0,.06); --line:rgba(0,0,0,.13); --zone-line:rgba(0,0,0,.30);
+    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.70); --scrim:rgba(0,0,0,.10);
+    --dr-pos:#06220f; --dr-neg:#7a1414;
+    --head-h:164px; --leg-h:58px;
+  }
 
-    /* ══ UCL ══ */
-    body.comp-UCL {
-      background:
-        radial-gradient(ellipse 80% 38% at 50% -2%, rgba(15,38,90,0.90) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 30% at 10% 90%, rgba(0,60,140,0.3) 0%, transparent 60%),
-        #040410;
-      --c-header-hi: #5ab4ff;
-      --c-pts:       #ffffff;
-      --c-row-a:     rgba(255,255,255,0.07);
-      --c-row-b:     rgba(0,0,0,0.15);
-      --c-text-dim:  #446080;
-      --c-zone-1:    #1db954;
-      --c-zone-2:    #f5a623;
-      --c-zone-3:    #e02020;
-      --row-h:       49px;
-      --head-h:      145px;
-      --leg-h:       56px;
-      --col-gap:     14px;
-    }
+  /* ──────── HEADER ──────── */
+  .header{
+    height:var(--head-h);flex-shrink:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:0 44px;text-align:center;
+  }
+  .header-title{font-family:var(--f-display),sans-serif;line-height:.96;white-space:nowrap;color:var(--ink);}
+  body.comp-SA   .header-title{font-weight:900;font-size:4.7rem;letter-spacing:.01em;}
+  body.comp-UCL  .header-title{font-weight:700;font-size:3.4rem;letter-spacing:.1em;text-transform:uppercase;}
+  body.comp-UEL  .header-title{font-weight:700;font-size:3.7rem;letter-spacing:.015em;text-transform:uppercase;}
+  body.comp-UECL .header-title{font-weight:600;font-size:3.4rem;letter-spacing:0;text-transform:uppercase;}
 
-    /* ══ UEL ══ */
-    body.comp-UEL {
-      background:
-        radial-gradient(ellipse 80% 38% at 50% -2%, rgba(80,25,0,0.95) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 30% at 90% 90%, rgba(100,30,0,0.3) 0%, transparent 60%),
-        #060200;
-      --c-header-hi: #ff7030;
-      --c-pts:       #ffffff;
-      --c-row-a:     rgba(255,255,255,0.07);
-      --c-row-b:     rgba(0,0,0,0.15);
-      --c-text-dim:  #805040;
-      --c-zone-1:    #1db954;
-      --c-zone-2:    #f5a623;
-      --c-zone-3:    #e02020;
-      --row-h:       49px;
-      --head-h:      145px;
-      --leg-h:       56px;
-      --col-gap:     14px;
-    }
+  .header-sub{
+    font-family:'Barlow Semi Condensed',sans-serif;
+    font-size:.95rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--ink-dim);margin-top:15px;padding-left:.3em;
+  }
+  body.comp-UECL .header-sub{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:.2em;}
 
-    /* ══ UECL ══ */
-    body.comp-UECL {
-      background:
-        radial-gradient(ellipse 80% 38% at 50% -2%, rgba(10,50,18,0.95) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 30% at 10% 90%, rgba(5,50,15,0.3) 0%, transparent 60%),
-        #020804;
-      --c-header-hi: #3ecf6a;
-      --c-pts:       #ffffff;
-      --c-row-a:     rgba(255,255,255,0.07);
-      --c-row-b:     rgba(0,0,0,0.15);
-      --c-text-dim:  #3a6048;
-      --c-zone-1:    #1db954;
-      --c-zone-2:    #f5a623;
-      --c-zone-3:    #e02020;
-      --row-h:       49px;
-      --head-h:      145px;
-      --leg-h:       56px;
-      --col-gap:     14px;
-    }
+  .header-rule{margin-top:15px;width:58px;height:3px;border-radius:2px;background:var(--ink);opacity:.4;}
 
-    /* ── HEADER ── */
-    .header {
-      height:var(--head-h);
-      flex-shrink:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:0 44px 12px;
-      gap:0;
-      position:relative;
-    }
-    /* Glow radiale centrato sotto il titolo */
-    .header::before {
-      content:'';
-      position:absolute;
-      top:-20px; left:50%;
-      transform:translateX(-50%);
-      width:600px; height:180px;
-      background:radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 70%);
-      pointer-events:none;
-    }
-    .header-top {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:24px;
-      margin-bottom:2px;
-      position:relative;
-    }
+  /* ──────── TABLE ──────── */
+  .table-area{flex:1;display:flex;padding:10px 28px 2px;min-height:0;overflow:hidden;}
+  .col{flex:1;display:flex;flex-direction:column;min-width:0;padding:0 18px;}
+  .col:first-child{padding-left:0;}
+  .col:last-child{padding-right:0;}
+  .col + .col{border-left:1px solid var(--line);}
 
-    /* Logo competizione nell'header */
-    .header-logo {
-      height:62px;
-      width:auto;
-      object-fit:contain;
-      filter:drop-shadow(0 2px 12px rgba(0,0,0,0.6));
-    }
-    body.comp-UCL .header-logo,
-    body.comp-UEL .header-logo,
-    body.comp-UECL .header-logo { height:52px; }
+  .col-head{
+    display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;padding:0 8px 9px;
+    color:var(--ink-dim);
+    font-family:'Barlow Semi Condensed',sans-serif;
+    font-size:.66rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  }
+  .col-head div{text-align:center;}
+  .col-head div:nth-child(3){text-align:left;padding-left:9px;}
 
-    .header-title {
-      font-family:'Bebas Neue',sans-serif;
-      font-weight:400;
-      font-size:5.8rem;
-      letter-spacing:0.08em;
-      color:#fff;
-      line-height:1;
-      text-shadow:0 0 60px rgba(100,160,255,0.25), 0 3px 20px rgba(0,0,0,0.8);
-      white-space:nowrap;
-    }
-    body.comp-UCL .header-title  { font-size:4.2rem; letter-spacing:0.06em; }
-    body.comp-UEL .header-title  { font-size:4.2rem; letter-spacing:0.06em; }
-    body.comp-UECL .header-title { font-size:4.2rem; letter-spacing:0.06em; }
+  .col-rows{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 
-    .header-sub {
-      font-family:'Barlow Condensed',sans-serif;
-      font-size:0.85rem;
-      font-weight:700;
-      letter-spacing:.55em;
-      text-transform:uppercase;
-      color:var(--c-header-hi);
-      opacity:0.8;
-      text-align:center;
-      margin-top:8px;
-    }
-    .header-divider {
-      width:90%;
-      height:1px;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.18) 80%,transparent);
-      margin-top:12px;
-    }
+  /* linea netta tra le zone di qualificazione */
+  .zone-divider{height:0;border-top:2px solid var(--zone-line);flex-shrink:0;}
 
-    /* ── TABLE AREA ── */
-    .table-area {
-      flex:1;
-      display:flex;
-      padding:10px 20px 0;
-      gap:var(--col-gap);
-      min-height:0;
-      overflow:hidden;
-    }
-    .col {
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-    }
+  .row{
+    position:relative;display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;
+    padding:0 8px;flex:1;min-height:0;
+  }
+  .row.odd{background:var(--row-odd);}
 
-    /* Divisore verticale tra le colonne */
-    .col + .col {
-      border-left:1px solid rgba(255,255,255,0.08);
-      padding-left:var(--col-gap);
-    }
+  .c-pos{
+    font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;
+    color:var(--ink-dim);font-variant-numeric:tabular-nums;
+  }
+  body.comp-SA .c-pos{font-size:1.05rem;}
+  body.comp-UCL .c-pos,body.comp-UEL .c-pos,body.comp-UECL .c-pos{font-size:.9rem;}
 
-    /* ── COL HEADER ── */
-    .col-head {
-      display:grid;
-      grid-template-columns:30px 40px 1fr 48px 42px;
-      align-items:center;
-      padding:3px 10px 7px;
-      margin-bottom:2px;
-      color:var(--c-text-dim);
-      font-size:.68rem;
-      font-weight:800;
-      letter-spacing:.25em;
-      text-transform:uppercase;
-      border-bottom:1px solid rgba(255,255,255,0.10);
-    }
-    .col-head div { text-align:center; }
-    .col-head div:nth-child(3) { text-align:left; padding-left:6px; }
+  .c-logo{display:flex;align-items:center;justify-content:center;}
+  .c-logo img{object-fit:contain;}
+  body.comp-SA .c-logo img{width:32px;height:32px;}
+  body.comp-UCL .c-logo img,body.comp-UEL .c-logo img,body.comp-UECL .c-logo img{width:24px;height:24px;}
+  .c-init{
+    display:flex;align-items:center;justify-content:center;border-radius:50%;
+    font-family:var(--f-display),sans-serif;font-weight:700;
+    background:var(--chip-bg);color:var(--chip-fg);
+  }
+  body.comp-SA .c-init{width:30px;height:30px;font-size:.82rem;}
+  body.comp-UCL .c-init,body.comp-UEL .c-init,body.comp-UECL .c-init{width:23px;height:23px;font-size:.64rem;}
 
-    .col-rows {
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:0;
-      overflow:hidden;
-    }
+  .c-name{
+    font-family:var(--f-body),sans-serif;font-weight:600;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    color:var(--ink);padding-left:9px;text-transform:uppercase;letter-spacing:.01em;
+  }
+  body.comp-SA .c-name{font-size:.97rem;font-weight:700;}
+  body.comp-UCL .c-name{font-size:.81rem;font-weight:500;}
+  body.comp-UEL .c-name{font-size:.81rem;font-weight:600;}
+  body.comp-UECL .c-name{font-size:.8rem;font-weight:700;text-transform:none;letter-spacing:0;}
 
-    /* Separatore zona */
-    .zone-divider {
-      height:1px;
-      background:rgba(255,255,255,0.10);
-      flex-shrink:0;
-      margin:1px 0;
-    }
+  .c-pt{
+    font-family:var(--f-num),sans-serif;font-weight:800;text-align:center;color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  body.comp-SA .c-pt{font-size:1.5rem;font-weight:900;}
+  body.comp-UCL .c-pt,body.comp-UEL .c-pt,body.comp-UECL .c-pt{font-size:1.15rem;}
 
-    /* ── ROW ── */
-    .row {
-      position:relative;
-      display:grid;
-      grid-template-columns:30px 40px 1fr 48px 42px;
-      align-items:center;
-      padding:0 10px;
-      flex:1;
-      min-height:0;
-      border-left:3px solid var(--zone,transparent);
-      transition:background .15s;
-      border-radius:0 2px 2px 0;
-    }
-    .row.odd  { background:var(--c-row-a); }
-    .row.even { background:var(--c-row-b); }
+  .c-dr{
+    font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;font-size:.95rem;
+    color:var(--ink-dim);font-variant-numeric:tabular-nums;
+  }
+  body.comp-SA .c-dr{font-size:1.05rem;}
+  .c-dr.pos{color:var(--dr-pos);}
+  .c-dr.neg{color:var(--dr-neg);}
+  .c-dr.zer{color:var(--ink-dim);opacity:.7;}
 
-    /* Bordo Juve oro */
-    .row.juve { outline:none; }
+  /* ──────── LEGEND ──────── */
+  .legend{
+    height:var(--leg-h);flex-shrink:0;display:flex;justify-content:center;align-items:center;
+    gap:26px;padding:0 24px;border-top:1px solid var(--line);background:var(--scrim);
+  }
+  .legend-item{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Barlow Semi Condensed',sans-serif;
+    font-size:.86rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink);opacity:.82;
+  }
+  body.comp-UECL .legend-item{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:.04em;}
+  .legend-bul{width:8px;height:8px;border-radius:2px;background:var(--ink);opacity:.5;flex-shrink:0;}
 
-    /* ── CELLE ── */
-    .c-pos {
-      font-family:'Barlow Condensed',sans-serif;
-      font-size:1.1rem; font-weight:700;
-      color:var(--c-text-dim);
-      text-align:center;
-      opacity:0.7;
-    }
-    .c-logo { display:flex; align-items:center; justify-content:center; }
-    .c-logo img { object-fit:contain; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.5)); }
-    body.comp-SA .c-logo img  { width:32px; height:32px; }
-    body.comp-UCL .c-logo img,
-    body.comp-UEL .c-logo img,
-    body.comp-UECL .c-logo img { width:24px; height:24px; }
-
-    .row.juve .c-name { color:#d4af37; }
-
-    .c-name {
-      font-weight:600;
-      font-size:.92rem;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-      color:rgba(230,238,255,0.92);
-      padding-left:8px;
-      letter-spacing:.01em;
-      text-transform:uppercase;
-    }
-    body.comp-SA .c-name  { font-size:.97rem; font-weight:700; }
-    body.comp-UCL .c-name,
-    body.comp-UEL .c-name,
-    body.comp-UECL .c-name { font-size:.80rem; }
-
-    .c-pt {
-      font-family:'Barlow Condensed',sans-serif;
-      font-weight:900;
-      text-align:center;
-      letter-spacing:.02em;
-    }
-    body.comp-SA .c-pt  { font-size:1.55rem; color:var(--c-pts); }
-    body.comp-UCL .c-pt,
-    body.comp-UEL .c-pt,
-    body.comp-UECL .c-pt { font-size:1.15rem; }
-
-    /* Colore punti per zona UCL/UEL/UECL */
-    body.comp-UCL .row[data-zone="z1"] .c-pt,
-    body.comp-UEL .row[data-zone="z1"] .c-pt,
-    body.comp-UECL .row[data-zone="z1"] .c-pt { color:#1db954; }
-    body.comp-UCL .row[data-zone="z2"] .c-pt,
-    body.comp-UEL .row[data-zone="z2"] .c-pt,
-    body.comp-UECL .row[data-zone="z2"] .c-pt { color:#f5a623; }
-    body.comp-UCL .row[data-zone="z3"] .c-pt,
-    body.comp-UEL .row[data-zone="z3"] .c-pt,
-    body.comp-UECL .row[data-zone="z3"] .c-pt { color:#e87070; }
-
-    .c-dr {
-      font-family:'Barlow Condensed',sans-serif;
-      font-weight:700;
-      text-align:center;
-      font-size:.95rem;
-      opacity:0.82;
-    }
-    body.comp-SA .c-dr  { font-size:1.1rem; }
-
-    .c-dr.pos { color:#4ade80; }
-    .c-dr.neg { color:#f87171; }
-    .c-dr.zer { color:var(--c-text-dim); }
-
-    /* ── LEGEND ── */
-    .legend {
-      height:var(--leg-h);
-      flex-shrink:0;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:28px;
-      padding:0 24px;
-      border-top:1px solid rgba(255,255,255,0.07);
-      background:rgba(0,0,0,0.15);
-    }
-    .legend-item {
-      display:flex; align-items:center; gap:9px;
-      font-family:'Barlow Condensed',sans-serif;
-      font-size:.9rem; font-weight:700;
-      letter-spacing:.18em; text-transform:uppercase;
-      color:rgba(255,255,255,0.42);
-    }
-    .legend-dot {
-      width:10px; height:10px;
-      border-radius:50%;
-      flex-shrink:0;
-      box-shadow:0 0 6px currentColor;
-    }
-  </style>
+  /* ──────── preview switch (solo demo) ──────── */
+  .preview-bar{
+    position:fixed;top:10px;left:50%;transform:translateX(-50%);
+    display:none;gap:8px;z-index:50;
+    background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);
+    padding:7px 9px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);
+    font-family:'Barlow Semi Condensed',sans-serif;
+  }
+  .preview-bar.on{display:flex;}
+  .preview-bar button{
+    border:0;cursor:pointer;border-radius:999px;padding:6px 14px;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;
+    background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);transition:.15s;
+  }
+  .preview-bar button:hover{background:rgba(255,255,255,0.22);color:#fff;}
+  .preview-bar button.active{background:#fff;color:#111;}
+</style>
 </head>
 <body>
 
+  <div class="preview-bar" id="previewBar"></div>
+
   <div class="header">
-    <div class="header-top">
-      <div class="header-title" id="heroTitle">Classifica</div>
-    </div>
+    <div class="header-title" id="heroTitle">Classifica</div>
     <div class="header-sub" id="heroSub"></div>
-    <div class="header-divider"></div>
+    <div class="header-rule"></div>
   </div>
 
   <div class="table-area" id="tableArea"></div>
@@ -388,7 +228,7 @@ const NOMI = {
   "chelsea fc":"Chelsea","chelsea":"Chelsea",
   "tottenham hotspur":"Tottenham","tottenham":"Tottenham",
   "bayer 04 leverkusen":"Leverkusen","bayer leverkusen":"Leverkusen","leverkusen":"Leverkusen",
-  "borussia dortmund":"B. Dortmund","borussia dortmund":"B. Dortmund",
+  "borussia dortmund":"B. Dortmund",
   "fc bayern münchen":"Bayern Monaco","fc bayern munich":"Bayern Monaco","bayern munich":"Bayern Monaco","bayern münchen":"Bayern Monaco",
   "atlético de madrid":"Atlético Madrid","atletico madrid":"Atlético Madrid","atleti":"Atlético Madrid",
   "aston villa fc":"Aston Villa","aston villa":"Aston Villa",
@@ -452,148 +292,141 @@ const NOMI = {
   "fc kairat almaty":"Kairat Almaty","kairat almaty":"Kairat Almaty",
   "olympiacos fc":"Olympiacos","olympiacos":"Olympiacos",
 };
+function nome(n){ return n ? (NOMI[n.toLowerCase().trim()] || n) : n; }
+function initial(n){ return (n||'?').trim().charAt(0).toUpperCase(); }
 
-function nome(n) {
-  return n ? (NOMI[n.toLowerCase().trim()] || n) : n;
-}
-
-/* ══ CONFIG COMPETIZIONI ══ */
+/* ══ CONFIG ══ */
 const CFG = {
-  SA: {
+  SA:{
     titolo:"SERIE A",
-    logo:"https://upload.wikimedia.org/wikipedia/it/thumb/e/ef/Serie_A_Enilive_25-26.svg/500px-Serie_A_Enilive_25-26.svg.png",
-    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
+    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:10,
-    zone: p => {
-      if(p<=4)  return {color:"var(--c-zone-1)",key:"z1"};
-      if(p<=6)  return {color:"var(--c-zone-2)",key:"z2"};
-      if(p===7) return {color:"var(--c-zone-3)",key:"z3"};
-      if(p>=18) return {color:"var(--c-zone-4)",key:"z4"};
-      return {color:"transparent",key:""};
-    },
+    zone:p=>{ if(p<=4)return"z1"; if(p<=6)return"z2"; if(p===7)return"z3"; if(p>=18)return"z4"; return""; },
     sepAfter:[4,6,7,17],
-    legend:[
-      {color:"var(--c-zone-1)",label:"Champions League"},
-      {color:"var(--c-zone-2)",label:"Europa League"},
-      {color:"var(--c-zone-3)",label:"Conference League"},
-      {color:"var(--c-zone-4)",label:"Retrocesse"},
-    ]
+    legend:["1–4 Champions","5–6 Europa","7 Conference","18–20 Retrocesse"]
   },
-  UCL: {
+  UCL:{
     titolo:"CHAMPIONS LEAGUE",
-    logo:"https://mir-s3-cdn-cf.behance.net/project_modules/max_632/d6297891682131.5e3864b00f466.png",
-    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
+    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
-    zone: p => {
-      if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
-      if(p<=24) return {color:"var(--c-zone-2)",key:"z2"};
-      return {color:"var(--c-zone-3)",key:"z3"};
-    },
+    zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
     sepAfter:[8,24],
-    legend:[
-      {color:"#1db954",label:"R16 Diretti"},
-      {color:"#f5a623",label:"Playoff"},
-      {color:"#e02020",label:"Eliminati"},
-    ]
+    legend:["1–8 Ottavi diretti","9–24 Playoff","25–36 Eliminate"]
   },
-  UEL: {
+  UEL:{
     titolo:"EUROPA LEAGUE",
-    logo:"https://r2.thesportsdb.com/images/media/league/badge/mlsr7d1718774547.png/medium",
-    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
+    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
-    zone: p => {
-      if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
-      if(p<=24) return {color:"var(--c-zone-2)",key:"z2"};
-      return {color:"var(--c-zone-3)",key:"z3"};
-    },
+    zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
     sepAfter:[8,24],
-    legend:[
-      {color:"#1db954",label:"R16 Diretti"},
-      {color:"#f5a623",label:"Playoff"},
-      {color:"#e02020",label:"Eliminati"},
-    ]
-  }
-,
-  UECL: {
+    legend:["1–8 Ottavi diretti","9–24 Playoff","25–36 Eliminate"]
+  },
+  UECL:{
     titolo:"CONFERENCE LEAGUE",
-    subLabel: g => `Classifica · Giornata ${g} · 2026/27`,
+    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
     cols:2, perCol:18,
-    zone: p => {
-      if(p<=8)  return {color:"var(--c-zone-1)",key:"z1"};
-      if(p<=24) return {color:"var(--c-zone-2)",key:"z2"};
-      return {color:"var(--c-zone-3)",key:"z3"};
-    },
+    zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
     sepAfter:[8,24],
-    legend:[
-      {color:"#1db954",label:"R16 Diretti"},
-      {color:"#f5a623",label:"Playoff"},
-      {color:"#e02020",label:"Eliminati"},
-    ]
+    legend:["1–8 Ottavi diretti","9–24 Playoff","25–36 Eliminate"]
   }
 };
 
+/* ══ RIGHE ══ */
 function drCls(v){ return v>0?'pos':v<0?'neg':'zer'; }
 function drVal(v){ return v>0?'+'+v:''+v; }
 
-function buildRow(t, zInfo, parity) {
+function buildRow(t, parity){
   const n = nome(t.team);
-  const isJ = n.toLowerCase().includes('juv');
-  const logo = t.logo ? `<img src="${t.logo}" alt="">` : '';
   const cls = parity % 2 === 0 ? 'even' : 'odd';
-  return `<div class="row ${cls}${isJ?' juve':''}" style="--zone:${zInfo.color}" data-zone="${zInfo.key}">
+  const badge = t.logo ? `<img src="${t.logo}" alt="">` : `<span class="c-init">${initial(n)}</span>`;
+  return `<div class="row ${cls}">
     <div class="c-pos">${t.pos}</div>
-    <div class="c-logo">${logo}</div>
+    <div class="c-logo">${badge}</div>
     <div class="c-name">${n}</div>
     <div class="c-pt">${t.pt}</div>
     <div class="c-dr ${drCls(t.dr)}">${drVal(t.dr)}</div>
   </div>`;
 }
-
-function buildHead() {
-  return `<div class="col-head">
-    <div></div><div></div><div>Squadra</div><div>PT</div><div>GD</div>
-  </div>`;
+function buildHead(){
+  return `<div class="col-head"><div></div><div></div><div>Squadra</div><div>PT</div><div>GD</div></div>`;
 }
 
-(window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r=>r.json()))
-  .then(data => {
-    const key = (data.competition||'SA').toUpperCase();
-    const cfg = CFG[key] || CFG.SA;
+function render(data){
+  const key = (data.competition||'SA').toUpperCase();
+  const cfg = CFG[key] || CFG.SA;
 
-    document.body.classList.add('comp-'+key);
+  document.body.className = 'comp-'+key;
+  document.getElementById('heroTitle').textContent = cfg.titolo;
+  document.getElementById('heroSub').textContent = cfg.subLabel(data.giornata || '—');
 
-    /* Titolo e sottotitolo */
-    document.getElementById('heroTitle').textContent = cfg.titolo;
-    document.getElementById('heroSub').textContent = cfg.subLabel(data.giornata || '—');
+  const area = document.getElementById('tableArea');
+  let html='';
+  for(let i=0;i<cfg.cols;i++){
+    const slice = data.classifica.slice(i*cfg.perCol,(i+1)*cfg.perCol);
+    if(!slice.length) continue;
+    let rows=''; let parity=0;
+    slice.forEach((t,idx)=>{
+      const posG = i*cfg.perCol + idx + 1;
+      rows += buildRow(t, parity);
+      parity++;
+      if(cfg.sepAfter && cfg.sepAfter.includes(posG)) rows += `<div class="zone-divider"></div>`;
+    });
+    html += `<div class="col">${buildHead()}<div class="col-rows">${rows}</div></div>`;
+  }
+  area.innerHTML = html;
 
-    /* Tabella */
-    const area = document.getElementById('tableArea');
-    let html = '';
-    for(let i=0; i<cfg.cols; i++){
-      const slice = data.classifica.slice(i*cfg.perCol,(i+1)*cfg.perCol);
-      if(!slice.length) continue;
-      let rows='';
-      let parity=0;
-      slice.forEach((t,idx)=>{
-        const posG = i*cfg.perCol + idx + 1;
-        const zi = cfg.zone(posG);
-        rows += buildRow(t, zi, parity);
-        parity++;
-        if(cfg.sepAfter && cfg.sepAfter.includes(posG)){
-          rows += `<div class="zone-divider"></div>`;
-        }
-      });
-      html += `<div class="col">${buildHead()}<div class="col-rows">${rows}</div></div>`;
-    }
-    area.innerHTML = html;
+  document.getElementById('legend').innerHTML = cfg.legend.map(l=>
+    `<div class="legend-item"><span class="legend-bul"></span>${l}</div>`
+  ).join('');
+}
 
-    /* Legenda */
-    document.getElementById('legend').innerHTML = cfg.legend.map(l=>
-      `<div class="legend-item">
-        <div class="legend-dot" style="background:${l.color}"></div>${l.label}
-      </div>`
-    ).join('');
-  });
+/* ══ DATI DEMO (solo senza dataset reale) ══ */
+const DEMO_TEAMS = {
+  SA:["Napoli","Inter","Atalanta","Juventus","Milan","Bologna","Roma","Lazio","Fiorentina","Como",
+      "Torino","Udinese","Genoa","Verona","Cagliari","Lecce","Parma","Pisa","Cremonese","Sassuolo"],
+  UCL:["Liverpool","Barcellona","Real Madrid","Man City","Arsenal","Inter","Bayern Monaco","Leverkusen",
+       "B. Dortmund","Atlético Madrid","Aston Villa","Atalanta","Milan","Juventus","Napoli","PSV","Benfica",
+       "Sporting CP","Feyenoord Rotterdam","Brest","Stuttgart","Lille","Bologna","Celtic","Club Brugge",
+       "Monaco","Salzburg","GNK Dinamo","Crvena Zvezda","Young Boys","Shakhtar","Leipzig","Girona",
+       "Sparta Praha","Sturm Graz","S. Bratislava"],
+  UEL:["Roma","Tottenham","Lazio","Athletic Club","Eintracht Frankfurt","Lyon","Porto","Rangers",
+       "Ajax Amsterdam","Galatasaray","Fenerbahçe","Slavia Prague","Ferencváros","Nice","Bodo/Glimt",
+       "Midtjylland","Viktoria Plzeň","FCSB","PAOK Salonika","Union St.-Gilloise","Braga","Olympiacos",
+       "M. Tel-Aviv","Malmö","Ludogorets Razgrad","FK Qarabag","Real Betis","Marseille","Newcastle United",
+       "Nott'm Forest","Racing Genk","Utrecht","Basel","Brann","Pafos","Kairat Almaty"],
+  UECL:["Fiorentina","Real Betis","Villarreal","Panathinaikos","F.C. København","Go Ahead Eagles","Freiburg",
+        "Celtic","Rangers","Basel","Young Boys","Pafos","Brann","Bodo/Glimt","Malmö","Ludogorets Razgrad",
+        "FCSB","FK Qarabag","M. Tel-Aviv","Kairat Almaty","PAOK Salonika","Olympiacos","Slavia Prague",
+        "Sparta Praha","Viktoria Plzeň","S. Bratislava","GNK Dinamo","Crvena Zvezda","Shakhtar","Salzburg",
+        "Sturm Graz","Racing Genk","Union St.-Gilloise","Utrecht","Braga","Nice"]
+};
+function makeDemo(key){
+  const teams = DEMO_TEAMS[key]; const n = teams.length;
+  return {
+    competition:key,
+    giornata: key==='SA' ? 14 : 6,
+    classifica: teams.map((team,i)=>({
+      pos:i+1, team,
+      pt: Math.max(0,(n-i)*2 + ((n-i)%3) + (i<3?6:0)),
+      dr: Math.round((n/2 - i) * 1.6)
+    }))
+  };
+}
+
+/* ══ AVVIO ══ */
+(window.__CLASSIFICA__
+  ? Promise.resolve(window.__CLASSIFICA__)
+  : fetch('./classifica.json').then(r=>{ if(!r.ok) throw 0; return r.json(); })
+).then(render)
+ .catch(()=>{
+   const bar = document.getElementById('previewBar');
+   bar.classList.add('on');
+   const comps = [['SA','Serie A'],['UCL','Champions'],['UEL','Europa'],['UECL','Conference']];
+   bar.innerHTML = comps.map(c=>`<button data-k="${c[0]}">${c[1]}</button>`).join('');
+   function show(k){ render(makeDemo(k)); [...bar.children].forEach(b=>b.classList.toggle('active', b.dataset.k===k)); }
+   bar.querySelectorAll('button').forEach(b=>b.onclick=()=>show(b.dataset.k));
+   show('SA');
+ });
 </script>
 </body>
 </html>
