@@ -37,21 +37,24 @@ COMP_INFO = {
 }
 
 
-def scarica_font_base64() -> str:
+def scarica_font_base64(css_url: str) -> str:
     """
-    Scarica i font da Google Fonts e li restituisce come blocco CSS @font-face
-    con sorgenti base64 inline. Se il download fallisce (es. CI senza rete),
-    torna una stringa vuota e i font di sistema vengono usati come fallback.
+    Scarica i font da un URL di Google Fonts (css2) e li restituisce come blocco
+    CSS @font-face con sorgenti base64 inline.
+
+    IMPORTANTE: l'URL viene letto direttamente dall'index.html, così i font
+    incorporati sono SEMPRE quelli usati dalla grafica. Se in futuro cambiano i
+    font nell'HTML, qui non c'è nulla da aggiornare.
+
+    Se il download fallisce (es. CI senza rete) torna stringa vuota e si usano
+    i font di sistema come fallback.
     """
     import base64
 
-    GOOGLE_FONTS_CSS = (
-        "https://fonts.googleapis.com/css2?"
-        "family=Bebas+Neue"
-        "&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700"
-        "&family=Inter:wght@400;600;700;800;900"
-        "&display=swap"
-    )
+    if not css_url:
+        print("⚠️  Nessun link Google Fonts trovato nell'HTML: uso i font di sistema.")
+        return ""
+
     UA = (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -59,25 +62,24 @@ def scarica_font_base64() -> str:
     )
 
     try:
-        css_resp = requests.get(GOOGLE_FONTS_CSS, headers={"User-Agent": UA}, timeout=15)
+        css_resp = requests.get(css_url, headers={"User-Agent": UA}, timeout=20)
         css_resp.raise_for_status()
         css_text = css_resp.text
 
-        # Trova tutti gli url() nei @font-face e sostituiscili con data URI base64
+        # Sostituisci ogni url(...) dentro i @font-face con un data URI base64
         font_urls = re.findall(r'url\((https://[^)]+)\)', css_text)
         for url in font_urls:
             try:
-                font_resp = requests.get(url, headers={"User-Agent": UA}, timeout=15)
+                font_resp = requests.get(url, headers={"User-Agent": UA}, timeout=20)
                 font_resp.raise_for_status()
                 b64 = base64.b64encode(font_resp.content).decode("ascii")
-                # Determina il formato dal URL
                 fmt = "woff2" if "woff2" in url else "woff" if "woff" in url else "truetype"
                 data_uri = f"data:font/{fmt};base64,{b64}"
                 css_text = css_text.replace(url, data_uri)
             except Exception as e:
                 print(f"⚠️  Font non scaricato ({url}): {e}")
 
-        print("✅ Font incorporati come base64.")
+        print(f"✅ Font incorporati come base64 ({len(font_urls)} file).")
         return css_text
 
     except Exception as e:
@@ -106,23 +108,21 @@ async def scatta_screenshot():
     json_str = json.dumps(json_completo, ensure_ascii=False)
     html_patched = html_content
 
-    # 1) Replace external Google Fonts links with locally-embedded @font-face (base64)
-    #    This avoids 403 errors in CI where google fonts are blocked.
+    # 1) Leggi l'URL dei Google Fonts DALL'HTML (così i font sono sempre allineati),
+    #    poi rimuovi i <link> esterni e incorpora i font come @font-face base64.
+    m = re.search(r'href="(https://fonts\.googleapis\.com/css2[^"]+)"', html_content)
+    css_url = m.group(1) if m else None
+
     html_patched = re.sub(r'<link[^>]+fonts\.googleapis[^>]*>', '', html_patched)
     html_patched = re.sub(r'<link[^>]+fonts\.gstatic[^>]*>', '', html_patched)
-    font_css = scarica_font_base64()
+
+    font_css = scarica_font_base64(css_url)
     if font_css:
         html_patched = html_patched.replace('<head>', f'<head>\n<style>\n{font_css}\n</style>', 1)
 
-    # 2) Inject data script right after <body>
+    # 2) Inietta i dati subito dopo <body> (l'HTML legge window.__CLASSIFICA__ se presente)
     inject = f"<script>\nwindow.__CLASSIFICA__ = {json_str};\n</script>"
     html_patched = html_patched.replace('<body>', '<body>\n' + inject, 1)
-
-    # 4) Replace fetch() with inline Promise so data always loads on file://
-    html_patched = html_patched.replace(
-        "(window.__CLASSIFICA__ ? Promise.resolve(window.__CLASSIFICA__) : fetch('./classifica.json').then(r => r.json()))",
-        f"Promise.resolve({json_str})"
-    )
 
     temp_html = script_dir / "_screenshot_temp.html"
     temp_html.write_text(html_patched, encoding="utf-8")
@@ -140,7 +140,12 @@ async def scatta_screenshot():
 
         await page.goto(f"file://{temp_html}", wait_until="load")
         await page.wait_for_selector(comp_data["wait"], timeout=30000)
-        await page.wait_for_timeout(4000)
+        # Aspetta che i font siano davvero pronti prima dello scatto
+        try:
+            await page.evaluate("async () => { await document.fonts.ready; }")
+        except Exception:
+            pass
+        await page.wait_for_timeout(2500)
 
         await page.screenshot(
             path="screenshot_raw.png",
