@@ -102,6 +102,11 @@ async def scatta_screenshot():
     comp_key  = json_completo.get("competition", "SA").upper()
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
 
+    # Texture diversa per competizione:
+    #  - bianca (texture_white.png) su Serie A e Champions (fondi blu/navy)
+    #  - nera   (texture_black.png) su Europa e Conference (fondi arancione/verde)
+    texture_file = "texture_white.png" if comp_key in ("SA", "UCL") else "texture_black.png"
+
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
@@ -155,7 +160,7 @@ async def scatta_screenshot():
 
     temp_html.unlink()
 
-    applica_texture("screenshot_raw.png", "texture.png", OUTPUT_PATH)
+    applica_texture("screenshot_raw.png", texture_file, OUTPUT_PATH)
     Path("screenshot_raw.png").unlink()
 
     print(f"✅ Screenshot generato: {comp_key} – Giornata {giornata}")
@@ -168,10 +173,13 @@ def applica_texture(base_path, texture_path, output_path):
     # la foto compressa risulta più definita rispetto a partire da un'immagine già piccola.
     if base.size != (TARGET_W, TARGET_H):
         base = base.resize((TARGET_W, TARGET_H), Image.LANCZOS)
-    texture = Image.open(texture_path).convert("RGBA")
-    if texture.size != base.size:
-        texture = texture.resize(base.size, Image.LANCZOS)
-    base.paste(texture, (0, 0), texture)
+    if texture_path and os.path.exists(texture_path):
+        texture = Image.open(texture_path).convert("RGBA")
+        if texture.size != base.size:
+            texture = texture.resize(base.size, Image.LANCZOS)
+        base.paste(texture, (0, 0), texture)
+    else:
+        print(f"⚠️  Texture non trovata ({texture_path}): salvo senza texture.")
     base.convert("RGB").save(output_path, "PNG")
 
 
