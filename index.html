@@ -145,7 +145,7 @@
   body.comp-SA .c-name{font-size:.97rem;font-weight:700;}
   body.comp-UCL .c-name{font-size:.81rem;font-weight:500;}
   body.comp-UEL .c-name{font-size:.81rem;font-weight:600;}
-  body.comp-UECL .c-name{font-size:.8rem;font-weight:700;text-transform:none;letter-spacing:0;}
+  body.comp-UECL .c-name{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.01em;}
 
   .c-pt{
     font-family:var(--f-num),sans-serif;font-weight:800;text-align:center;color:var(--ink);
@@ -209,104 +209,11 @@
   <div class="legend" id="legend"></div>
 
 <script>
-/* ══ MAPPA NOMI ══ */
-const NOMI = {
-  "juventus fc":"Juventus","juventus":"Juventus",
-  "inter milan":"Inter","fc internazionale milano":"Inter","inter":"Inter","internazionale":"Inter",
-  "ac milan":"Milan","milan":"Milan",
-  "ssc napoli":"Napoli","napoli":"Napoli",
-  "as roma":"Roma","roma":"Roma",
-  "ss lazio":"Lazio","lazio":"Lazio",
-  "atalanta bc":"Atalanta","atalanta":"Atalanta",
-  "bologna fc 1909":"Bologna","bologna fc":"Bologna","bologna":"Bologna",
-  "acf fiorentina":"Fiorentina","fiorentina":"Fiorentina",
-  "torino fc":"Torino","torino":"Torino",
-  "udinese calcio":"Udinese","udinese":"Udinese",
-  "empoli fc":"Empoli","empoli":"Empoli",
-  "us lecce":"Lecce","lecce":"Lecce",
-  "ac monza":"Monza","monza":"Monza",
-  "cagliari calcio":"Cagliari","cagliari":"Cagliari",
-  "genoa cfc":"Genoa","genoa":"Genoa",
-  "como 1907":"Como","como":"Como",
-  "parma calcio 1913":"Parma","parma":"Parma",
-  "venezia fc":"Venezia","venezia":"Venezia",
-  "hellas verona fc":"Verona","hellas verona":"Verona",
-  "us sassuolo calcio":"Sassuolo","sassuolo":"Sassuolo",
-  "ac pisa 1909":"Pisa","pisa":"Pisa",
-  "us cremonese":"Cremonese","cremonese":"Cremonese",
-  "liverpool fc":"Liverpool","liverpool":"Liverpool",
-  "fc barcelona":"Barcellona","barcelona":"Barcellona",
-  "real madrid cf":"Real Madrid","real madrid":"Real Madrid",
-  "manchester city fc":"Man City","manchester city":"Man City",
-  "arsenal fc":"Arsenal","arsenal":"Arsenal",
-  "chelsea fc":"Chelsea","chelsea":"Chelsea",
-  "tottenham hotspur":"Tottenham","tottenham":"Tottenham",
-  "bayer 04 leverkusen":"Leverkusen","bayer leverkusen":"Leverkusen","leverkusen":"Leverkusen",
-  "borussia dortmund":"B. Dortmund",
-  "fc bayern münchen":"Bayern Monaco","fc bayern munich":"Bayern Monaco","bayern munich":"Bayern Monaco","bayern münchen":"Bayern Monaco",
-  "atlético de madrid":"Atlético Madrid","atletico madrid":"Atlético Madrid","atleti":"Atlético Madrid",
-  "aston villa fc":"Aston Villa","aston villa":"Aston Villa",
-  "sl benfica":"Benfica","benfica":"Benfica",
-  "feyenoord":"Feyenoord Rotterdam","feyenoord rotterdam":"Feyenoord Rotterdam",
-  "as monaco":"Monaco","monaco":"Monaco",
-  "sporting cp":"Sporting CP","sporting clube de portugal":"Sporting CP",
-  "celtic fc":"Celtic","celtic":"Celtic",
-  "club brugge kv":"Club Brugge","club brugge":"Club Brugge",
-  "paris saint-germain":"Paris","paris sg":"Paris","psg":"Paris",
-  "stade brestois 29":"Brest","brest":"Brest",
-  "gnk dinamo":"GNK Dinamo","dinamo zagreb":"GNK Dinamo",
-  "fc red bull salzburg":"Salzburg","rb salzburg":"Salzburg","salzburg":"Salzburg",
-  "psv eindhoven":"PSV","psv":"PSV",
-  "vfb stuttgart":"Stuttgart","stuttgart":"Stuttgart",
-  "ac sparta prague":"Sparta Praha","sparta prague":"Sparta Praha","sparta praha":"Sparta Praha",
-  "sk sturm graz":"Sturm Graz","sturm graz":"Sturm Graz",
-  "girona fc":"Girona","girona":"Girona",
-  "crvena zvezda":"Crvena Zvezda","red star belgrade":"Crvena Zvezda",
-  "bsc young boys":"Young Boys","young boys":"Young Boys",
-  "shakhtar donetsk":"Shakhtar","shakhtar":"Shakhtar",
-  "rb leipzig":"Leipzig","rasenballsport leipzig":"Leipzig",
-  "sk slovan bratislava":"S. Bratislava","slovan bratislava":"S. Bratislava",
-  "losc lille":"Lille","lille osc":"Lille","lille":"Lille",
-  "olympique lyonnais":"Lyon","lyon":"Lyon",
-  "fc midtjylland":"Midtjylland","midtjylland":"Midtjylland",
-  "sc freiburg":"Freiburg","freiburg":"Freiburg",
-  "real betis balompié":"Real Betis","real betis":"Real Betis",
-  "ferencváros tc":"Ferencváros","ferencvaros":"Ferencváros","ferencváros":"Ferencváros",
-  "sc braga":"Braga","braga":"Braga",
-  "fc porto":"Porto","porto":"Porto",
-  "krc genk":"Racing Genk","genk":"Racing Genk",
-  "fc viktoria plzen":"Viktoria Plzeň","viktoria plzen":"Viktoria Plzeň","viktoria plzeň":"Viktoria Plzeň",
-  "panathinaikos fc":"Panathinaikos","panathinaikos":"Panathinaikos",
-  "nottingham forest":"Nott'm Forest","nottm forest":"Nott'm Forest",
-  "paok fc":"PAOK Salonika","paok":"PAOK Salonika",
-  "sk brann":"Brann","brann":"Brann",
-  "fenerbahçe sk":"Fenerbahçe","fenerbahce":"Fenerbahçe","fenerbahçe":"Fenerbahçe",
-  "fc basel 1893":"Basel","fc basel":"Basel","basel":"Basel",
-  "pfc ludogorets razgrad":"Ludogorets Razgrad","ludogorets":"Ludogorets Razgrad",
-  "go ahead eagles":"Go Ahead Eagles",
-  "fcsb":"FCSB",
-  "fc utrecht":"Utrecht","utrecht":"Utrecht",
-  "rangers fc":"Rangers","rangers":"Rangers",
-  "malmö ff":"Malmö","malmo ff":"Malmö","malmö":"Malmö",
-  "maccabi tel-aviv":"M. Tel-Aviv","maccabi tel aviv":"M. Tel-Aviv",
-  "ogc nice":"Nice","nice":"Nice",
-  "newcastle united":"Newcastle United","newcastle":"Newcastle United",
-  "galatasaray":"Galatasaray","galatasaray sk":"Galatasaray",
-  "fk qarabag":"FK Qarabag","qarabag":"FK Qarabag",
-  "bodo/glimt":"Bodo/Glimt","fk bodø/glimt":"Bodo/Glimt",
-  "olympique de marseille":"Marseille","marseille":"Marseille",
-  "pafos fc":"Pafos","pafos":"Pafos",
-  "royale union saint-gilloise":"Union St.-Gilloise","union st-gilloise":"Union St.-Gilloise",
-  "athletic club":"Athletic Club","athletic bilbao":"Athletic Club",
-  "fc copenhagen":"F.C. København","fc københavn":"F.C. København","copenhagen":"F.C. København",
-  "ajax amsterdam":"Ajax Amsterdam","ajax":"Ajax Amsterdam",
-  "eintracht frankfurt":"Eintracht Frankfurt",
-  "sk slavia prague":"Slavia Prague","slavia prague":"Slavia Prague",
-  "villarreal cf":"Villarreal","villarreal":"Villarreal",
-  "fc kairat almaty":"Kairat Almaty","kairat almaty":"Kairat Almaty",
-  "olympiacos fc":"Olympiacos","olympiacos":"Olympiacos",
-};
-function nome(n){ return n ? (NOMI[n.toLowerCase().trim()] || n) : n; }
+/* ══ NOMI SQUADRE ══
+   I nomi corretti arrivano già da teams.json, applicati lato Python in
+   aggiorna_classifica.py al momento di generare classifica.json.
+   Qui quindi nessuna mappa: si usa il nome così com'è nei dati. */
+function nome(n){ return n ? n.trim() : n; }
 function initial(n){ return (n||'?').trim().charAt(0).toUpperCase(); }
 
 /* squadra/e da evidenziare ovunque compaiano (match sul nome normalizzato) */
