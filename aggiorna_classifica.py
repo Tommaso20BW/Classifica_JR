@@ -2,6 +2,7 @@ import os
 import sys
 import requests
 import json
+from pathlib import Path
 
 # ESPN slug per competizione → nessuna API key richiesta
 COMPETIZIONI = {
@@ -51,6 +52,52 @@ HEADERS = {
     "Accept": "application/json",
     "Referer": "https://www.espn.com/",
 }
+
+
+# ── Mappa nomi squadre: nome ESPN → nome corretto (da teams.json) ──
+def carica_mappa_nomi() -> tuple[dict, dict]:
+    """
+    Legge teams.json (nella stessa cartella dello script) e costruisce la
+    mappa 'nome ESPN' → 'nome corretto'.
+
+    Formato di teams.json:
+        "Nome ESPN": ["Nome corretto", "Hashtag"]
+    Il terzo campo (hashtag) NON viene usato.
+
+    Restituisce due dizionari: uno con le chiavi originali e uno con le chiavi
+    in minuscolo, così il confronto è robusto a differenze di maiuscole.
+    Se teams.json manca o è illeggibile, torna mappe vuote (fallback ai nomi ESPN).
+    """
+    path = Path(__file__).parent / "teams.json"
+    try:
+        with open(path, encoding="utf-8") as f:
+            raw = json.load(f)
+    except FileNotFoundError:
+        print("⚠️  teams.json non trovato: uso i nomi originali ESPN.")
+        return {}, {}
+    except Exception as e:
+        print(f"⚠️  Impossibile leggere teams.json ({e}): uso i nomi ESPN.")
+        return {}, {}
+
+    esatta: dict[str, str] = {}
+    minuscola: dict[str, str] = {}
+    for espn, valori in raw.items():
+        corretto = valori[0] if isinstance(valori, list) and valori else espn
+        esatta[espn] = corretto
+        minuscola[espn.lower().strip()] = corretto
+    return esatta, minuscola
+
+
+MAPPA_NOMI, MAPPA_NOMI_LOWER = carica_mappa_nomi()
+
+
+def nome_corretto(espn_name: str) -> str:
+    """Converte un nome ESPN nel nome corretto definito in teams.json."""
+    if not espn_name:
+        return espn_name
+    if espn_name in MAPPA_NOMI:
+        return MAPPA_NOMI[espn_name]
+    return MAPPA_NOMI_LOWER.get(espn_name.lower().strip(), espn_name)
 
 
 def get_standings_espn(slug: str) -> dict | None:
@@ -130,6 +177,10 @@ def parse_standings(data: dict) -> tuple[list, int]:
             # Aggiorna giornata con il massimo delle partite giocate
             if pld > giornata:
                 giornata = pld
+
+            # Nome corretto da teams.json (l'override loghi qui sopra usa
+            # ancora il nome ESPN originale, quindi non cambia comportamento)
+            nome = nome_corretto(nome)
 
             classifica.append({
                 "pos":    pos,
