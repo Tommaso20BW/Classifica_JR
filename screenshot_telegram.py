@@ -13,8 +13,8 @@ TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 VIEWPORT_WIDTH  = 900
 VIEWPORT_HEIGHT = 1200
 SCALE           = 3
-TARGET_W        = 1080
-TARGET_H        = 1440
+TARGET_W        = 1620
+TARGET_H        = 2160
 OUTPUT_PATH     = "screenshot.png"
 
 COMP_INFO = {
@@ -164,6 +164,8 @@ async def scatta_screenshot():
 
 def applica_texture(base_path, texture_path, output_path):
     base = Image.open(base_path).convert("RGBA")
+    # Mando a Telegram una sorgente ad alta risoluzione e nitida (LANCZOS):
+    # la foto compressa risulta più definita rispetto a partire da un'immagine già piccola.
     if base.size != (TARGET_W, TARGET_H):
         base = base.resize((TARGET_W, TARGET_H), Image.LANCZOS)
     texture = Image.open(texture_path).convert("RGBA")
@@ -181,6 +183,8 @@ def invia_telegram(giornata, comp_key):
     comp_data     = COMP_INFO.get(comp_key, COMP_INFO["SA"])
     caption_testo = comp_data["caption"](giornata)
 
+    # Invio come FOTO inline. Telegram comprime sempre in JPEG: per ridurre l'effetto
+    # mando una sorgente ad alta risoluzione (vedi TARGET_W/H).
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
     with open(OUTPUT_PATH, "rb") as foto:
         response = requests.post(
