@@ -1,6 +1,9 @@
 name: Aggiorna Classifica Live - Europa League
 on:
   workflow_dispatch:
+concurrency:
+  group: classifica-bot
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
