@@ -17,22 +17,29 @@ TARGET_W        = 1620
 TARGET_H        = 2160
 OUTPUT_PATH     = "screenshot.png"
 
+def _keycap(n) -> str:
+    """Converte un numero nelle emoji keycap: 1 → 1️⃣, 12 → 1️⃣2️⃣."""
+    return "".join(f"{c}\uFE0F\u20E3" for c in str(n))
+
+
+WAIT_SELECTOR = "#tableArea .col:last-child .col-rows .row:last-child"
+
 COMP_INFO = {
     "SA":  {
-        "caption": lambda g: f"<b>🇮🇹📊 Classifica Serie A - {g}ª Giornata</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
+        "caption": lambda g: f"<b>🇮🇹📊 Serie A | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "wait":    WAIT_SELECTOR
     },
     "UCL": {
-        "caption": lambda g: f"<b>🇪🇺📊 Classifica Champions League - {g}ª Giornata</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
+        "caption": lambda g: f"<b>🇪🇺📊 Champions League | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "wait":    WAIT_SELECTOR
     },
     "UEL": {
-        "caption": lambda g: f"<b>🇪🇺📊 Classifica Europa League - {g}ª Giornata</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
+        "caption": lambda g: f"<b>🇪🇺📊 Europa League | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "wait":    WAIT_SELECTOR
     },
     "UECL": {
-        "caption": lambda g: f"<b>🇪🇺📊 Classifica Conference League - {g}ª Giornata</b>\n\n👉 @Juventus_Reborn",
-        "wait":    "#tableArea .col:last-child .col-rows .row:last-child"
+        "caption": lambda g: f"<b>🇪🇺📊 Conference League | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "wait":    WAIT_SELECTOR
     },
 }
 
