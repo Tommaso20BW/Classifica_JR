@@ -30,15 +30,15 @@ COMP_INFO = {
         "wait":    WAIT_SELECTOR
     },
     "UCL": {
-        "caption": lambda g: f"<b>🇪🇺📊 Champions League | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "caption": lambda g: f"<b>🇪🇺📊 UCL | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
         "wait":    WAIT_SELECTOR
     },
     "UEL": {
-        "caption": lambda g: f"<b>🇪🇺📊 Europa League | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "caption": lambda g: f"<b>🇪🇺📊 UEL | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
         "wait":    WAIT_SELECTOR
     },
     "UECL": {
-        "caption": lambda g: f"<b>🇪🇺📊 Conference League | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
+        "caption": lambda g: f"<b>🇪🇺📊 UECL | Classifica\n{_keycap(g)} Giornata</b>\n\n👉 @Juventus_Reborn",
         "wait":    WAIT_SELECTOR
     },
 }
