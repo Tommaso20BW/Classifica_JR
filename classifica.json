@@ -2,6 +2,7 @@
     "competition": "SA",
     "competition_name": "Serie A",
     "giornata": 1,
+    "stagione": "2026/27",
     "classifica": [
         {
             "pos": 1,
@@ -253,7 +254,7 @@
         {
             "pos": 20,
             "team": "Venezia",
-            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/17530.png",
+            "logo": "https://upload.wikimedia.org/wikipedia/it/7/73/Venezia_FC_Logo_2026.svg",
             "pt": 0,
             "p": 0,
             "v": 0,
