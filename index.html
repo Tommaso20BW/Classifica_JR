@@ -216,6 +216,14 @@
 function nome(n){ return n ? n.trim() : n; }
 function initial(n){ return (n||'?').trim().charAt(0).toUpperCase(); }
 
+/* stagione corrente ("2026/27") ricavata dalla data: usata come fallback
+   se classifica.json non contiene il campo "stagione". La stagione inizia a luglio. */
+function stagioneCorrente(){
+  const o = new Date();
+  const inizio = o.getMonth() >= 6 ? o.getFullYear() : o.getFullYear() - 1; // getMonth(): luglio = 6
+  return inizio + '/' + String((inizio + 1) % 100).padStart(2, '0');
+}
+
 /* squadra/e da evidenziare ovunque compaiano (match sul nome normalizzato) */
 const HIGHLIGHT = new Set(["Juventus"]);
 
@@ -223,7 +231,7 @@ const HIGHLIGHT = new Set(["Juventus"]);
 const CFG = {
   SA:{
     titolo:"SERIE A",
-    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
+    subLabel:(g,s)=>`Classifica · Giornata ${g} · ${s}`,
     cols:2, perCol:10,
     zone:p=>{ if(p<=4)return"z1"; if(p===5)return"z2"; if(p===6)return"z3"; if(p>=18)return"z4"; return""; },
     sepAfter:[4,5,6,17],
@@ -231,7 +239,7 @@ const CFG = {
   },
   UCL:{
     titolo:"CHAMPIONS LEAGUE",
-    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
+    subLabel:(g,s)=>`Classifica · Giornata ${g} · ${s}`,
     cols:2, perCol:18,
     zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
     sepAfter:[8,24],
@@ -239,7 +247,7 @@ const CFG = {
   },
   UEL:{
     titolo:"EUROPA LEAGUE",
-    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
+    subLabel:(g,s)=>`Classifica · Giornata ${g} · ${s}`,
     cols:2, perCol:18,
     zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
     sepAfter:[8,24],
@@ -247,7 +255,7 @@ const CFG = {
   },
   UECL:{
     titolo:"CONFERENCE LEAGUE",
-    subLabel:g=>`Classifica · Giornata ${g} · 2026/27`,
+    subLabel:(g,s)=>`Classifica · Giornata ${g} · ${s}`,
     cols:2, perCol:18,
     zone:p=>{ if(p<=8)return"z1"; if(p<=24)return"z2"; return"z3"; },
     sepAfter:[8,24],
@@ -282,7 +290,8 @@ function render(data){
 
   document.body.className = 'comp-'+key;
   document.getElementById('heroTitle').textContent = cfg.titolo;
-  document.getElementById('heroSub').textContent = cfg.subLabel(data.giornata || '—');
+  const stagione = data.stagione || stagioneCorrente();
+  document.getElementById('heroSub').textContent = cfg.subLabel(data.giornata || '—', stagione);
 
   const area = document.getElementById('tableArea');
   let html='';
@@ -329,6 +338,7 @@ function makeDemo(key){
   return {
     competition:key,
     giornata: key==='SA' ? 14 : 6,
+    stagione: stagioneCorrente(),
     classifica: teams.map((team,i)=>({
       pos:i+1, team,
       pt: Math.max(0,(n-i)*2 + ((n-i)%3) + (i<3?6:0)),
