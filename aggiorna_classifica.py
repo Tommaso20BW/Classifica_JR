@@ -41,6 +41,7 @@ LOGO_OVERRIDE = {
     "fiorentina":"https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
     "verona":    "https://sport.sky.it/assets/images/3a737aa34cf3cac3ed64133d1527a6c517d0e8d5/skysport/it/calcio/serie-a/2020/06/01/hellas-verona-stemma/herllas%20verona_giallo_dentro.png",
     "roma":      "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
+    "venezia":   "https://upload.wikimedia.org/wikipedia/it/7/73/Venezia_FC_Logo_2026.svg",
 }
 
 HEADERS = {
@@ -100,6 +101,35 @@ def nome_corretto(espn_name: str) -> str:
     return MAPPA_NOMI_LOWER.get(espn_name.lower().strip(), espn_name)
 
 
+def format_stagione(anno_inizio) -> str:
+    """Da anno d'inizio ESPN (es. 2026) → stringa stagione '2026/27'.
+    Torna '' se il valore non è un anno valido."""
+    try:
+        y = int(anno_inizio)
+    except (TypeError, ValueError):
+        return ""
+    if y < 1900 or y > 2100:
+        return ""
+    return f"{y}/{(y + 1) % 100:02d}"
+
+
+def stagione_da_testo(testo: str) -> str:
+    """Estrae la stagione da stringhe ESPN tipo '2026-2027' o
+    'Serie A 2026-2027' / '2026-27 Serie A'. Torna '' se non trovata."""
+    import re
+    m = re.search(r"(19|20)\d{2}", testo or "")
+    return format_stagione(m.group()) if m else ""
+
+
+def stagione_corrente_da_data() -> str:
+    """Fallback (solo se l'API non espone la stagione): la ricava dalla data
+    odierna. La stagione calcistica inizia a luglio."""
+    from datetime import date
+    oggi = date.today()
+    anno_inizio = oggi.year if oggi.month >= 7 else oggi.year - 1
+    return format_stagione(anno_inizio)
+
+
 def get_standings_espn(slug: str) -> dict | None:
     """
     Chiama l'API pubblica non documentata di ESPN per le classifiche calcio.
@@ -117,16 +147,15 @@ def get_standings_espn(slug: str) -> dict | None:
     return None
 
 
-def parse_standings(data: dict) -> tuple[list, int]:
+def parse_standings(data: dict) -> tuple[list, int, str]:
     """
-    Estrae la lista classifica e la giornata corrente dal JSON ESPN.
-    Restituisce (classifica_pulita, giornata).
+    Estrae la lista classifica, la giornata e la stagione dal JSON ESPN.
+    Restituisce (classifica_pulita, giornata, stagione).
     """
     classifica = []
     giornata = 1
+    stagione = ""
 
-    # La stagione corrente è in data['season']
-    season = data.get("season", {})
     # ESPN non espone direttamente la matchday; la ricaviamo dai filter/note
     # Proviamo ad ottenerla da 'notes'
     for note in data.get("notes", []):
@@ -145,6 +174,19 @@ def parse_standings(data: dict) -> tuple[list, int]:
         entries = standings_obj.get("entries", [])
         if not entries:
             continue
+
+        # ── Stagione dall'API ESPN ──
+        # Sorgente primaria: il campo intero 'season' (anno d'inizio, es. 2026).
+        # Fallback: testo di 'seasonDisplayName' / nome o abbreviazione del gruppo
+        # (es. "2026-27 Serie A", "Serie A 2026-2027", "2026-2027").
+        if not stagione:
+            stagione = format_stagione(standings_obj.get("season"))
+        if not stagione:
+            stagione = stagione_da_testo(
+                standings_obj.get("seasonDisplayName")
+                or child.get("abbreviation")
+                or child.get("name")
+            )
 
         for entry in entries:
             team = entry.get("team", {})
@@ -200,7 +242,7 @@ def parse_standings(data: dict) -> tuple[list, int]:
 
     # Ordina per posizione
     classifica.sort(key=lambda x: x["pos"])
-    return classifica, giornata
+    return classifica, giornata, stagione
 
 
 def genera_json_classifica():
@@ -217,23 +259,29 @@ def genera_json_classifica():
         print("❌ Impossibile recuperare i dati. Controlla la connessione.")
         sys.exit(1)
 
-    classifica, giornata = parse_standings(data)
+    classifica, giornata, stagione = parse_standings(data)
 
     if not classifica:
         print("❌ Nessuna squadra trovata nella risposta ESPN.")
         sys.exit(1)
 
+    # Se l'API non ha esposto la stagione, la ricaviamo dalla data odierna
+    if not stagione:
+        stagione = stagione_corrente_da_data()
+        print(f"⚠️  Stagione non trovata nell'API ESPN: uso il fallback da data ({stagione}).")
+
     output = {
         "competition":      comp_key,
         "competition_name": comp["nome"],
         "giornata":         giornata,
+        "stagione":         stagione,
         "classifica":       classifica,
     }
 
     with open("classifica.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=4)
 
-    print(f"✅ JSON salvato: {comp['nome']} – Giornata {giornata} ({len(classifica)} squadre).")
+    print(f"✅ JSON salvato: {comp['nome']} – Giornata {giornata} – Stagione {stagione} ({len(classifica)} squadre).")
 
 
 if __name__ == "__main__":
