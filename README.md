@@ -1,147 +1,129 @@
-<div align="center">
-
 # 📊 Classifica JR
 
-**Bot Telegram che pubblica in automatico le classifiche calcistiche con grafica ad alta risoluzione.**
+Bot Telegram che recupera le classifiche calcistiche da ESPN, genera una card grafica ad alta risoluzione e la pubblica sul canale configurato.
 
-Recupera i dati da ESPN, li trasforma in una card grafica brandizzata e la invia su Telegram — costruito su GitHub Actions, senza server.
+Il progetto gira su GitHub Actions e supporta quattro competizioni:
 
-`Python 3.10` · `ESPN API` · `Playwright` · `Pillow` · `GitHub Actions`
-
-</div>
-
------
-
-## Indice
-
-- [Cos’è](#cosè)
-- [Come funziona](#come-funziona)
-- [Funzionalità](#funzionalità)
-- [Competizioni supportate](#competizioni-supportate)
-- [Struttura del repository](#struttura-del-repository)
-- [Configurazione](#configurazione)
-- [Avvio](#avvio)
-- [Stack tecnico](#stack-tecnico)
-- [Fonte dati](#fonte-dati)
-
------
-
-## Cos’è
-
-Classifica JR recupera la classifica aggiornata di Serie A, Champions League, Europa League o Conference League tramite l’API pubblica di ESPN, la renderizza in una card grafica personalizzata e la invia come immagine al canale Telegram **@Juventus_Reborn**. Ogni competizione ha il proprio workflow GitHub Actions attivabile manualmente.
-
------
+| `COMPETITION` | Competizione | Slug ESPN |
+|---|---|---|
+| `SA` | Serie A | `ita.1` |
+| `UCL` | Champions League | `uefa.champions` |
+| `UEL` | Europa League | `uefa.europa` |
+| `UECL` | Conference League | `uefa.europa.conf` |
 
 ## Come funziona
 
-```
-                ┌──────────────────────┐
-                │   GitHub Actions      │  ← un workflow per competizione
-                │  SerieA · UCL · ...   │
-                └──────────┬───────────┘
-                           │
-                           ▼
-        ┌──────────────────────────────────────┐
-        │         aggiorna_classifica.py        │
-        │   scarica la classifica da ESPN e     │
-        │   la salva in classifica.json         │
-        └────────────────────┬───────────────────┘
-                             │
-                             ▼
-        ┌──────────────────────────────────────┐
-        │        screenshot_telegram.py         │
-        │   index.html → PNG (Playwright)       │
-        │   + overlay texture (Pillow) → invio  │
-        └───────────────┬──────────┬─────────────┘
-                        │          │
-                        ▼          ▼
-                  ┌─────────┐  ┌──────────┐
-                  │  ESPN   │  │ Telegram │
-                  │ (dati)  │  │ (output) │
-                  └─────────┘  └──────────┘
+Ogni esecuzione segue questa pipeline:
+
+```text
+ESPN standings API
+        │
+        ▼
+aggiorna_classifica.py ──► classifica.json
+        │
+        ▼
+index.html + Playwright + texture
+        │
+        ▼
+screenshot.png ──► Telegram
+        │
+        └────────► commit di classifica.json
 ```
 
-Il workflow esegue i due script in sequenza: prima `aggiorna_classifica.py` recupera i dati da ESPN e li salva in `classifica.json`, poi `screenshot_telegram.py` renderizza la card da `index.html`, vi applica l’overlay texture e la invia su Telegram.
+### 1. Recupero e normalizzazione
 
------
+`aggiorna_classifica.py`:
 
-## Funzionalità
+- legge la competizione dalla variabile `COMPETITION` (default `SA`);
+- interroga l’endpoint pubblico ESPN delle classifiche;
+- estrae posizione, punti, partite, vittorie, pareggi, sconfitte, gol fatti/subiti e differenza reti;
+- ricava giornata e stagione, con fallback basato sulla data corrente;
+- normalizza i nomi tramite `teams.json`;
+- applica override grafici per alcuni loghi;
+- salva il risultato in `classifica.json`.
 
-- **Recupero dati ESPN** — classifica completa con posizione, punti, partite, vittorie, pareggi, sconfitte, gol fatti/subiti e differenza reti.
-- **Loghi personalizzati** — override dei loghi ESPN per le squadre italiane (Juventus, Napoli, Atalanta, Fiorentina, Roma, Udinese, Verona).
-- **Rendering grafico** — la classifica viene resa in HTML e scattata come screenshot con Playwright a risoluzione **1080×1440 px** con fattore di scala 3×.
-- **Overlay texture** — immagine `texture.png` applicata come layer trasparente per un effetto grafico coerente con il branding del canale.
-- **Font embedded in base64** — i font Google (Bebas Neue, Barlow Condensed, Inter) vengono scaricati e incorporati direttamente nell’HTML per garantire il rendering corretto in ambienti CI senza accesso a risorse esterne.
-- **Commit automatico del JSON** — `classifica.json` viene aggiornato e committato nel repository ad ogni esecuzione.
-- **Didascalia dinamica** — il messaggio Telegram riporta automaticamente il numero di giornata corrente.
+### 2. Rendering e invio
 
------
+`screenshot_telegram.py`:
 
-## Competizioni supportate
+- incorpora in base64 i font Google dichiarati in `index.html`, con fallback ai font di sistema;
+- inietta `classifica.json` nel template;
+- renderizza la pagina con Playwright/Chromium;
+- ridimensiona il risultato a **1620×2160 px**;
+- applica `texture_white.png` a Serie A/Champions o `texture_black.png` a Europa/Conference;
+- invia la card con `sendPhoto` e una didascalia HTML.
 
-|Variabile `COMPETITION`|Campionato       |Emoji|
-|-----------------------|-----------------|-----|
-|`SA`                   |Serie A          |🇮🇹    |
-|`UCL`                  |Champions League |🇪🇺    |
-|`UEL`                  |Europa League    |🇪🇺    |
-|`UECL`                 |Conference League|🇪🇺    |
+Lo screenshot è temporaneo e non viene committato. Il workflow aggiorna invece `classifica.json` nel repository quando il contenuto cambia.
 
------
+## Workflow
 
-## Struttura del repository
+È presente un workflow manuale per ogni competizione:
 
-```
-Classifica_JR/
-├── aggiorna_classifica.py    # Recupera e salva la classifica in JSON
-├── screenshot_telegram.py    # Renderizza la card HTML e invia su Telegram
-├── index.html                # Template grafico della classifica
-├── classifica.json           # Dati aggiornati (rigenerati ad ogni esecuzione)
-├── texture.png               # Overlay grafico applicato all'immagine finale
-└── .github/workflows/
-    ├── SerieA.yml            # Workflow Serie A
-    ├── ChampionsLeague.yml   # Workflow Champions League
-    ├── EuropaLeague.yml      # Workflow Europa League
-    └── ConferenceLeague.yml  # Workflow Conference League
-```
+- `.github/workflows/SerieA.yml`
+- `.github/workflows/ChampionsLeague.yml`
+- `.github/workflows/EuropaLeague.yml`
+- `.github/workflows/ConferenceLeague.yml`
 
------
+Tutti usano Python 3.10, installano Chromium e avviano in sequenza i due script. Non è configurato uno schedule automatico.
 
 ## Configurazione
 
-In **Settings → Secrets and variables → Actions** aggiungi:
+In **Settings → Secrets and variables → Actions** configura:
 
-|Secret              |Descrizione                                                                |
-|--------------------|---------------------------------------------------------------------------|
-|`TELEGRAM_BOT_TOKEN`|Token del bot Telegram.                                                    |
-|`TELEGRAM_CHAT_ID`  |Chat ID del canale di destinazione.                                        |
-|`FOOTBALL_API_KEY`  |*(Presente nei workflow ma non usato attivamente — ESPN non richiede key.)*|
+| Secret | Obbligatorio | Uso |
+|---|---:|---|
+| `TELEGRAM_BOT_TOKEN` | sì | Token del bot Telegram. |
+| `TELEGRAM_CHAT_ID` | sì | Chat o canale di destinazione. |
 
------
+`FOOTBALL_API_KEY` compare nei workflow, ma il codice non la usa: l’endpoint ESPN chiamato dal bot non richiede una chiave API.
 
 ## Avvio
 
-1. Fai il **fork** del repository.
-1. Configura i secret elencati sopra.
-1. Avvia il workflow desiderato da `Actions → [nome campionato] → Run workflow`.
+### Da GitHub
 
-> Il workflow esegue i due script in sequenza: prima aggiorna il JSON, poi genera lo screenshot e lo invia su Telegram.
+Apri **Actions**, seleziona il workflow della competizione desiderata e usa **Run workflow**.
 
------
+### In locale
 
-## Stack tecnico
+```bash
+python -m pip install -r requirements.txt
+playwright install chromium
+```
 
-`Python 3.10` · `requests` · `Playwright (Chromium)` · `Pillow` · `GitHub Actions`
+Esempio per la Serie A:
 
------
+```bash
+COMPETITION=SA python aggiorna_classifica.py
+COMPETITION=SA python screenshot_telegram.py
+```
 
-## Fonte dati
+Per il secondo comando servono `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID`. Su PowerShell imposta le variabili con `$env:NOME="valore"` prima di eseguire gli script.
 
-[ESPN API pubblica](https://site.api.espn.com/apis/v2/sports/soccer/) — nessuna API key necessaria.
+## Struttura
 
------
+```text
+Classifica_JR/
+├── aggiorna_classifica.py
+├── screenshot_telegram.py
+├── index.html
+├── classifica.json
+├── teams.json
+├── texture_black.png
+├── texture_white.png
+├── requirements.txt
+└── .github/workflows/
+    ├── SerieA.yml
+    ├── ChampionsLeague.yml
+    ├── EuropaLeague.yml
+    └── ConferenceLeague.yml
+```
 
-<div align="center">
+## Limiti noti
 
-*Progetto amatoriale. Non affiliato con la Juventus FC, Telegram o ESPN.*
+- Gli endpoint ESPN usati sono pubblici ma non documentati: struttura e disponibilità possono cambiare.
+- Giornata e stagione dipendono dai metadati ESPN; se mancano vengono stimate dai dati disponibili.
+- Font, loghi e rendering richiedono accesso di rete durante l’esecuzione; sono previsti alcuni fallback grafici.
 
-</div>
+---
+
+Progetto amatoriale, non affiliato con Juventus FC, Telegram o ESPN.
