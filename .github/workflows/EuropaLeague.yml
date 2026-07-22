@@ -39,14 +39,14 @@ jobs:
         env:
           FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
           COMPETITION: UEL
-        run: python aggiorna_classifica.py
+        run: python -u aggiorna_classifica.py
 
       - name: Invia Screenshot su Telegram
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           COMPETITION: UEL
-        run: python screenshot_telegram.py
+        run: python -u screenshot_telegram.py
 
       - name: Commit e Push del JSON
         run: |
