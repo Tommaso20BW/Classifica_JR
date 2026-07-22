@@ -5,6 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
     steps:
       - name: Checkout Repository
@@ -53,3 +54,20 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add classifica.json
           git diff --quiet && git diff --staged --quiet || (git commit -m 'Classifica aggiornata automaticamente (SA)' && git push)
+
+      - name: Pulisci la cronologia dei run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KEEP: "0"   # 0 = cancella TUTTI i run precedenti; resta visibile solo quello in corso
+                      # (un run non puo' cancellare se' stesso mentre gira: limite di GitHub)
+        run: |
+          # Cancella i run COMPLETATI di questo stesso workflow,
+          # tenendo solo gli ultimi $KEEP.
+          gh api "repos/${{ github.repository }}/actions/workflows/SerieA.yml/runs?status=completed&per_page=100" \
+            --jq '.workflow_runs | sort_by(.created_at) | reverse | .['"$KEEP"':] | .[].id' |
+          while read -r RUN_ID; do
+            echo "Elimino run $RUN_ID"
+            gh api -X DELETE "repos/${{ github.repository }}/actions/runs/$RUN_ID" || true
+          done
+          echo "Pulizia completata."
