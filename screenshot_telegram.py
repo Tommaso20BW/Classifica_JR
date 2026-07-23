@@ -13,8 +13,8 @@ TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 VIEWPORT_WIDTH  = 900
 VIEWPORT_HEIGHT = 1200
 SCALE           = 3
-TARGET_W        = 1620
-TARGET_H        = 2160
+TARGET_W        = 1920
+TARGET_H        = 2560
 OUTPUT_PATH     = "screenshot.png"
 
 
@@ -170,8 +170,8 @@ async def scatta_screenshot():
 
 def applica_texture(base_path, texture_path, output_path):
     base = Image.open(base_path).convert("RGBA")
-    # Mando a Telegram una sorgente ad alta risoluzione e nitida (LANCZOS):
-    # la foto compressa risulta più definita rispetto a partire da un'immagine già piccola.
+    # La foto HD di Telegram usa quattro volte i pixel della foto standard:
+    # per il formato 3:4 prepariamo quindi una sorgente 1920x2560 (LANCZOS).
     if base.size != (TARGET_W, TARGET_H):
         base = base.resize((TARGET_W, TARGET_H), Image.LANCZOS)
     if texture_path and os.path.exists(texture_path):
@@ -192,18 +192,28 @@ def invia_telegram(giornata, comp_key):
     comp_data     = COMP_INFO.get(comp_key, COMP_INFO["SA"])
     caption_testo = comp_data["caption"](giornata)
 
-    # Invio come FOTO inline. Telegram comprime sempre in JPEG: per ridurre l'effetto
-    # mando una sorgente ad alta risoluzione (vedi TARGET_W/H).
+    # Invio come FOTO inline alla risoluzione HD 3:4, non come documento.
+    # Il Bot API non espone un interruttore "HD": è la sorgente fino a 2560 px
+    # che consente a Telegram di generare la variante foto ad alta definizione.
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
     with open(OUTPUT_PATH, "rb") as foto:
         response = requests.post(
             url,
             data={"chat_id": TELEGRAM_CHAT_ID, "caption": caption_testo, "parse_mode": "HTML"},
-            files={"photo": foto}
+            files={"photo": ("classifica-hd.png", foto, "image/png")},
+            timeout=60,
         )
 
     if response.status_code == 200:
-        print(f"✅ Immagine inviata su Telegram ({comp_key})!")
+        payload = response.json()
+        photo_sizes = payload.get("result", {}).get("photo", [])
+        largest = max(photo_sizes, key=lambda p: p.get("width", 0) * p.get("height", 0), default={})
+        sent_w = largest.get("width", 0)
+        sent_h = largest.get("height", 0)
+        if max(sent_w, sent_h) >= 2000:
+            print(f"✅ Immagine HD inviata su Telegram ({comp_key}) – variante massima {sent_w}x{sent_h}.")
+        else:
+            print(f"⚠️ Telegram ha restituito solo {sent_w}x{sent_h}: verificare la variante HD.")
     else:
         print(f"❌ Errore Telegram: {response.status_code} — {response.text}")
 

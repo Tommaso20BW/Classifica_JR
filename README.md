@@ -49,10 +49,11 @@ screenshot.png ──► Telegram
 - incorpora in base64 i font Google dichiarati in `index.html`, con fallback ai font di sistema;
 - inietta `classifica.json` nel template;
 - renderizza la pagina con Playwright/Chromium;
-- usa fondali UEFA ad alta definizione con un overlay nero semitrasparente al 30%;
-- ridimensiona il risultato a **1620×2160 px**;
+- usa fondali UEFA ad alta definizione con un overlay nero semitrasparente al 42%;
+- ridimensiona il risultato alla risoluzione HD 3:4 di **1920×2560 px**;
 - applica `texture_white.png` a tutte e quattro le competizioni;
-- invia la card con `sendPhoto` e una didascalia HTML.
+- prepara la card in formato foto HD 3:4 (`1920x2560`) e la invia con `sendPhoto`, mantenendo la didascalia HTML;
+- controlla nella risposta di Telegram la risoluzione della variante foto più grande.
 
 Lo screenshot è temporaneo e non viene committato. Il workflow aggiorna invece `classifica.json` nel repository quando il contenuto cambia.
 
