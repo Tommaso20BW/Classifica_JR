@@ -50,7 +50,7 @@ screenshot.png ──► Telegram
 - inietta `classifica.json` nel template;
 - renderizza la pagina con Playwright/Chromium;
 - ridimensiona il risultato a **1620×2160 px**;
-- applica `texture_white.png` a Serie A/Champions o `texture_black.png` a Europa/Conference;
+- applica `texture_white.png` a tutte e quattro le competizioni;
 - invia la card con `sendPhoto` e una didascalia HTML.
 
 Lo screenshot è temporaneo e non viene committato. Il workflow aggiorna invece `classifica.json` nel repository quando il contenuto cambia.
@@ -108,8 +108,11 @@ Classifica_JR/
 ├── index.html
 ├── classifica.json
 ├── teams.json
-├── texture_black.png
 ├── texture_white.png
+├── competition-trophies.png
+├── ucl-texture.png
+├── uel-texture.png
+├── uecl-texture.png
 ├── requirements.txt
 └── .github/workflows/
     ├── SerieA.yml

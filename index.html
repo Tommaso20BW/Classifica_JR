@@ -5,177 +5,197 @@
 <title>Classifica</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Saira:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Roboto+Slab:wght@600;700;800;900&family=Saira:wght@500;600;700;800&family=Saira+Semi+Condensed:wght@500;600;700;800&family=Sofia+Sans+Semi+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{width:900px;height:1200px;overflow:hidden;}
 
   body{
     color:var(--ink);display:flex;flex-direction:column;position:relative;
-    font-family:'Saira',sans-serif;
-    --f-display:'Saira'; --f-body:'Saira'; --f-num:'Saira';
+    font-family:var(--f-body),sans-serif;background-color:var(--base);
+    --head-h:136px;--leg-h:62px;
+    --f-display:'Saira';--f-body:'Saira Semi Condensed';--f-num:'Saira';
   }
+  body::after{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(circle at 52% 36%,transparent 24%,rgba(0,0,0,.17) 100%);
+  }
+  .header,.table-area,.legend{position:relative;z-index:1;}
 
-  /* ════ SERIE A — blu ════ */
+  /* ════ SERIE A — bianco, azzurro e blu ════ */
   body.comp-SA{
-    background:linear-gradient(165deg,#2f78ff 0%,#1240cc 58%,#0c2ea6 100%);
-    --f-display:'Archivo'; --f-body:'Archivo'; --f-num:'Archivo';
-    --ink:#ffffff; --ink-dim:rgba(255,255,255,.66);
-    --row-odd:rgba(255,255,255,.08); --line:rgba(255,255,255,.16); --scrim:rgba(0,0,0,.16);
-    --chip-bg:rgba(255,255,255,.18); --chip-fg:#fff;
-    --dr-pos:#a8ffca; --dr-neg:#ffbcbc;
-    --z1:#34e3ff; --z2:#ff9540; --z3:#36d870; --z4:#ff5d5d;
-    --hi-soft:rgba(255,255,255,.20);
-    --head-h:172px; --leg-h:60px;
+    background:
+      linear-gradient(180deg,transparent 0 136px,rgba(239,246,255,.80) 136px 100%),
+      repeating-linear-gradient(135deg,rgba(22,111,255,.035) 0 2px,transparent 2px 34px),
+      #f6f9fd;
+    --base:#f6f9fd;
+    --f-display:'Archivo';--f-body:'Archivo';--f-num:'Archivo';
+    --ink:#102345;--ink-dim:#71809a;--head-ink:#fff;
+    --row-odd:rgba(20,87,175,.045);--line:rgba(19,55,105,.14);--scrim:rgba(255,255,255,.88);
+    --chip-bg:#e5eefb;--chip-fg:#174a98;
+    --dr-pos:#09864e;--dr-neg:#c53343;
+    --z1:#1388ff;--z2:#ff7b32;--z3:#08ac73;--z4:#e83f55;
   }
-  /* ════ CHAMPIONS LEAGUE — navy ════ */
-  body.comp-UCL{
-    background:linear-gradient(165deg,#1c40b0 0%,#0e2068 58%,#0a1550 100%);
-    --ink:#ffffff; --ink-dim:rgba(255,255,255,.64);
-    --row-odd:rgba(255,255,255,.07); --line:rgba(255,255,255,.14); --scrim:rgba(0,0,0,.20);
-    --chip-bg:rgba(255,255,255,.16); --chip-fg:#fff;
-    --dr-pos:#9dffbf; --dr-neg:#ffb4b4;
-    --z1:#2bd46f; --z2:#ffc94f; --z3:#ff6e6e;
-    --hi-soft:rgba(255,255,255,.18);
-    --head-h:164px; --leg-h:58px;
-  }
-  /* ════ EUROPA LEAGUE — arancione ════ */
-  body.comp-UEL{
-    background:linear-gradient(165deg,#ff941f 0%,#f56600 58%,#e35700 100%);
-    --f-display:'Oswald'; --f-body:'Oswald'; --f-num:'Oswald';
-    --ink:#241200; --ink-dim:rgba(36,18,0,.62);
-    --row-odd:rgba(0,0,0,.055); --line:rgba(0,0,0,.16); --scrim:rgba(0,0,0,.10);
-    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.72);
-    --dr-pos:#0c5a2a; --dr-neg:#8a1414;
-    --z1:#07c95f; --z2:#fff14d; --z3:#e21515;
-    --hi-soft:rgba(0,0,0,.15);
-    --head-h:164px; --leg-h:58px;
-  }
-  /* ════ CONFERENCE LEAGUE — verde ════ */
-  body.comp-UECL{
-    background:linear-gradient(165deg,#27cc6c 0%,#129b4f 58%,#0c8645 100%);
-    --f-display:'Fredoka'; --f-body:'Nunito'; --f-num:'Fredoka';
-    --ink:#06220f; --ink-dim:rgba(6,34,15,.60);
-    --row-odd:rgba(0,0,0,.06); --line:rgba(0,0,0,.13); --scrim:rgba(0,0,0,.10);
-    --chip-bg:rgba(0,0,0,.14); --chip-fg:rgba(0,0,0,.70);
-    --dr-pos:#06220f; --dr-neg:#7a1414;
-    --z1:#063; --z2:#ffd24f; --z3:#e21515;
-    --hi-soft:rgba(0,0,0,.15);
-    --head-h:164px; --leg-h:58px;
-  }
-  /* sovrascrivo z1 UECL con un verde scuro che stacca dal fondo */
-  body.comp-UECL{ --z1:#06351c; }
+  body.comp-SA::after{background:linear-gradient(90deg,rgba(28,111,255,.035),transparent 35%,rgba(22,55,145,.035));}
 
-  /* ──────── HEADER ──────── */
-  .header{
-    height:var(--head-h);flex-shrink:0;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:0 44px;text-align:center;
+  /* ════ UEFA CHAMPIONS LEAGUE — Kick of Light ════ */
+  body.comp-UCL{
+    background:
+      linear-gradient(180deg,rgba(2,5,30,.10),rgba(1,4,23,.66)),
+      url("ucl-texture.png") center top / cover no-repeat,
+      #02051b;
+    --base:#02051b;
+    --f-display:'Saira';--f-body:'Saira Semi Condensed';--f-num:'Saira';
+    --ink:#f5f7ff;--ink-dim:rgba(220,227,255,.68);--head-ink:#fff;
+    --row-odd:rgba(255,255,255,.045);--line:rgba(136,177,255,.18);--scrim:rgba(0,2,20,.72);
+    --chip-bg:rgba(86,143,255,.22);--chip-fg:#fff;
+    --dr-pos:#8cf3d2;--dr-neg:#ff9aa8;
+    --z1:#50e2ff;--z2:#8f85ff;--z3:#ff668a;
   }
-  .header-title{font-family:var(--f-display),sans-serif;line-height:.96;white-space:nowrap;color:var(--ink);}
-  body.comp-SA   .header-title{font-weight:900;font-size:4.7rem;letter-spacing:.01em;}
-  body.comp-UCL  .header-title{font-weight:700;font-size:3.4rem;letter-spacing:.1em;text-transform:uppercase;}
-  body.comp-UEL  .header-title{font-weight:700;font-size:3.7rem;letter-spacing:.015em;text-transform:uppercase;}
-  body.comp-UECL .header-title{font-weight:600;font-size:3.4rem;letter-spacing:0;text-transform:uppercase;}
+
+  /* ════ UEFA EUROPA LEAGUE — nero e arancione ════ */
+  body.comp-UEL{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.70) 52%,rgba(0,0,0,.88)),
+      url("uel-texture.png") center top / 1600px auto no-repeat,
+      #030303;
+    --base:#030303;
+    --f-display:'Roboto Slab';--f-body:'Barlow Semi Condensed';--f-num:'Barlow Semi Condensed';
+    --ink:#fff7ef;--ink-dim:rgba(255,224,203,.66);--head-ink:#fff;
+    --row-odd:rgba(255,100,19,.055);--line:rgba(255,98,18,.24);--scrim:rgba(0,0,0,.76);
+    --chip-bg:rgba(255,91,12,.22);--chip-fg:#fff;
+    --dr-pos:#8de7ac;--dr-neg:#ff956f;
+    --z1:#ff6a17;--z2:#ffb020;--z3:#e64d45;
+  }
+
+  /* ════ UEFA CONFERENCE LEAGUE — nero e verde ════ */
+  body.comp-UECL{
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.68) 48%,rgba(0,0,0,.84)),
+      url("uecl-texture.png") left bottom / 1540px auto no-repeat,
+      #020403;
+    --base:#020403;
+    --f-display:'Sofia Sans Semi Condensed';--f-body:'Sofia Sans Semi Condensed';--f-num:'Sofia Sans Semi Condensed';
+    --ink:#f3fff7;--ink-dim:rgba(202,255,221,.66);--head-ink:#fff;
+    --row-odd:rgba(0,211,98,.052);--line:rgba(0,220,104,.22);--scrim:rgba(0,0,0,.76);
+    --chip-bg:rgba(0,204,91,.20);--chip-fg:#fff;
+    --dr-pos:#8fffc0;--dr-neg:#ff9e9e;
+    --z1:#00d763;--z2:#a7f13e;--z3:#ea5d5d;
+  }
+
+  /* ──────── HEADER: compatto, senza marchi decorativi ──────── */
+  .header{
+    height:var(--head-h);flex-shrink:0;padding:13px 40px 10px;text-align:left;
+    display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+    color:var(--head-ink);
+  }
+  body.comp-SA .header{background:linear-gradient(105deg,#0268d7 0%,#168eff 55%,#2448ca 100%);}
+  body.comp-UCL .header{background:linear-gradient(90deg,rgba(1,4,28,.92),rgba(5,17,75,.44),rgba(0,0,0,.04));}
+  body.comp-UEL .header{background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(23,6,0,.52),transparent);}
+  body.comp-UECL .header{background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,25,12,.54),transparent);}
+
+  .titleline{height:100px;display:flex;align-items:center;gap:16px;min-width:0;}
+  .titlecopy{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+  .trophy{position:relative;display:block;height:94px;overflow:hidden;flex:0 0 auto;}
+  .trophy img{
+    position:absolute;max-width:none;
+    filter:brightness(0) invert(1);opacity:.98;pointer-events:none;
+  }
+  body.comp-SA .trophy{width:64px;}
+  body.comp-SA .trophy img{width:368.64px;height:245.76px;left:-34.3px;top:-77.9px;}
+  body.comp-UCL .trophy{width:64px;}
+  body.comp-UCL .trophy img{width:330.24px;height:220.16px;left:-98.5px;top:-55.6px;}
+  body.comp-UEL .trophy{width:58px;}
+  body.comp-UEL .trophy img{width:337.92px;height:245.76px;left:-181.3px;top:-72.2px;}
+  body.comp-UECL .trophy{width:50px;}
+  body.comp-UECL .trophy img{width:325.63px;height:217.09px;left:-248.3px;top:-53.3px;}
+
+  .header-title{font-family:var(--f-display),sans-serif;line-height:.94;white-space:nowrap;color:var(--head-ink);}
+  body.comp-SA .header-title{font-weight:900;font-size:3.7rem;letter-spacing:.005em;}
+  body.comp-UCL .header-title{font-weight:700;font-size:3.05rem;letter-spacing:.045em;text-transform:uppercase;}
+  body.comp-UEL .header-title{font-weight:800;font-size:3.18rem;letter-spacing:.005em;text-transform:uppercase;}
+  body.comp-UECL .header-title{font-weight:900;font-size:3.02rem;letter-spacing:.01em;text-transform:uppercase;}
 
   .header-sub{
-    font-family:'Barlow Semi Condensed',sans-serif;
-    font-size:.95rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
-    color:var(--ink-dim);margin-top:15px;padding-left:.3em;
+    font-family:var(--f-body),sans-serif;font-size:.84rem;font-weight:700;
+    letter-spacing:.19em;text-transform:uppercase;color:rgba(255,255,255,.72);
+    margin-top:8px;
   }
-  body.comp-UECL .header-sub{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:.2em;}
-
-  .header-rule{margin-top:15px;width:58px;height:3px;border-radius:2px;background:var(--ink);opacity:.4;}
+  body.comp-UECL .header-sub{letter-spacing:.15em;}
 
   /* ──────── TABLE ──────── */
-  .table-area{flex:1;display:flex;padding:10px 28px 2px;min-height:0;overflow:hidden;}
-  .col{flex:1;display:flex;flex-direction:column;min-width:0;padding:0 18px;}
-  .col:first-child{padding-left:0;}
-  .col:last-child{padding-right:0;}
-  .col + .col{border-left:1px solid var(--line);}
+  .table-area{flex:1;display:flex;gap:19px;padding:17px 28px 9px;min-height:0;overflow:hidden;}
+  .col{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .col + .col{border-left:1px solid var(--line);padding-left:19px;}
+  body.comp-SA .col{background:rgba(255,255,255,.72);border-radius:10px;padding-top:9px;box-shadow:0 12px 30px rgba(20,63,126,.07);}
+  body.comp-SA .col:first-child{padding-left:0;}
+  body.comp-SA .col + .col{padding-left:19px;border-radius:10px;}
 
   .col-head{
-    display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;
-    padding:0 8px 9px;
-    color:var(--ink-dim);
-    font-family:'Barlow Semi Condensed',sans-serif;
-    font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    display:grid;grid-template-columns:29px 33px minmax(0,1fr) 42px 38px;align-items:center;
+    padding:0 7px 8px;color:var(--ink-dim);font-family:var(--f-body),sans-serif;
+    font-size:.68rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
   }
   .col-head div{text-align:center;}
-  .col-head div:nth-child(3){text-align:left;padding-left:9px;}
-
+  .col-head div:nth-child(3){text-align:left;padding-left:8px;}
   .col-rows{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-
-  /* linea separatrice tra le zone di qualificazione */
-  .zone-divider{height:0;border-top:2px solid var(--ink);opacity:.32;flex-shrink:0;}
+  .zone-divider{height:0;border-top:1px solid var(--line);opacity:.92;flex-shrink:0;}
 
   .row{
-    position:relative;display:grid;grid-template-columns:30px 38px 1fr 46px 40px;align-items:center;
-    padding:0 8px;flex:1;min-height:0;
+    position:relative;display:grid;grid-template-columns:29px 33px minmax(0,1fr) 42px 38px;align-items:center;
+    padding:0 7px;flex:1;min-height:0;border-bottom:1px solid var(--line);
   }
+  .row:last-child{border-bottom:0;}
+  .row::before{content:"";position:absolute;left:0;top:18%;bottom:18%;width:3px;border-radius:0 2px 2px 0;background:transparent;}
+  .row[data-zone="z1"]::before{background:var(--z1);}
+  .row[data-zone="z2"]::before{background:var(--z2);}
+  .row[data-zone="z3"]::before{background:var(--z3);}
+  .row[data-zone="z4"]::before{background:var(--z4);}
   .row.odd{background:var(--row-odd);}
-  /* evidenziazione squadra (morbida) */
-  .row.hl{background:var(--hi-soft);}
-  .row.hl .c-name{font-weight:800;}
+  body.comp-SA .row.hl{background:linear-gradient(90deg,rgba(15,119,238,.18),rgba(63,146,255,.06));}
+  body.comp-UCL .row.hl{background:linear-gradient(90deg,rgba(56,219,255,.20),rgba(112,78,255,.15),rgba(255,76,196,.10));}
+  body.comp-UEL .row.hl{background:linear-gradient(90deg,rgba(255,104,17,.25),rgba(255,104,17,.06));}
+  body.comp-UECL .row.hl{background:linear-gradient(90deg,rgba(0,216,101,.25),rgba(0,216,101,.06));}
+  .row.hl .c-name{font-weight:900;}
 
-  .c-pos{
-    font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;
-    color:var(--ink-dim);font-variant-numeric:tabular-nums;
-  }
-  body.comp-SA .c-pos{font-size:1.12rem;}
-  body.comp-UCL .c-pos,body.comp-UEL .c-pos,body.comp-UECL .c-pos{font-size:.96rem;}
+  .c-pos{font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;color:var(--ink-dim);font-variant-numeric:tabular-nums;}
+  body.comp-SA .c-pos{font-size:1.05rem;}
+  body.comp-UCL .c-pos,body.comp-UEL .c-pos,body.comp-UECL .c-pos{font-size:.88rem;}
 
   .c-logo{display:flex;align-items:center;justify-content:center;}
-  .c-logo img{object-fit:contain;}
-  body.comp-SA .c-logo img{width:36px;height:36px;}
-  body.comp-UCL .c-logo img,body.comp-UEL .c-logo img,body.comp-UECL .c-logo img{width:27px;height:27px;}
-  .c-init{
-    display:flex;align-items:center;justify-content:center;border-radius:50%;
-    font-family:var(--f-display),sans-serif;font-weight:700;
-    background:var(--chip-bg);color:var(--chip-fg);
-  }
-  body.comp-SA .c-init{width:34px;height:34px;font-size:.9rem;}
-  body.comp-UCL .c-init,body.comp-UEL .c-init,body.comp-UECL .c-init{width:26px;height:26px;font-size:.7rem;}
+  .c-logo img{object-fit:contain;filter:drop-shadow(0 1px 2px rgba(0,0,0,.22));}
+  body.comp-SA .c-logo img{width:32px;height:32px;}
+  body.comp-UCL .c-logo img,body.comp-UEL .c-logo img,body.comp-UECL .c-logo img{width:24px;height:24px;}
+  .c-init{display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:var(--f-display),sans-serif;font-weight:800;background:var(--chip-bg);color:var(--chip-fg);}
+  body.comp-SA .c-init{width:30px;height:30px;font-size:.78rem;}
+  body.comp-UCL .c-init,body.comp-UEL .c-init,body.comp-UECL .c-init{width:23px;height:23px;font-size:.65rem;}
 
   .c-name{
-    font-family:var(--f-body),sans-serif;font-weight:600;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    color:var(--ink);padding-left:9px;text-transform:uppercase;letter-spacing:.01em;
+    font-family:var(--f-body),sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    color:var(--ink);padding-left:8px;text-transform:uppercase;letter-spacing:.005em;
   }
-  body.comp-SA .c-name{font-size:1.04rem;font-weight:700;}
-  body.comp-UCL .c-name{font-size:.86rem;font-weight:500;}
-  body.comp-UEL .c-name{font-size:.86rem;font-weight:600;}
-  body.comp-UECL .c-name{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.01em;}
+  body.comp-SA .c-name{font-size:.96rem;font-weight:700;}
+  body.comp-UCL .c-name{font-size:.84rem;font-weight:600;letter-spacing:.01em;}
+  body.comp-UEL .c-name{font-size:.86rem;font-weight:700;letter-spacing:.015em;}
+  body.comp-UECL .c-name{font-size:.86rem;font-weight:800;letter-spacing:.012em;}
 
-  .c-pt{
-    font-family:var(--f-num),sans-serif;font-weight:800;text-align:center;color:var(--ink);
-    font-variant-numeric:tabular-nums;
-  }
-  body.comp-SA .c-pt{font-size:1.6rem;font-weight:900;}
-  body.comp-UCL .c-pt,body.comp-UEL .c-pt,body.comp-UECL .c-pt{font-size:1.22rem;}
-
-  .c-dr{
-    font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;font-size:1rem;
-    color:var(--ink-dim);font-variant-numeric:tabular-nums;
-  }
-  body.comp-SA .c-dr{font-size:1.12rem;}
-  .c-dr.pos{color:var(--dr-pos);}
-  .c-dr.neg{color:var(--dr-neg);}
-  .c-dr.zer{color:var(--ink-dim);opacity:.7;}
+  .c-pt{font-family:var(--f-num),sans-serif;font-weight:900;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums;}
+  body.comp-SA .c-pt{font-size:1.42rem;}
+  body.comp-UCL .c-pt,body.comp-UEL .c-pt,body.comp-UECL .c-pt{font-size:1.11rem;}
+  .c-dr{font-family:var(--f-num),sans-serif;font-weight:700;text-align:center;font-size:.91rem;color:var(--ink-dim);font-variant-numeric:tabular-nums;}
+  body.comp-SA .c-dr{font-size:1.02rem;}
+  .c-dr.pos{color:var(--dr-pos);}.c-dr.neg{color:var(--dr-neg);}.c-dr.zer{color:var(--ink-dim);opacity:.75;}
 
   /* ──────── LEGEND ──────── */
   .legend{
     height:var(--leg-h);flex-shrink:0;display:flex;justify-content:center;align-items:center;
-    gap:24px;padding:0 24px;border-top:1px solid var(--line);background:var(--scrim);
+    gap:23px;padding:0 24px;border-top:1px solid var(--line);background:var(--scrim);
   }
-  .legend-item{
-    display:flex;align-items:center;gap:8px;
-    font-family:'Barlow Semi Condensed',sans-serif;
-    font-size:.9rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink);opacity:.86;
-  }
-  body.comp-UECL .legend-item{font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:.04em;}
-  .legend-bul{width:8px;height:8px;border-radius:2px;background:var(--ink);opacity:.5;flex-shrink:0;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-family:var(--f-body),sans-serif;font-size:.79rem;font-weight:800;letter-spacing:.075em;text-transform:uppercase;color:var(--ink);opacity:.92;}
+  .legend-bul{width:8px;height:8px;border-radius:2px;background:var(--z1);flex-shrink:0;}
+  .legend-item:nth-child(2) .legend-bul{background:var(--z2);}
+  .legend-item:nth-child(3) .legend-bul{background:var(--z3);}
+  .legend-item:nth-child(4) .legend-bul{background:var(--z4);}
 
   /* ──────── preview switch (solo demo) ──────── */
   .preview-bar{
@@ -200,9 +220,13 @@
   <div class="preview-bar" id="previewBar"></div>
 
   <div class="header">
-    <div class="header-title" id="heroTitle">Classifica</div>
-    <div class="header-sub" id="heroSub"></div>
-    <div class="header-rule"></div>
+    <div class="titleline">
+      <span class="trophy" aria-hidden="true"><img src="competition-trophies.png" alt=""></span>
+      <div class="titlecopy">
+        <div class="header-title" id="heroTitle">Classifica</div>
+        <div class="header-sub" id="heroSub"></div>
+      </div>
+    </div>
   </div>
 
   <div class="table-area" id="tableArea"></div>
@@ -348,9 +372,12 @@ function makeDemo(key){
 }
 
 /* ══ AVVIO ══ */
+const PREVIEW_KEY = (new URLSearchParams(location.search).get('comp') || '').toUpperCase();
 (window.__CLASSIFICA__
   ? Promise.resolve(window.__CLASSIFICA__)
-  : fetch('./classifica.json').then(r=>{ if(!r.ok) throw 0; return r.json(); })
+  : PREVIEW_KEY && CFG[PREVIEW_KEY]
+    ? Promise.resolve(makeDemo(PREVIEW_KEY))
+    : fetch('./classifica.json').then(r=>{ if(!r.ok) throw 0; return r.json(); })
 ).then(render)
  .catch(()=>{
    const bar = document.getElementById('previewBar');

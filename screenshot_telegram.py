@@ -105,10 +105,8 @@ async def scatta_screenshot():
     comp_key  = json_completo.get("competition", "SA").upper()
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
 
-    # Texture diversa per competizione:
-    #  - bianca (texture_white.png) su Serie A e Champions (fondi blu/navy)
-    #  - nera   (texture_black.png) su Europa e Conference (fondi arancione/verde)
-    texture_file = "texture_white.png" if comp_key in ("SA", "UCL") else "texture_black.png"
+    # La stessa texture chiara rifinisce tutte e quattro le competizioni.
+    texture_file = "texture_white.png"
 
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
