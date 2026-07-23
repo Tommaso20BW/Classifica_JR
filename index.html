@@ -104,6 +104,9 @@
     filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));
   }
   body.comp-UCL .competition-mark img{transform:scaleX(1.06);}
+  /* I PNG UEL/UECL hanno più trasparenza sopra che sotto: compensazione ottica. */
+  body.comp-UEL .competition-mark img{transform:translateY(-9px);}
+  body.comp-UECL .competition-mark img{transform:translateY(-10px);}
 
   .header-title{font-family:var(--f-display),sans-serif;line-height:.94;white-space:nowrap;color:var(--head-ink);}
   body.comp-SA .header-title{font-weight:900;font-size:3.7rem;letter-spacing:.005em;}
