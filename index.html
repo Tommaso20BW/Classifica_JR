@@ -41,8 +41,7 @@
   /* ════ UEFA CHAMPIONS LEAGUE — Kick of Light ════ */
   body.comp-UCL{
     background:
-      linear-gradient(180deg,rgba(2,5,30,.10),rgba(1,4,23,.66)),
-      url("ucl-texture.png") center top / cover no-repeat,
+      url("ucl-texture-hq.webp") center top / cover no-repeat,
       #02051b;
     --base:#02051b;
     --f-display:'Saira';--f-body:'Saira Semi Condensed';--f-num:'Saira';
@@ -56,8 +55,7 @@
   /* ════ UEFA EUROPA LEAGUE — nero e arancione ════ */
   body.comp-UEL{
     background:
-      linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.70) 52%,rgba(0,0,0,.88)),
-      url("uel-texture.png") center top / 1600px auto no-repeat,
+      url("uel-texture-hq.webp") center top / 1600px auto no-repeat,
       #030303;
     --base:#030303;
     --f-display:'Roboto Slab';--f-body:'Barlow Semi Condensed';--f-num:'Barlow Semi Condensed';
@@ -71,8 +69,7 @@
   /* ════ UEFA CONFERENCE LEAGUE — nero e verde ════ */
   body.comp-UECL{
     background:
-      linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.68) 48%,rgba(0,0,0,.84)),
-      url("uecl-texture.png") left bottom / 1540px auto no-repeat,
+      url("uecl-texture-hq.webp") left bottom / 1540px auto no-repeat,
       #020403;
     --base:#020403;
     --f-display:'Sofia Sans Semi Condensed';--f-body:'Sofia Sans Semi Condensed';--f-num:'Sofia Sans Semi Condensed';
@@ -94,21 +91,18 @@
   body.comp-UEL .header{background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(23,6,0,.52),transparent);}
   body.comp-UECL .header{background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,25,12,.54),transparent);}
 
-  .titleline{height:100px;display:flex;align-items:center;gap:16px;min-width:0;}
+  .titleline{height:100px;display:flex;align-items:center;gap:16px;min-width:0;position:relative;z-index:1;}
   .titlecopy{display:flex;flex-direction:column;justify-content:center;min-width:0;}
-  .trophy{position:relative;display:block;height:94px;overflow:hidden;flex:0 0 auto;}
-  .trophy img{
-    position:absolute;max-width:none;
-    filter:brightness(0) invert(1);opacity:.98;pointer-events:none;
+  .competition-mark{height:96px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .competition-mark img{display:block;max-width:100%;max-height:100%;object-fit:contain;pointer-events:none;}
+  body.comp-SA .competition-mark{width:76px;}
+  body.comp-SA .competition-mark img{width:76px;height:90px;}
+  body.comp-UCL .competition-mark{width:64px;}
+  body.comp-UEL .competition-mark{width:64px;}
+  body.comp-UECL .competition-mark{width:69px;}
+  body.comp-UCL .competition-mark img,body.comp-UEL .competition-mark img,body.comp-UECL .competition-mark img{
+    filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));
   }
-  body.comp-SA .trophy{width:64px;}
-  body.comp-SA .trophy img{width:368.64px;height:245.76px;left:-34.3px;top:-77.9px;}
-  body.comp-UCL .trophy{width:64px;}
-  body.comp-UCL .trophy img{width:330.24px;height:220.16px;left:-98.5px;top:-55.6px;}
-  body.comp-UEL .trophy{width:58px;}
-  body.comp-UEL .trophy img{width:337.92px;height:245.76px;left:-181.3px;top:-72.2px;}
-  body.comp-UECL .trophy{width:50px;}
-  body.comp-UECL .trophy img{width:325.63px;height:217.09px;left:-248.3px;top:-53.3px;}
 
   .header-title{font-family:var(--f-display),sans-serif;line-height:.94;white-space:nowrap;color:var(--head-ink);}
   body.comp-SA .header-title{font-weight:900;font-size:3.7rem;letter-spacing:.005em;}
@@ -197,6 +191,59 @@
   .legend-item:nth-child(3) .legend-bul{background:var(--z3);}
   .legend-item:nth-child(4) .legend-bul{background:var(--z4);}
 
+  /* ──────── Serie A: ripristino del design approvato ──────── */
+  body.comp-SA{background:#f7faff;--base:#f7faff;--line:#dce8f8;--scrim:#062d79;}
+  body.comp-SA::after{background:transparent;}
+  body.comp-SA .header{
+    position:relative;overflow:hidden;
+    background:linear-gradient(128deg,#052878 0 43%,#0757d7 43% 68%,#12b9f1 68% 100%);
+  }
+  body.comp-SA .header::before{
+    content:"";position:absolute;width:430px;height:430px;right:-180px;top:-226px;
+    border:45px solid rgba(255,255,255,.12);border-radius:50%;pointer-events:none;
+  }
+  body.comp-SA .header-title{font-size:3.38rem;letter-spacing:-.035em;}
+  body.comp-SA .table-area{gap:22px;padding:17px 27px 9px;background:#f7faff;}
+  body.comp-SA .col{background:transparent;border-radius:0;padding-top:0;box-shadow:none;}
+  body.comp-SA .col + .col{border-left:2px solid #d8e6ff;padding-left:22px;border-radius:0;}
+  body.comp-SA .col-head{
+    grid-template-columns:29px 31px minmax(0,1fr) 39px 34px;height:27px;flex:0 0 27px;
+    padding:0 5px;border-bottom:2px solid #1669d8;color:#174c9b;
+    font-size:.5rem;letter-spacing:.18em;
+  }
+  body.comp-SA .row{
+    grid-template-columns:29px 31px minmax(0,1fr) 39px 34px;padding:0 5px;
+    border-bottom:1px solid #dce8f8;color:#08245e;
+  }
+  body.comp-SA .row::before{display:none;}
+  body.comp-SA .row.odd{background:transparent;}
+  body.comp-SA .row.even{background:#edf4ff;}
+  body.comp-SA .row.hl{
+    color:#fff;background:linear-gradient(90deg,#063d9e,#0c70dd);
+    box-shadow:inset 5px 0 #16c9f4;
+  }
+  body.comp-SA .row.hl .c-pos,body.comp-SA .row.hl .c-name,
+  body.comp-SA .row.hl .c-pt,body.comp-SA .row.hl .c-dr{color:#fff;}
+  body.comp-SA .c-pos{font-size:.7rem;color:#2b6fc2;font-weight:900;}
+  body.comp-SA .c-logo img{width:23px;height:23px;}
+  body.comp-SA .c-init{width:23px;height:23px;font-size:.62rem;background:#fff;color:#0b56bd;border:1px solid #b9d1f4;}
+  body.comp-SA .c-name{font-size:.76rem;font-weight:700;padding-left:7px;letter-spacing:-.012em;}
+  body.comp-SA .c-pt{font-size:1.08rem;}
+  body.comp-SA .c-dr{font-size:.58rem;color:#5681b7;}
+  body.comp-SA .legend{background:#062d79;border:0;}
+  body.comp-SA .legend-item{color:#fff;font-size:.52rem;letter-spacing:.09em;}
+  body.comp-SA .legend-bul,body.comp-SA .legend-item:nth-child(n) .legend-bul{background:#25cbea;}
+
+  /* Overlay nero al 30% sulle classifiche UEFA per proteggere la leggibilità. */
+  body.comp-UCL .table-area,body.comp-UEL .table-area,body.comp-UECL .table-area{
+    background:rgba(0,0,0,.30);
+  }
+  body.comp-UCL .col-head,body.comp-UCL .row,
+  body.comp-UEL .col-head,body.comp-UEL .row,
+  body.comp-UECL .col-head,body.comp-UECL .row{
+    text-shadow:0 1px 3px rgba(0,0,0,.72);
+  }
+
   /* ──────── preview switch (solo demo) ──────── */
   .preview-bar{
     position:fixed;top:10px;left:50%;transform:translateX(-50%);
@@ -221,7 +268,7 @@
 
   <div class="header">
     <div class="titleline">
-      <span class="trophy" aria-hidden="true"><img src="competition-trophies.png" alt=""></span>
+      <span class="competition-mark" aria-hidden="true"><img id="competitionIcon" src="serie-a-scudetto.png" alt=""></span>
       <div class="titlecopy">
         <div class="header-title" id="heroTitle">Classifica</div>
         <div class="header-sub" id="heroSub"></div>
@@ -258,7 +305,7 @@ const CFG = {
     subLabel:(g,s)=>`Classifica · Giornata ${g} · ${s}`,
     cols:2, perCol:10,
     zone:p=>{ if(p<=4)return"z1"; if(p===5)return"z2"; if(p===6)return"z3"; if(p>=18)return"z4"; return""; },
-    sepAfter:[4,5,6,17],
+    sepAfter:[],
     legend:["1–4 Champions","5 Europa","6 Conference","18–20 Retrocesse"]
   },
   UCL:{
@@ -291,21 +338,29 @@ const CFG = {
 function drCls(v){ return v>0?'pos':v<0?'neg':'zer'; }
 function drVal(v){ return v>0?'+'+v:''+v; }
 
-function buildRow(t, parity, zone){
+const COMPETITION_ICONS = {
+  SA:'serie-a-scudetto.png',
+  UCL:'ucl-mark.png',
+  UEL:'uel-mark.png',
+  UECL:'uecl-mark.png'
+};
+
+function buildRow(t, parity, zone, key){
   const n = nome(t.team);
   const cls = parity % 2 === 0 ? 'even' : 'odd';
   const hl = HIGHLIGHT.has(n) ? ' hl' : '';
   const badge = t.logo ? `<img src="${t.logo}" alt="">` : `<span class="c-init">${initial(n)}</span>`;
+  const posizione = key === 'SA' ? String(t.pos).padStart(2,'0') : t.pos;
   return `<div class="row ${cls}${hl}" data-zone="${zone}">
-    <div class="c-pos">${t.pos}</div>
+    <div class="c-pos">${posizione}</div>
     <div class="c-logo">${badge}</div>
     <div class="c-name">${n}</div>
     <div class="c-pt">${t.pt}</div>
     <div class="c-dr ${drCls(t.dr)}">${drVal(t.dr)}</div>
   </div>`;
 }
-function buildHead(){
-  return `<div class="col-head"><div></div><div></div><div>Squadra</div><div>PT</div><div>GD</div></div>`;
+function buildHead(key){
+  return `<div class="col-head"><div>${key === 'SA' ? 'Pos' : ''}</div><div></div><div>Squadra</div><div>PT</div><div>${key === 'SA' ? 'DR' : 'GD'}</div></div>`;
 }
 
 function render(data){
@@ -314,6 +369,7 @@ function render(data){
 
   document.body.className = 'comp-'+key;
   document.getElementById('heroTitle').textContent = cfg.titolo;
+  document.getElementById('competitionIcon').src = COMPETITION_ICONS[key] || COMPETITION_ICONS.SA;
   const stagione = data.stagione || stagioneCorrente();
   document.getElementById('heroSub').textContent = cfg.subLabel(data.giornata || '—', stagione);
 
@@ -325,10 +381,10 @@ function render(data){
     let rows='';
     slice.forEach((t,idx)=>{
       const posG = i*cfg.perCol + idx + 1;
-      rows += buildRow(t, idx, cfg.zone(posG));
+      rows += buildRow(t, idx, cfg.zone(posG), key);
       if(cfg.sepAfter && cfg.sepAfter.includes(posG)) rows += `<div class="zone-divider"></div>`;
     });
-    html += `<div class="col">${buildHead()}<div class="col-rows">${rows}</div></div>`;
+    html += `<div class="col">${buildHead(key)}<div class="col-rows">${rows}</div></div>`;
   }
   area.innerHTML = html;
 

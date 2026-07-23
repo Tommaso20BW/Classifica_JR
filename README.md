@@ -49,6 +49,7 @@ screenshot.png ──► Telegram
 - incorpora in base64 i font Google dichiarati in `index.html`, con fallback ai font di sistema;
 - inietta `classifica.json` nel template;
 - renderizza la pagina con Playwright/Chromium;
+- usa fondali UEFA ad alta definizione con un overlay nero semitrasparente al 30%;
 - ridimensiona il risultato a **1620×2160 px**;
 - applica `texture_white.png` a tutte e quattro le competizioni;
 - invia la card con `sendPhoto` e una didascalia HTML.
@@ -109,10 +110,13 @@ Classifica_JR/
 ├── classifica.json
 ├── teams.json
 ├── texture_white.png
-├── competition-trophies.png
-├── ucl-texture.png
-├── uel-texture.png
-├── uecl-texture.png
+├── serie-a-scudetto.png
+├── ucl-mark.png
+├── uel-mark.png
+├── uecl-mark.png
+├── ucl-texture-hq.webp
+├── uel-texture-hq.webp
+├── uecl-texture-hq.webp
 ├── requirements.txt
 └── .github/workflows/
     ├── SerieA.yml
