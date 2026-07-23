@@ -49,7 +49,7 @@ screenshot.png ──► Telegram
 - incorpora in base64 i font Google dichiarati in `index.html`, con fallback ai font di sistema;
 - inietta `classifica.json` nel template;
 - renderizza la pagina con Playwright/Chromium;
-- usa fondali UEFA ad alta definizione con un overlay nero semitrasparente al 42%;
+- usa fondali UEFA ad alta definizione con un overlay nero semitrasparente al 70%;
 - ridimensiona il risultato alla risoluzione HD 3:4 di **1920×2560 px**;
 - applica `texture_white.png` a tutte e quattro le competizioni;
 - prepara la card in formato foto HD 3:4 (`1920x2560`) e la invia con `sendPhoto`, mantenendo la didascalia HTML;
