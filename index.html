@@ -41,6 +41,7 @@
   /* ════ UEFA CHAMPIONS LEAGUE — Kick of Light ════ */
   body.comp-UCL{
     background:
+      linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
       url("ucl-texture-hq.webp") center top / cover no-repeat,
       #02051b;
     --base:#02051b;
@@ -55,6 +56,7 @@
   /* ════ UEFA EUROPA LEAGUE — nero e arancione ════ */
   body.comp-UEL{
     background:
+      linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
       url("uel-texture-hq.webp") center top / 1600px auto no-repeat,
       #030303;
     --base:#030303;
@@ -69,6 +71,7 @@
   /* ════ UEFA CONFERENCE LEAGUE — nero e verde ════ */
   body.comp-UECL{
     background:
+      linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
       url("uecl-texture-hq.webp") left bottom / 1540px auto no-repeat,
       #020403;
     --base:#020403;
@@ -79,6 +82,7 @@
     --dr-pos:#8fffc0;--dr-neg:#ff9e9e;
     --z1:#00d763;--z2:#a7f13e;--z3:#ea5d5d;
   }
+  body.comp-UCL::after,body.comp-UEL::after,body.comp-UECL::after{background:transparent;}
 
   /* ──────── HEADER: compatto, senza marchi decorativi ──────── */
   .header{
@@ -87,9 +91,7 @@
     color:var(--head-ink);
   }
   body.comp-SA .header{background:linear-gradient(105deg,#0268d7 0%,#168eff 55%,#2448ca 100%);}
-  body.comp-UCL .header{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),linear-gradient(90deg,rgba(1,4,28,.92),rgba(5,17,75,.44),rgba(0,0,0,.04));}
-  body.comp-UEL .header{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),linear-gradient(90deg,rgba(0,0,0,.92),rgba(23,6,0,.52),transparent);}
-  body.comp-UECL .header{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,25,12,.54),transparent);}
+  body.comp-UCL .header,body.comp-UEL .header,body.comp-UECL .header{background:transparent;}
 
   .titleline{height:100px;display:flex;align-items:center;gap:16px;min-width:0;position:relative;z-index:1;}
   .titlecopy{display:flex;flex-direction:column;justify-content:center;min-width:0;}
@@ -234,11 +236,11 @@
   body.comp-SA .legend-item{color:#fff;font-size:.65rem;letter-spacing:.08em;}
   body.comp-SA .legend-bul,body.comp-SA .legend-item:nth-child(n) .legend-bul{background:#25cbea;}
 
-  /* Overlay nero uniforme al 55% su header, classifica e legenda UEFA. */
+  /* Un solo overlay nero al 55% vive nel background del body UEFA. */
   body.comp-UCL .table-area,body.comp-UEL .table-area,body.comp-UECL .table-area{
-    background:rgba(0,0,0,.55);
+    background:transparent;
   }
-  body.comp-UCL .legend,body.comp-UEL .legend,body.comp-UECL .legend{background:rgba(0,0,0,.55);}
+  body.comp-UCL .legend,body.comp-UEL .legend,body.comp-UECL .legend{background:transparent;border-top:0;}
   .col-head,.row{text-shadow:none;}
 
   /* ──────── preview switch (solo demo) ──────── */
