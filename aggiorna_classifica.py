@@ -32,7 +32,8 @@ COMPETIZIONI = {
     },
 }
 
-# Overrides loghi per squadre italiane
+# Override loghi per squadre italiane. Restano prioritari rispetto a ESPN;
+# l'unica eccezione e' la Juventus, gestita sotto con il logo ESPN bianco.
 LOGO_OVERRIDE = {
     "juventus":  "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
     "napoli":    "https://upload.wikimedia.org/wikipedia/commons/4/4d/SSC_Napoli_2025_%28white_and_azure%29.svg",
@@ -43,6 +44,8 @@ LOGO_OVERRIDE = {
     "roma":      "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
     "venezia":   "https://upload.wikimedia.org/wikipedia/it/7/73/Venezia_FC_Logo_2026.svg",
 }
+
+JUVENTUS_ESPN_WHITE_LOGO = "https://a.espncdn.com/i/teamlogos/soccer/500-dark/111.png"
 
 HEADERS = {
     "User-Agent": (
@@ -135,9 +138,14 @@ def get_standings_espn(slug: str) -> dict | None:
     Chiama l'API pubblica non documentata di ESPN per le classifiche calcio.
     Restituisce il JSON grezzo oppure None in caso di errore.
     """
-    url = f"https://site.api.espn.com/apis/v2/sports/soccer/{slug}/standings"
+    url = f"https://site.web.api.espn.com/apis/v2/sports/soccer/{slug}/standings"
     try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
+        r = requests.get(
+            url,
+            headers=HEADERS,
+            params={"region": "us", "lang": "en", "contentorigin": "espn"},
+            timeout=15,
+        )
         r.raise_for_status()
         return r.json()
     except requests.HTTPError as e:
@@ -145,6 +153,23 @@ def get_standings_espn(slug: str) -> dict | None:
     except Exception as e:
         print(f"❌ Errore di rete ESPN ({slug}): {e}")
     return None
+
+
+def varianti_logo_espn(logo_url: str) -> tuple[str, str]:
+    """Restituisce i loghi adatti rispettivamente a fondo chiaro e scuro.
+
+    ESPN pubblica la variante predefinita sotto ``/500/`` e quella per temi
+    scuri sotto ``/500-dark/``. Se l'URL non appartiene a questo schema, la
+    stessa risorsa viene usata per entrambi i temi.
+    """
+    if not logo_url:
+        return "", ""
+    logo_light_bg = logo_url.replace("/500-dark/", "/500/")
+    if "/teamlogos/soccer/500/" in logo_light_bg:
+        logo_dark_bg = logo_light_bg.replace("/500/", "/500-dark/", 1)
+    else:
+        logo_dark_bg = logo_light_bg
+    return logo_light_bg, logo_dark_bg
 
 
 def parse_standings(data: dict) -> tuple[list, int, str]:
@@ -192,16 +217,34 @@ def parse_standings(data: dict) -> tuple[list, int, str]:
             team = entry.get("team", {})
             nome = team.get("displayName", team.get("name", "?"))
 
-            # Logo: ESPN CDN (alta qualità)
+            # Logo ESPN: variante scura su fondi chiari e variante chiara su
+            # fondi scuri. L'API espone normalmente il link ``/500/``; il CDN
+            # rende disponibile la coppia equivalente sotto ``/500-dark/``.
             logos = team.get("logos", [])
-            logo_url = logos[0]["href"] if logos else ""
+            logo_url = next(
+                (logo.get("href", "") for logo in logos if "default" in logo.get("rel", [])),
+                logos[0].get("href", "") if logos else "",
+            )
 
-            # Override loghi per squadre note
             nome_lower = nome.lower()
-            for chiave, url in LOGO_OVERRIDE.items():
-                if chiave in nome_lower:
-                    logo_url = url
-                    break
+            override_key = next(
+                (chiave for chiave in LOGO_OVERRIDE if chiave in nome_lower),
+                None,
+            )
+
+            if override_key == "juventus":
+                # La riga Juventus e' evidenziata anche nel tema chiaro della
+                # Serie A: il marchio ESPN bianco resta quindi uguale ovunque.
+                _, logo_espn_bianco = varianti_logo_espn(logo_url)
+                logo_light_bg = logo_espn_bianco or JUVENTUS_ESPN_WHITE_LOGO
+                logo_dark_bg = logo_light_bg
+            elif override_key:
+                # Tutti gli altri override rimangono esattamente quelli
+                # configurati sopra, indipendentemente dal tema.
+                logo_light_bg = LOGO_OVERRIDE[override_key]
+                logo_dark_bg = logo_light_bg
+            else:
+                logo_light_bg, logo_dark_bg = varianti_logo_espn(logo_url)
 
             # Statistiche dalle 'stats'
             stats = {s["name"]: s.get("value", 0) for s in entry.get("stats", [])}
@@ -220,14 +263,17 @@ def parse_standings(data: dict) -> tuple[list, int, str]:
             if pld > giornata:
                 giornata = pld
 
-            # Nome corretto da teams.json (l'override loghi qui sopra usa
-            # ancora il nome ESPN originale, quindi non cambia comportamento)
+            # Nome corretto da teams.json.
             nome = nome_corretto(nome)
 
             classifica.append({
                 "pos":    pos,
                 "team":   nome,
-                "logo":   logo_url,
+                # ``logo`` resta per compatibilità con dataset e client meno
+                # recenti; punta alla variante adatta al fondo chiaro.
+                "logo":          logo_light_bg,
+                "logo_light_bg": logo_light_bg,
+                "logo_dark_bg":  logo_dark_bg,
                 "pt":     pt,
                 "p":      pld,
                 "v":      won,
