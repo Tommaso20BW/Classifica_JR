@@ -2,29 +2,40 @@ import os
 import sys
 import requests
 import json
+import re
 from pathlib import Path
 
-# ESPN slug per competizione → nessuna API key richiesta
+# La Serie A viene letta dalla classifica visualizzata su Diretta.it.
+# Le coppe europee restano su ESPN, perche' il link indicato riguarda solo la
+# Serie A e i relativi workflow continuano a usare questo stesso script.
 COMPETIZIONI = {
     "SA": {
-        "slug":   "ita.1",
+        "source": "diretta",
+        "url": (
+            "https://www.diretta.it/serie-a/classifiche/"
+            "CfujcOgK/classifiche/generale/"
+        ),
         "nome":   "Serie A",
         "comp":   "SA",
         "giornate": 38,
+        "squadre": 20,
     },
     "UCL": {
+        "source": "espn",
         "slug":   "uefa.champions",
         "nome":   "Champions League",
         "comp":   "UCL",
         "giornate": 8,
     },
     "UEL": {
+        "source": "espn",
         "slug":   "uefa.europa",
         "nome":   "Europa League",
         "comp":   "UEL",
         "giornate": 8,
     },
     "UECL": {
+        "source": "espn",
         "slug":   "uefa.europa.conf",
         "nome":   "Conference League",
         "comp":   "UECL",
@@ -32,8 +43,8 @@ COMPETIZIONI = {
     },
 }
 
-# Override loghi per squadre italiane. Restano prioritari rispetto a ESPN;
-# l'unica eccezione e' la Juventus, gestita sotto con il logo ESPN bianco.
+# Override loghi per squadre italiane. Restano prioritari rispetto alla
+# sorgente della classifica; la Juventus usa un marchio bianco sulla riga blu.
 LOGO_OVERRIDE = {
     "juventus":  "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
     "napoli":    "https://upload.wikimedia.org/wikipedia/commons/4/4d/SSC_Napoli_2025_%28white_and_azure%29.svg",
@@ -47,7 +58,7 @@ LOGO_OVERRIDE = {
 
 JUVENTUS_ESPN_WHITE_LOGO = "https://a.espncdn.com/i/teamlogos/soccer/500-dark/111.png"
 
-HEADERS = {
+ESPN_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -58,29 +69,30 @@ HEADERS = {
 }
 
 
-# ── Mappa nomi squadre: nome ESPN → nome corretto (da teams.json) ──
+# ── Mappa nomi squadre: nome sorgente → nome corretto (da teams.json) ──
 def carica_mappa_nomi() -> tuple[dict, dict]:
     """
     Legge teams.json (nella stessa cartella dello script) e costruisce la
-    mappa 'nome ESPN' → 'nome corretto'.
+    mappa 'nome sorgente' → 'nome corretto'.
 
     Formato di teams.json:
-        "Nome ESPN": ["Nome corretto", "Hashtag"]
+        "Nome sorgente": ["Nome corretto", "Hashtag"]
     Il terzo campo (hashtag) NON viene usato.
 
     Restituisce due dizionari: uno con le chiavi originali e uno con le chiavi
     in minuscolo, così il confronto è robusto a differenze di maiuscole.
-    Se teams.json manca o è illeggibile, torna mappe vuote (fallback ai nomi ESPN).
+    Se teams.json manca o è illeggibile, torna mappe vuote (fallback ai nomi
+    ricevuti dalla sorgente).
     """
     path = Path(__file__).parent / "teams.json"
     try:
         with open(path, encoding="utf-8") as f:
             raw = json.load(f)
     except FileNotFoundError:
-        print("⚠️  teams.json non trovato: uso i nomi originali ESPN.")
+        print("⚠️  teams.json non trovato: uso i nomi originali della sorgente.")
         return {}, {}
     except Exception as e:
-        print(f"⚠️  Impossibile leggere teams.json ({e}): uso i nomi ESPN.")
+        print(f"⚠️  Impossibile leggere teams.json ({e}): uso i nomi della sorgente.")
         return {}, {}
 
     esatta: dict[str, str] = {}
@@ -95,17 +107,17 @@ def carica_mappa_nomi() -> tuple[dict, dict]:
 MAPPA_NOMI, MAPPA_NOMI_LOWER = carica_mappa_nomi()
 
 
-def nome_corretto(espn_name: str) -> str:
-    """Converte un nome ESPN nel nome corretto definito in teams.json."""
-    if not espn_name:
-        return espn_name
-    if espn_name in MAPPA_NOMI:
-        return MAPPA_NOMI[espn_name]
-    return MAPPA_NOMI_LOWER.get(espn_name.lower().strip(), espn_name)
+def nome_corretto(source_name: str) -> str:
+    """Converte il nome ricevuto nel nome corretto definito in teams.json."""
+    if not source_name:
+        return source_name
+    if source_name in MAPPA_NOMI:
+        return MAPPA_NOMI[source_name]
+    return MAPPA_NOMI_LOWER.get(source_name.lower().strip(), source_name)
 
 
 def format_stagione(anno_inizio) -> str:
-    """Da anno d'inizio ESPN (es. 2026) → stringa stagione '2026/27'.
+    """Da anno d'inizio (es. 2026) → stringa stagione '2026/27'.
     Torna '' se il valore non è un anno valido."""
     try:
         y = int(anno_inizio)
@@ -117,7 +129,7 @@ def format_stagione(anno_inizio) -> str:
 
 
 def stagione_da_testo(testo: str) -> str:
-    """Estrae la stagione da stringhe ESPN tipo '2026-2027' o
+    """Estrae la stagione da stringhe tipo '2026-2027' o
     'Serie A 2026-2027' / '2026-27 Serie A'. Torna '' se non trovata."""
     import re
     m = re.search(r"(19|20)\d{2}", testo or "")
@@ -142,7 +154,7 @@ def get_standings_espn(slug: str) -> dict | None:
     try:
         r = requests.get(
             url,
-            headers=HEADERS,
+            headers=ESPN_HEADERS,
             params={"region": "us", "lang": "en", "contentorigin": "espn"},
             timeout=15,
         )
@@ -153,6 +165,144 @@ def get_standings_espn(slug: str) -> dict | None:
     except Exception as e:
         print(f"❌ Errore di rete ESPN ({slug}): {e}")
     return None
+
+
+def _intero(valore, campo: str, squadra: str) -> int:
+    """Converte un valore numerico della tabella e produce errori leggibili."""
+    try:
+        return int(str(valore).strip())
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"valore non valido per {campo} di {squadra}: {valore!r}"
+        ) from exc
+
+
+def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
+    """Legge la classifica Serie A dal DOM renderizzato di Diretta.it.
+
+    La pagina carica la tabella tramite JavaScript, quindi viene usato Chromium
+    headless (gia' installato dai workflow per la generazione dello screenshot).
+    Restituisce ``(classifica, giornata, stagione)`` oppure ``None`` in caso di
+    errore di navigazione o di formato inatteso.
+    """
+    try:
+        from playwright.sync_api import sync_playwright
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(
+                headless=True,
+                args=["--disable-dev-shm-usage"],
+            )
+            try:
+                context = browser.new_context(
+                    locale="it-IT",
+                    timezone_id="Europe/Rome",
+                    user_agent=(
+                        "Mozilla/5.0 (X11; Linux x86_64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/140.0.0.0 Safari/537.36"
+                    ),
+                )
+                page = context.new_page()
+                page.goto(url, wait_until="domcontentloaded", timeout=45_000)
+
+                rows = page.locator(".ui-table__body .ui-table__row")
+                rows.first.wait_for(state="visible", timeout=45_000)
+
+                raw_rows = rows.evaluate_all(
+                    """
+                    rows => rows.map(row => ({
+                        pos: row.querySelector('.tableCellRank')?.textContent?.trim() || '',
+                        team: row.querySelector('.tableCellParticipant__name')?.textContent?.trim() || '',
+                        logo: row.querySelector('.tableCellParticipant__image img')?.src || '',
+                        values: [...row.querySelectorAll('span.table__cell--value')]
+                            .map(cell => cell.textContent.trim())
+                    }))
+                    """
+                )
+                titolo = page.locator("h1").first.inner_text(timeout=10_000)
+            finally:
+                browser.close()
+    except Exception as exc:
+        print(f"❌ Errore durante l'estrazione da Diretta.it: {exc}")
+        return None
+
+    try:
+        classifica = []
+        for raw in raw_rows:
+            squadra_originale = raw.get("team", "").strip()
+            valori = raw.get("values", [])
+            if not squadra_originale or len(valori) < 7:
+                raise ValueError(f"riga incompleta: {raw!r}")
+
+            posizione_testo = re.sub(r"\D", "", raw.get("pos", ""))
+            if not posizione_testo:
+                raise ValueError(f"posizione mancante per {squadra_originale}")
+
+            pld = _intero(valori[0], "partite", squadra_originale)
+            won = _intero(valori[1], "vittorie", squadra_originale)
+            draw = _intero(valori[2], "pareggi", squadra_originale)
+            lost = _intero(valori[3], "sconfitte", squadra_originale)
+            score_match = re.fullmatch(r"(\d+)\s*:\s*(\d+)", valori[4])
+            if not score_match:
+                raise ValueError(
+                    f"reti non valide per {squadra_originale}: {valori[4]!r}"
+                )
+            gf, ga = map(int, score_match.groups())
+            dr = _intero(valori[5], "differenza reti", squadra_originale)
+            points = _intero(valori[6], "punti", squadra_originale)
+
+            if pld != won + draw + lost:
+                raise ValueError(
+                    f"totale partite incoerente per {squadra_originale}: "
+                    f"{pld} != {won}+{draw}+{lost}"
+                )
+            if dr != gf - ga:
+                raise ValueError(
+                    f"differenza reti incoerente per {squadra_originale}: "
+                    f"{dr} != {gf}-{ga}"
+                )
+
+            nome_lower = squadra_originale.lower()
+            override_key = next(
+                (chiave for chiave in LOGO_OVERRIDE if chiave in nome_lower),
+                None,
+            )
+            logo = (
+                LOGO_OVERRIDE[override_key]
+                if override_key
+                else raw.get("logo", "")
+            )
+
+            classifica.append({
+                "pos": int(posizione_testo),
+                "team": nome_corretto(squadra_originale),
+                "logo": logo,
+                "logo_light_bg": logo,
+                "logo_dark_bg": logo,
+                "pt": points,
+                "p": pld,
+                "v": won,
+                "n": draw,
+                "p_pers": lost,
+                "gf": gf,
+                "gs": ga,
+                "dr": dr,
+            })
+
+        classifica.sort(key=lambda x: x["pos"])
+        posizioni = [riga["pos"] for riga in classifica]
+        if posizioni != list(range(1, len(classifica) + 1)):
+            raise ValueError(f"posizioni non consecutive: {posizioni}")
+        if len({riga["team"] for riga in classifica}) != len(classifica):
+            raise ValueError("la tabella contiene squadre duplicate")
+
+        giornata = max((riga["p"] for riga in classifica), default=0) or 1
+        stagione = stagione_da_testo(titolo)
+        return classifica, giornata, stagione
+    except Exception as exc:
+        print(f"❌ Formato classifica Diretta.it non valido: {exc}")
+        return None
 
 
 def varianti_logo_espn(logo_url: str) -> tuple[str, str]:
@@ -298,23 +448,37 @@ def genera_json_classifica():
         print(f"❌ Competizione non riconosciuta: {comp_key}. Usa SA, UCL, UEL o UECL.")
         sys.exit(1)
 
-    print(f"📡 Recupero classifica ESPN: {comp['nome']} ({comp_key})...")
-
-    data = get_standings_espn(comp["slug"])
-    if data is None:
-        print("❌ Impossibile recuperare i dati. Controlla la connessione.")
-        sys.exit(1)
-
-    classifica, giornata, stagione = parse_standings(data)
+    if comp["source"] == "diretta":
+        print(f"📡 Recupero classifica Diretta.it: {comp['nome']} ({comp_key})...")
+        risultato = scrape_standings_diretta(comp["url"])
+        if risultato is None:
+            print("❌ Impossibile recuperare la classifica da Diretta.it.")
+            sys.exit(1)
+        classifica, giornata, stagione = risultato
+    else:
+        print(f"📡 Recupero classifica ESPN: {comp['nome']} ({comp_key})...")
+        data = get_standings_espn(comp["slug"])
+        if data is None:
+            print("❌ Impossibile recuperare i dati. Controlla la connessione.")
+            sys.exit(1)
+        classifica, giornata, stagione = parse_standings(data)
 
     if not classifica:
-        print("❌ Nessuna squadra trovata nella risposta ESPN.")
+        print(f"❌ Nessuna squadra trovata nella risposta {comp['source']}.")
+        sys.exit(1)
+
+    squadre_attese = comp.get("squadre")
+    if squadre_attese and len(classifica) != squadre_attese:
+        print(
+            f"❌ Numero di squadre inatteso: {len(classifica)} "
+            f"(attese {squadre_attese})."
+        )
         sys.exit(1)
 
     # Se l'API non ha esposto la stagione, la ricaviamo dalla data odierna
     if not stagione:
         stagione = stagione_corrente_da_data()
-        print(f"⚠️  Stagione non trovata nell'API ESPN: uso il fallback da data ({stagione}).")
+        print(f"⚠️  Stagione non trovata nella sorgente: uso il fallback da data ({stagione}).")
 
     output = {
         "competition":      comp_key,

@@ -1,6 +1,12 @@
 name: Aggiorna Classifica Live - Serie A
 on:
   workflow_dispatch:
+    inputs:
+      test_only:
+        description: 'Test estrazione: non invia su Telegram e non modifica il repository'
+        required: false
+        default: false
+        type: boolean
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,7 +48,29 @@ jobs:
           COMPETITION: SA
         run: python -u aggiorna_classifica.py
 
+      - name: Verifica estrazione Diretta.it
+        if: ${{ inputs.test_only }}
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("classifica.json", encoding="utf-8") as file:
+              data = json.load(file)
+
+          rows = data["classifica"]
+          assert data["competition"] == "SA"
+          assert len(rows) == 20, len(rows)
+          assert [row["pos"] for row in rows] == list(range(1, 21))
+          assert all(row["p"] == row["v"] + row["n"] + row["p_pers"] for row in rows)
+          assert all(row["dr"] == row["gf"] - row["gs"] for row in rows)
+
+          print(f"OK: {len(rows)} squadre, giornata {data['giornata']}, stagione {data['stagione']}")
+          for row in rows:
+              print(f"{row['pos']:>2}. {row['team']:<15} {row['pt']:>3} pt")
+          PY
+
       - name: Invia Screenshot su Telegram
+        if: ${{ !inputs.test_only }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -50,6 +78,7 @@ jobs:
         run: python -u screenshot_telegram.py
 
       - name: Commit e Push del JSON
+        if: ${{ !inputs.test_only }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -57,7 +86,7 @@ jobs:
           git diff --quiet && git diff --staged --quiet || (git commit -m 'Classifica aggiornata automaticamente (SA)' && git push)
 
       - name: Pulisci la cronologia dei run
-        if: always()
+        if: ${{ always() && !inputs.test_only }}
         env:
           GH_TOKEN: ${{ github.token }}
           KEEP: "0"   # 0 = cancella TUTTI i run precedenti; resta visibile solo quello in corso
