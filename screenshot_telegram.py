@@ -54,11 +54,33 @@ LOGO_HEADERS = {
     "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 }
 
+LOGHI_PERSONALIZZATI_CACHE = {
+    (
+        "https://upload.wikimedia.org/wikipedia/commons/9/99/"
+        "Juventus_FC_2017_squared_icon_%28white%29.png"
+    ): Path("assets/juventus-custom.png.b64"),
+    (
+        "https://assets.football-logos.cc/logos/italy/512x512/"
+        "roma.8dfa8968.png"
+    ): Path("assets/roma-custom.png.b64"),
+}
+
 
 def _scarica_logo_base64(url: str) -> str:
     """Scarica un logo e lo converte in data URI per il rendering offline."""
     if url.startswith("data:"):
         return url
+
+    cache_path = LOGHI_PERSONALIZZATI_CACHE.get(url)
+    if cache_path:
+        encoded = (
+            (Path(__file__).parent / cache_path)
+            .read_text(encoding="ascii")
+            .strip()
+        )
+        # Verifica anche l'integrita' della copia prima di usarla.
+        base64.b64decode(encoded, validate=True)
+        return f"data:image/png;base64,{encoded}"
 
     response = requests.get(url, headers=LOGO_HEADERS, timeout=25)
     response.raise_for_status()
