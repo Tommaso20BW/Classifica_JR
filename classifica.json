@@ -6,6 +6,21 @@
     "classifica": [
         {
             "pos": 1,
+            "team": "Roma",
+            "logo": "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
+            "logo_light_bg": "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
+            "logo_dark_bg": "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
+            "pt": 3,
+            "p": 1,
+            "v": 1,
+            "n": 0,
+            "p_pers": 0,
+            "gf": 4,
+            "gs": 0,
+            "dr": 4
+        },
+        {
+            "pos": 2,
             "team": "Inter",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
@@ -20,7 +35,7 @@
             "dr": 3
         },
         {
-            "pos": 2,
+            "pos": 3,
             "team": "Lecce",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/113.png",
@@ -35,7 +50,7 @@
             "dr": 2
         },
         {
-            "pos": 3,
+            "pos": 4,
             "team": "Napoli",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/SSC_Napoli_2025_%28white_and_azure%29.svg",
             "logo_light_bg": "https://upload.wikimedia.org/wikipedia/commons/4/4d/SSC_Napoli_2025_%28white_and_azure%29.svg",
@@ -50,7 +65,7 @@
             "dr": 2
         },
         {
-            "pos": 4,
+            "pos": 5,
             "team": "Milan",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
@@ -65,7 +80,7 @@
             "dr": 1
         },
         {
-            "pos": 5,
+            "pos": 6,
             "team": "Atalanta",
             "logo": "https://upload.wikimedia.org/wikipedia/it/2/24/Atalanta_BC_2026.svg",
             "logo_light_bg": "https://upload.wikimedia.org/wikipedia/it/2/24/Atalanta_BC_2026.svg",
@@ -80,7 +95,7 @@
             "dr": 1
         },
         {
-            "pos": 6,
+            "pos": 7,
             "team": "Cagliari",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2925.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/2925.png",
@@ -95,7 +110,7 @@
             "dr": 1
         },
         {
-            "pos": 7,
+            "pos": 8,
             "team": "Juventus",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/111.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/111.png",
@@ -110,7 +125,22 @@
             "dr": 1
         },
         {
-            "pos": 8,
+            "pos": 9,
+            "team": "Lazio",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
+            "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
+            "logo_dark_bg": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/112.png",
+            "pt": 3,
+            "p": 1,
+            "v": 1,
+            "n": 0,
+            "p_pers": 0,
+            "gf": 1,
+            "gs": 0,
+            "dr": 1
+        },
+        {
+            "pos": 10,
             "team": "Como",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/2572.png",
@@ -125,7 +155,7 @@
             "dr": 0
         },
         {
-            "pos": 9,
+            "pos": 11,
             "team": "Udinese",
             "logo": "https://upload.wikimedia.org/wikipedia/it/a/ae/Logo_Udinese_Calcio_2010.svg",
             "logo_light_bg": "https://upload.wikimedia.org/wikipedia/it/a/ae/Logo_Udinese_Calcio_2010.svg",
@@ -140,67 +170,7 @@
             "dr": 0
         },
         {
-            "pos": 10,
-            "team": "Bologna",
-            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
-            "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
-            "logo_dark_bg": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/107.png",
-            "pt": 0,
-            "p": 0,
-            "v": 0,
-            "n": 0,
-            "p_pers": 0,
-            "gf": 0,
-            "gs": 0,
-            "dr": 0
-        },
-        {
-            "pos": 11,
-            "team": "Fiorentina",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
-            "logo_light_bg": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
-            "logo_dark_bg": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
-            "pt": 0,
-            "p": 0,
-            "v": 0,
-            "n": 0,
-            "p_pers": 0,
-            "gf": 0,
-            "gs": 0,
-            "dr": 0
-        },
-        {
             "pos": 12,
-            "team": "Lazio",
-            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
-            "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/112.png",
-            "logo_dark_bg": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/112.png",
-            "pt": 0,
-            "p": 0,
-            "v": 0,
-            "n": 0,
-            "p_pers": 0,
-            "gf": 0,
-            "gs": 0,
-            "dr": 0
-        },
-        {
-            "pos": 13,
-            "team": "Roma",
-            "logo": "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
-            "logo_light_bg": "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
-            "logo_dark_bg": "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
-            "pt": 0,
-            "p": 0,
-            "v": 0,
-            "n": 0,
-            "p_pers": 0,
-            "gf": 0,
-            "gs": 0,
-            "dr": 0
-        },
-        {
-            "pos": 14,
             "team": "Sassuolo",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/3997.png",
@@ -215,7 +185,7 @@
             "dr": -1
         },
         {
-            "pos": 15,
+            "pos": 13,
             "team": "Torino",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/239.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/239.png",
@@ -230,7 +200,22 @@
             "dr": -1
         },
         {
-            "pos": 16,
+            "pos": 14,
+            "team": "Bologna",
+            "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
+            "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/107.png",
+            "logo_dark_bg": "https://a.espncdn.com/i/teamlogos/soccer/500-dark/107.png",
+            "pt": 0,
+            "p": 1,
+            "v": 0,
+            "n": 0,
+            "p_pers": 1,
+            "gf": 0,
+            "gs": 1,
+            "dr": -1
+        },
+        {
+            "pos": 15,
             "team": "Frosinone",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/4057.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/4057.png",
@@ -245,7 +230,7 @@
             "dr": -1
         },
         {
-            "pos": 17,
+            "pos": 16,
             "team": "Parma",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/115.png",
@@ -260,7 +245,7 @@
             "dr": -1
         },
         {
-            "pos": 18,
+            "pos": 17,
             "team": "Genoa",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/3263.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/3263.png",
@@ -275,7 +260,7 @@
             "dr": -2
         },
         {
-            "pos": 19,
+            "pos": 18,
             "team": "Venezia",
             "logo": "https://upload.wikimedia.org/wikipedia/it/7/73/Venezia_FC_Logo_2026.svg",
             "logo_light_bg": "https://upload.wikimedia.org/wikipedia/it/7/73/Venezia_FC_Logo_2026.svg",
@@ -290,7 +275,7 @@
             "dr": -2
         },
         {
-            "pos": 20,
+            "pos": 19,
             "team": "Monza",
             "logo": "https://a.espncdn.com/i/teamlogos/soccer/500/4007.png",
             "logo_light_bg": "https://a.espncdn.com/i/teamlogos/soccer/500/4007.png",
@@ -303,6 +288,21 @@
             "gf": 1,
             "gs": 4,
             "dr": -3
+        },
+        {
+            "pos": 20,
+            "team": "Fiorentina",
+            "logo": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
+            "logo_light_bg": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
+            "logo_dark_bg": "https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
+            "pt": 0,
+            "p": 1,
+            "v": 0,
+            "n": 0,
+            "p_pers": 1,
+            "gf": 0,
+            "gs": 4,
+            "dr": -4
         }
     ]
 }
