@@ -2,8 +2,12 @@ import json
 import os
 import re
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
+from urllib.parse import urljoin
+
+import requests
 
 
 # Le URL correnti senza ID seguono automaticamente la stagione attiva scelta
@@ -58,6 +62,24 @@ COMPETIZIONI = {
         "squadre": 36,
     },
 }
+
+TEAM_PAGE_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (X11; Linux x86_64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/140.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml",
+    "Accept-Language": "it-IT,it;q=0.9,en;q=0.7",
+}
+
+# La tabella usa icone 30x30. La pagina della squadra, sempre su Diretta.it,
+# espone invece lo stesso stemma nella variante heading__logo da 100x100.
+LOGO_GRANDE_RE = re.compile(
+    r'<img\b(?=[^>]*\bclass=["\'][^"\']*\bheading__logo\b[^"\']*["\'])'
+    r'(?=[^>]*\bsrc=["\']([^"\']+)["\'])[^>]*>',
+    re.IGNORECASE,
+)
 
 
 def carica_mappa_nomi() -> tuple[dict, dict]:
@@ -132,6 +154,50 @@ def _intero(valore, campo: str, squadra: str) -> int:
         ) from exc
 
 
+def _logo_grande_diretta(team_url: str, fallback: str) -> str:
+    """Recupera dalla pagina squadra lo stemma Diretta.it da 100x100."""
+    if not team_url:
+        return fallback
+    try:
+        response = requests.get(
+            urljoin("https://www.diretta.it/", team_url),
+            headers=TEAM_PAGE_HEADERS,
+            timeout=20,
+        )
+        response.raise_for_status()
+        match = LOGO_GRANDE_RE.search(response.text)
+        if match:
+            return urljoin(response.url, match.group(1))
+    except Exception as exc:
+        print(f"⚠️  Logo grande non disponibile per {team_url}: {exc}")
+    return fallback
+
+
+def _loghi_grandi_diretta(raw_rows: list[dict]) -> list[str]:
+    """Scarica in parallelo le varianti grandi, mantenendo l'ordine delle righe."""
+    if not raw_rows:
+        return []
+    workers = min(8, len(raw_rows))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        loghi = list(executor.map(
+            lambda raw: _logo_grande_diretta(
+                raw.get("team_url", ""),
+                raw.get("logo", ""),
+            ),
+            raw_rows,
+        ))
+
+    trovati = sum(
+        logo and logo != raw.get("logo", "")
+        for logo, raw in zip(loghi, raw_rows)
+    )
+    print(
+        f"🖼️  Loghi Diretta.it ad alta risoluzione: "
+        f"{trovati}/{len(raw_rows)}."
+    )
+    return loghi
+
+
 def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
     """Legge una classifica dal DOM renderizzato di Diretta.it.
 
@@ -169,6 +235,7 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                     rows => rows.map(row => ({
                         pos: row.querySelector('.tableCellRank')?.textContent?.trim() || '',
                         team: row.querySelector('.tableCellParticipant__name')?.textContent?.trim() || '',
+                        team_url: row.querySelector('.tableCellParticipant__name')?.href || '',
                         logo: row.querySelector('.tableCellParticipant__image img')?.src || '',
                         values: [...row.querySelectorAll('span.table__cell--value')]
                             .map(cell => cell.textContent.trim())
@@ -185,7 +252,8 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
 
     try:
         classifica = []
-        for raw in raw_rows:
+        loghi_grandi = _loghi_grandi_diretta(raw_rows)
+        for raw, logo_grande in zip(raw_rows, loghi_grandi):
             squadra_originale = raw.get("team", "").strip()
             valori = raw.get("values", [])
             if not squadra_originale or len(valori) < 7:
@@ -219,8 +287,8 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                     f"{dr} != {gf}-{ga}"
                 )
 
-            # Nessuna sostituzione: il logo e' esattamente quello di Diretta.it.
-            logo = raw.get("logo", "")
+            # Nessuna sostituzione: e' la variante grande del sito Diretta.it.
+            logo = logo_grande
             classifica.append({
                 "pos": int(posizione_testo),
                 "team": nome_corretto(squadra_originale),
