@@ -266,6 +266,27 @@ async def scatta_screenshot():
             )
         print("✅ Rendering verificato: nessun logo rotto o segnaposto.")
 
+        if comp_key == "SA":
+            evidenziate = page.locator(".row.hl")
+            if await evidenziate.count():
+                stile_evidenza = await evidenziate.first.evaluate(
+                    """row => ({
+                        boxShadow: getComputedStyle(row).boxShadow,
+                        beforeDisplay: getComputedStyle(row, '::before').display
+                    })"""
+                )
+                if (
+                    stile_evidenza["boxShadow"] != "none"
+                    or stile_evidenza["beforeDisplay"] != "none"
+                ):
+                    raise RuntimeError(
+                        "la riga Juventus contiene ancora una linea laterale"
+                    )
+                print(
+                    "✅ Evidenza Juventus verificata: sola fascia blu, "
+                    "nessuna linea celeste."
+                )
+
         await page.screenshot(
             path="screenshot_raw.png",
             clip={"x": 0, "y": 0, "width": VIEWPORT_WIDTH, "height": VIEWPORT_HEIGHT}
