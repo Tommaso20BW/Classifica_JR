@@ -270,22 +270,44 @@ async def scatta_screenshot():
             evidenziate = page.locator(".row.hl")
             if await evidenziate.count():
                 stile_evidenza = await evidenziate.first.evaluate(
-                    """row => ({
-                        boxShadow: getComputedStyle(row).boxShadow,
-                        beforeDisplay: getComputedStyle(row, '::before').display
-                    })"""
+                    "row => getComputedStyle(row).boxShadow"
                 )
-                if (
-                    stile_evidenza["boxShadow"] != "none"
-                    or stile_evidenza["beforeDisplay"] != "none"
-                ):
+                if stile_evidenza != "none":
                     raise RuntimeError(
-                        "la riga Juventus contiene ancora una linea laterale"
+                        "la riga Juventus contiene ancora la linea celeste extra"
                     )
                 print(
                     "✅ Evidenza Juventus verificata: sola fascia blu, "
-                    "nessuna linea celeste."
+                    "nessuna linea celeste extra."
                 )
+
+            indicatori_zona = page.locator(
+                '.row[data-zone]:not([data-zone=""])'
+            )
+            stili_indicatori = await indicatori_zona.evaluate_all(
+                """rows => rows.map(row => {
+                    const style = getComputedStyle(row, '::before');
+                    return {
+                        display: style.display,
+                        backgroundColor: style.backgroundColor
+                    };
+                })"""
+            )
+            if not stili_indicatori or any(
+                stile["display"] == "none"
+                or stile["backgroundColor"] in {
+                    "transparent", "rgba(0, 0, 0, 0)"
+                }
+                for stile in stili_indicatori
+            ):
+                raise RuntimeError(
+                    "uno o piu' indicatori UCL/UEL/UECL/retrocessione "
+                    "non sono visibili"
+                )
+            print(
+                "✅ Indicatori di zona verificati: "
+                "UCL, UEL, UECL e retrocessione visibili."
+            )
 
         await page.screenshot(
             path="screenshot_raw.png",
