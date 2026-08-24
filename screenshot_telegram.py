@@ -1,14 +1,19 @@
 import os
 import asyncio
+import base64
 import json
 import re
 import requests
+from concurrent.futures import ThreadPoolExecutor
 from playwright.async_api import async_playwright
 from pathlib import Path
 from PIL import Image
 
 TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
+TEST_ONLY = os.environ.get("TEST_ONLY", "").strip().lower() in {
+    "1", "true", "yes", "on"
+}
 
 VIEWPORT_WIDTH  = 900
 VIEWPORT_HEIGHT = 1200
@@ -38,6 +43,76 @@ COMP_INFO = {
         "wait":    WAIT_SELECTOR
     },
 }
+
+
+LOGO_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/140.0.0.0 Safari/537.36"
+    ),
+    "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+}
+
+
+def _scarica_logo_base64(url: str) -> str:
+    """Scarica un logo e lo converte in data URI per il rendering offline."""
+    if url.startswith("data:"):
+        return url
+
+    response = requests.get(url, headers=LOGO_HEADERS, timeout=25)
+    response.raise_for_status()
+    content_type = response.headers.get("Content-Type", "").split(";", 1)[0]
+    if not content_type.startswith("image/") or not response.content:
+        raise ValueError(
+            f"risposta non valida ({content_type or 'content-type assente'})"
+        )
+
+    encoded = base64.b64encode(response.content).decode("ascii")
+    return f"data:{content_type};base64,{encoded}"
+
+
+def incorpora_loghi_base64(json_completo: dict) -> None:
+    """Incorpora tutti i loghi per evitare hotlink, timeout e segnaposto."""
+    campi_logo = ("logo", "logo_light_bg", "logo_dark_bg")
+    righe = json_completo.get("classifica", [])
+    urls = sorted({
+        riga.get(campo, "")
+        for riga in righe
+        for campo in campi_logo
+        if riga.get(campo, "")
+    })
+    if not urls:
+        raise RuntimeError("nessun logo presente nella classifica")
+
+    workers = min(8, len(urls))
+    risultati = {}
+    errori = []
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            url: executor.submit(_scarica_logo_base64, url)
+            for url in urls
+        }
+        for url, future in futures.items():
+            try:
+                risultati[url] = future.result()
+            except Exception as exc:
+                errori.append(f"{url}: {exc}")
+
+    if errori:
+        dettagli = "\n".join(f"- {errore}" for errore in errori)
+        raise RuntimeError(
+            "impossibile incorporare tutti i loghi; interrompo l'invio:\n"
+            f"{dettagli}"
+        )
+
+    for riga in righe:
+        for campo in campi_logo:
+            url = riga.get(campo, "")
+            if url:
+                riga[campo] = risultati[url]
+
+    print(f"✅ Loghi incorporati nell'immagine: {len(urls)} file distinti.")
 
 
 def scarica_font_base64(css_url: str) -> str:
@@ -101,6 +176,11 @@ async def scatta_screenshot():
     if isinstance(json_completo, list):
         json_completo = {"competition": "SA", "giornata": 1, "classifica": json_completo}
 
+    # Il browser apre un file locale: incorporando i loghi nel documento non
+    # dipendiamo da hotlink esterni durante lo scatto (il caso che trasformava
+    # il logo personalizzato della Roma in un segnaposto).
+    incorpora_loghi_base64(json_completo)
+
     giornata  = json_completo.get("giornata", 1)
     comp_key  = json_completo.get("competition", "SA").upper()
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
@@ -152,6 +232,17 @@ async def scatta_screenshot():
         except Exception:
             pass
         await page.wait_for_timeout(2500)
+
+        loghi_rotti = await page.locator(".c-logo img").evaluate_all(
+            "imgs => imgs.filter(img => !img.complete || img.naturalWidth === 0).length"
+        )
+        segnaposto = await page.locator(".c-logo .c-init").count()
+        if loghi_rotti or segnaposto:
+            raise RuntimeError(
+                "rendering loghi incompleto: "
+                f"{loghi_rotti} immagini non caricate, {segnaposto} segnaposto"
+            )
+        print("✅ Rendering verificato: nessun logo rotto o segnaposto.")
 
         await page.screenshot(
             path="screenshot_raw.png",
@@ -220,4 +311,7 @@ def invia_telegram(giornata, comp_key):
 
 if __name__ == "__main__":
     giornata, comp_key = asyncio.run(scatta_screenshot())
-    invia_telegram(giornata, comp_key)
+    if TEST_ONLY:
+        print("🧪 TEST_ONLY attivo: rendering verificato, invio Telegram saltato.")
+    else:
+        invia_telegram(giornata, comp_key)

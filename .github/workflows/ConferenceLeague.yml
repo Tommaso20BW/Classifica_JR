@@ -49,6 +49,12 @@ jobs:
           TEST_ONLY: ${{ inputs.test_only }}
         run: python -u aggiorna_classifica.py
 
+      - name: Verifica rendering completo dei loghi
+        if: ${{ inputs.test_only }}
+        env:
+          TEST_ONLY: "true"
+        run: python -u screenshot_telegram.py
+
       - name: Invia Screenshot su Telegram
         if: ${{ !inputs.test_only }}
         env:

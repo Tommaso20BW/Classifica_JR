@@ -70,6 +70,12 @@ jobs:
               print(f"{row['pos']:>2}. {row['team']:<15} {row['pt']:>3} pt")
           PY
 
+      - name: Verifica rendering completo dei loghi
+        if: ${{ inputs.test_only }}
+        env:
+          TEST_ONLY: "true"
+        run: python -u screenshot_telegram.py
+
       - name: Invia Screenshot su Telegram
         if: ${{ !inputs.test_only }}
         env:
