@@ -195,6 +195,11 @@ def _loghi_grandi_diretta(raw_rows: list[dict]) -> list[str]:
         f"🖼️  Loghi Diretta.it ad alta risoluzione: "
         f"{trovati}/{len(raw_rows)}."
     )
+    if trovati != len(raw_rows):
+        raise RuntimeError(
+            "non tutte le squadre espongono il logo Diretta.it da 100x100; "
+            "interrompo per evitare un'immagine con stemmi sgranati"
+        )
     return loghi
 
 
