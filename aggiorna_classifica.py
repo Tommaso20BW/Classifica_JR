@@ -81,6 +81,18 @@ LOGO_GRANDE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Uniche eccezioni richieste: tutti gli altri stemmi restano quelli grandi di
+# Diretta.it. Il file Juventus e' l'originale 3359x3359 collegato da Wikipedia;
+# quello Roma e' la risorsa 512x512 indicata dall'utente.
+LOGHI_PERSONALIZZATI = {
+    "juventus": (
+        "https://upload.wikimedia.org/wikipedia/commons/9/99/"
+        "Juventus_FC_2017_squared_icon_%28white%29.png"
+    ),
+    "roma": "https://assets.football-logos.cc/logos/italy/512x512/roma.8dfa8968.png",
+    "as roma": "https://assets.football-logos.cc/logos/italy/512x512/roma.8dfa8968.png",
+}
+
 
 def carica_mappa_nomi() -> tuple[dict, dict]:
     """Carica le correzioni dei nomi da teams.json, se disponibili."""
@@ -173,6 +185,10 @@ def _logo_grande_diretta(team_url: str, fallback: str) -> str:
     return fallback
 
 
+def _logo_personalizzato(nome_squadra: str) -> str:
+    return LOGHI_PERSONALIZZATI.get(nome_squadra.strip().lower(), "")
+
+
 def _loghi_grandi_diretta(raw_rows: list[dict]) -> list[str]:
     """Scarica in parallelo le varianti grandi, mantenendo l'ordine delle righe."""
     if not raw_rows:
@@ -180,9 +196,12 @@ def _loghi_grandi_diretta(raw_rows: list[dict]) -> list[str]:
     workers = min(8, len(raw_rows))
     with ThreadPoolExecutor(max_workers=workers) as executor:
         loghi = list(executor.map(
-            lambda raw: _logo_grande_diretta(
-                raw.get("team_url", ""),
-                raw.get("logo", ""),
+            lambda raw: (
+                _logo_personalizzato(raw.get("team", ""))
+                or _logo_grande_diretta(
+                    raw.get("team_url", ""),
+                    raw.get("logo", ""),
+                )
             ),
             raw_rows,
         ))
@@ -192,7 +211,7 @@ def _loghi_grandi_diretta(raw_rows: list[dict]) -> list[str]:
         for logo, raw in zip(loghi, raw_rows)
     )
     print(
-        f"🖼️  Loghi Diretta.it ad alta risoluzione: "
+        f"🖼️  Loghi ad alta risoluzione: "
         f"{trovati}/{len(raw_rows)}."
     )
     if trovati != len(raw_rows):
@@ -292,7 +311,7 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                     f"{dr} != {gf}-{ga}"
                 )
 
-            # Nessuna sostituzione: e' la variante grande del sito Diretta.it.
+            # Variante grande Diretta.it, salvo le sole eccezioni Juventus/Roma.
             logo = logo_grande
             classifica.append({
                 "pos": int(posizione_testo),
