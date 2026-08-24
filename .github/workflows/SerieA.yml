@@ -46,6 +46,7 @@ jobs:
       - name: Esegui Script Classifica
         env:
           COMPETITION: SA
+          TEST_ONLY: ${{ inputs.test_only }}
         run: python -u aggiorna_classifica.py
 
       - name: Verifica estrazione Diretta.it

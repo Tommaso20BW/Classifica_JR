@@ -1,106 +1,88 @@
-import os
-import sys
-import requests
 import json
+import os
 import re
+import sys
+from datetime import date
 from pathlib import Path
 
-# La Serie A viene letta dalla classifica visualizzata su Diretta.it.
-# Le coppe europee restano su ESPN, perche' il link indicato riguarda solo la
-# Serie A e i relativi workflow continuano a usare questo stesso script.
+
+# Le URL correnti senza ID seguono automaticamente la stagione attiva scelta
+# da Diretta.it. Durante i test delle coppe si usano classifiche archiviate e
+# complete: al 24 agosto 2026 le pagine 2026/27 mostrano ancora soltanto i
+# tabelloni delle qualificazioni, non la classifica della fase campionato.
 COMPETIZIONI = {
     "SA": {
-        "source": "diretta",
-        "url": (
-            "https://www.diretta.it/serie-a/classifiche/"
-            "CfujcOgK/classifiche/generale/"
-        ),
-        "nome":   "Serie A",
-        "comp":   "SA",
+        "nome": "Serie A",
+        "url": "https://www.diretta.it/serie-a/classifiche/",
+        "test_url": "https://www.diretta.it/serie-a/classifiche/",
         "giornate": 38,
         "squadre": 20,
     },
     "UCL": {
-        "source": "espn",
-        "slug":   "uefa.champions",
-        "nome":   "Champions League",
-        "comp":   "UCL",
+        "nome": "Champions League",
+        "url": (
+            "https://www.diretta.it/calcio/europa/"
+            "champions-league/classifiche/"
+        ),
+        "test_url": (
+            "https://www.diretta.it/calcio/europa/"
+            "champions-league-2025-2026/classifiche/"
+        ),
         "giornate": 8,
+        "squadre": 36,
     },
     "UEL": {
-        "source": "espn",
-        "slug":   "uefa.europa",
-        "nome":   "Europa League",
-        "comp":   "UEL",
+        "nome": "Europa League",
+        "url": (
+            "https://www.diretta.it/calcio/europa/"
+            "europa-league/classifiche/"
+        ),
+        "test_url": (
+            "https://www.diretta.it/calcio/europa/"
+            "europa-league-2025-2026/classifiche/"
+        ),
         "giornate": 8,
+        "squadre": 36,
     },
     "UECL": {
-        "source": "espn",
-        "slug":   "uefa.europa.conf",
-        "nome":   "Conference League",
-        "comp":   "UECL",
+        "nome": "Conference League",
+        "url": (
+            "https://www.diretta.it/calcio/europa/"
+            "conference-league/classifiche/"
+        ),
+        "test_url": (
+            "https://www.diretta.it/calcio/europa/"
+            "conference-league-2025-2026/classifiche/"
+        ),
         "giornate": 6,
+        "squadre": 36,
     },
 }
 
-# Override loghi per squadre italiane. Restano prioritari rispetto alla
-# sorgente della classifica; la Juventus usa un marchio bianco sulla riga blu.
-LOGO_OVERRIDE = {
-    "juventus":  "https://upload.wikimedia.org/wikipedia/commons/9/99/Juventus_FC_2017_squared_icon_%28white%29.png",
-    "napoli":    "https://upload.wikimedia.org/wikipedia/commons/4/4d/SSC_Napoli_2025_%28white_and_azure%29.svg",
-    "atalanta":  "https://upload.wikimedia.org/wikipedia/it/2/24/Atalanta_BC_2026.svg",
-    "udinese":   "https://upload.wikimedia.org/wikipedia/it/a/ae/Logo_Udinese_Calcio_2010.svg",
-    "fiorentina":"https://upload.wikimedia.org/wikipedia/commons/8/8c/ACF_Fiorentina_-_logo_%28Italy%2C_2022%29.svg",
-    "verona":    "https://sport.sky.it/assets/images/3a737aa34cf3cac3ed64133d1527a6c517d0e8d5/skysport/it/calcio/serie-a/2020/06/01/hellas-verona-stemma/herllas%20verona_giallo_dentro.png",
-    "roma":      "https://images2.gazzettaobjects.it/assets-mc/calcio/squadre/high/121.png",
-    "venezia":   "https://upload.wikimedia.org/wikipedia/it/7/73/Venezia_FC_Logo_2026.svg",
-}
 
-JUVENTUS_ESPN_WHITE_LOGO = "https://a.espncdn.com/i/teamlogos/soccer/500-dark/111.png"
-
-ESPN_HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/124.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json",
-    "Referer": "https://www.espn.com/",
-}
-
-
-# ── Mappa nomi squadre: nome sorgente → nome corretto (da teams.json) ──
 def carica_mappa_nomi() -> tuple[dict, dict]:
-    """
-    Legge teams.json (nella stessa cartella dello script) e costruisce la
-    mappa 'nome sorgente' → 'nome corretto'.
-
-    Formato di teams.json:
-        "Nome sorgente": ["Nome corretto", "Hashtag"]
-    Il terzo campo (hashtag) NON viene usato.
-
-    Restituisce due dizionari: uno con le chiavi originali e uno con le chiavi
-    in minuscolo, così il confronto è robusto a differenze di maiuscole.
-    Se teams.json manca o è illeggibile, torna mappe vuote (fallback ai nomi
-    ricevuti dalla sorgente).
-    """
+    """Carica le correzioni dei nomi da teams.json, se disponibili."""
     path = Path(__file__).parent / "teams.json"
     try:
-        with open(path, encoding="utf-8") as f:
-            raw = json.load(f)
+        with open(path, encoding="utf-8") as file:
+            raw = json.load(file)
     except FileNotFoundError:
-        print("⚠️  teams.json non trovato: uso i nomi originali della sorgente.")
+        print("⚠️  teams.json non trovato: uso i nomi di Diretta.it.")
         return {}, {}
-    except Exception as e:
-        print(f"⚠️  Impossibile leggere teams.json ({e}): uso i nomi della sorgente.")
+    except Exception as exc:
+        print(f"⚠️  Impossibile leggere teams.json ({exc}): uso i nomi di Diretta.it.")
         return {}, {}
 
     esatta: dict[str, str] = {}
     minuscola: dict[str, str] = {}
-    for espn, valori in raw.items():
-        corretto = valori[0] if isinstance(valori, list) and valori else espn
-        esatta[espn] = corretto
-        minuscola[espn.lower().strip()] = corretto
+    for nome_sorgente, valori in raw.items():
+        corretto = (
+            valori[0]
+            if isinstance(valori, list) and valori
+            else nome_sorgente
+        )
+        esatta[nome_sorgente] = corretto
+        minuscola[nome_sorgente.lower().strip()] = corretto
     return esatta, minuscola
 
 
@@ -108,7 +90,7 @@ MAPPA_NOMI, MAPPA_NOMI_LOWER = carica_mappa_nomi()
 
 
 def nome_corretto(source_name: str) -> str:
-    """Converte il nome ricevuto nel nome corretto definito in teams.json."""
+    """Applica l'eventuale correzione del nome definita in teams.json."""
     if not source_name:
         return source_name
     if source_name in MAPPA_NOMI:
@@ -117,54 +99,27 @@ def nome_corretto(source_name: str) -> str:
 
 
 def format_stagione(anno_inizio) -> str:
-    """Da anno d'inizio (es. 2026) → stringa stagione '2026/27'.
-    Torna '' se il valore non è un anno valido."""
+    """Converte l'anno iniziale 2026 nella stagione breve 2026/27."""
     try:
-        y = int(anno_inizio)
+        anno = int(anno_inizio)
     except (TypeError, ValueError):
         return ""
-    if y < 1900 or y > 2100:
+    if anno < 1900 or anno > 2100:
         return ""
-    return f"{y}/{(y + 1) % 100:02d}"
+    return f"{anno}/{(anno + 1) % 100:02d}"
 
 
 def stagione_da_testo(testo: str) -> str:
-    """Estrae la stagione da stringhe tipo '2026-2027' o
-    'Serie A 2026-2027' / '2026-27 Serie A'. Torna '' se non trovata."""
-    import re
-    m = re.search(r"(19|20)\d{2}", testo or "")
-    return format_stagione(m.group()) if m else ""
+    """Estrae la stagione da testi come 'Champions League 2025/2026'."""
+    match = re.search(r"(19|20)\d{2}", testo or "")
+    return format_stagione(match.group()) if match else ""
 
 
 def stagione_corrente_da_data() -> str:
-    """Fallback (solo se l'API non espone la stagione): la ricava dalla data
-    odierna. La stagione calcistica inizia a luglio."""
-    from datetime import date
+    """Fallback della stagione quando Diretta.it non la espone nel titolo."""
     oggi = date.today()
     anno_inizio = oggi.year if oggi.month >= 7 else oggi.year - 1
     return format_stagione(anno_inizio)
-
-
-def get_standings_espn(slug: str) -> dict | None:
-    """
-    Chiama l'API pubblica non documentata di ESPN per le classifiche calcio.
-    Restituisce il JSON grezzo oppure None in caso di errore.
-    """
-    url = f"https://site.web.api.espn.com/apis/v2/sports/soccer/{slug}/standings"
-    try:
-        r = requests.get(
-            url,
-            headers=ESPN_HEADERS,
-            params={"region": "us", "lang": "en", "contentorigin": "espn"},
-            timeout=15,
-        )
-        r.raise_for_status()
-        return r.json()
-    except requests.HTTPError as e:
-        print(f"❌ HTTP {e.response.status_code} da ESPN ({slug}): {e}")
-    except Exception as e:
-        print(f"❌ Errore di rete ESPN ({slug}): {e}")
-    return None
 
 
 def _intero(valore, campo: str, squadra: str) -> int:
@@ -178,12 +133,12 @@ def _intero(valore, campo: str, squadra: str) -> int:
 
 
 def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
-    """Legge la classifica Serie A dal DOM renderizzato di Diretta.it.
+    """Legge una classifica dal DOM renderizzato di Diretta.it.
 
     La pagina carica la tabella tramite JavaScript, quindi viene usato Chromium
-    headless (gia' installato dai workflow per la generazione dello screenshot).
-    Restituisce ``(classifica, giornata, stagione)`` oppure ``None`` in caso di
-    errore di navigazione o di formato inatteso.
+    headless, gia' installato dai workflow per creare lo screenshot Telegram.
+    I loghi vengono copiati direttamente dalla tabella di Diretta.it senza
+    override personalizzati.
     """
     try:
         from playwright.sync_api import sync_playwright
@@ -221,6 +176,7 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                     """
                 )
                 titolo = page.locator("h1").first.inner_text(timeout=10_000)
+                resolved_url = page.url
             finally:
                 browser.close()
     except Exception as exc:
@@ -263,17 +219,8 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                     f"{dr} != {gf}-{ga}"
                 )
 
-            nome_lower = squadra_originale.lower()
-            override_key = next(
-                (chiave for chiave in LOGO_OVERRIDE if chiave in nome_lower),
-                None,
-            )
-            logo = (
-                LOGO_OVERRIDE[override_key]
-                if override_key
-                else raw.get("logo", "")
-            )
-
+            # Nessuna sostituzione: il logo e' esattamente quello di Diretta.it.
+            logo = raw.get("logo", "")
             classifica.append({
                 "pos": int(posizione_testo),
                 "team": nome_corretto(squadra_originale),
@@ -290,155 +237,24 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                 "dr": dr,
             })
 
-        classifica.sort(key=lambda x: x["pos"])
-        posizioni = [riga["pos"] for riga in classifica]
+        classifica.sort(key=lambda row: row["pos"])
+        posizioni = [row["pos"] for row in classifica]
         if posizioni != list(range(1, len(classifica) + 1)):
             raise ValueError(f"posizioni non consecutive: {posizioni}")
-        if len({riga["team"] for riga in classifica}) != len(classifica):
+        if len({row["team"] for row in classifica}) != len(classifica):
             raise ValueError("la tabella contiene squadre duplicate")
 
-        giornata = max((riga["p"] for riga in classifica), default=0) or 1
+        giornata = max((row["p"] for row in classifica), default=0) or 1
         stagione = stagione_da_testo(titolo)
+        print(f"🌐 Pagina risolta: {resolved_url}")
         return classifica, giornata, stagione
     except Exception as exc:
         print(f"❌ Formato classifica Diretta.it non valido: {exc}")
         return None
 
 
-def varianti_logo_espn(logo_url: str) -> tuple[str, str]:
-    """Restituisce i loghi adatti rispettivamente a fondo chiaro e scuro.
-
-    ESPN pubblica la variante predefinita sotto ``/500/`` e quella per temi
-    scuri sotto ``/500-dark/``. Se l'URL non appartiene a questo schema, la
-    stessa risorsa viene usata per entrambi i temi.
-    """
-    if not logo_url:
-        return "", ""
-    logo_light_bg = logo_url.replace("/500-dark/", "/500/")
-    if "/teamlogos/soccer/500/" in logo_light_bg:
-        logo_dark_bg = logo_light_bg.replace("/500/", "/500-dark/", 1)
-    else:
-        logo_dark_bg = logo_light_bg
-    return logo_light_bg, logo_dark_bg
-
-
-def parse_standings(data: dict) -> tuple[list, int, str]:
-    """
-    Estrae la lista classifica, la giornata e la stagione dal JSON ESPN.
-    Restituisce (classifica_pulita, giornata, stagione).
-    """
-    classifica = []
-    giornata = 1
-    stagione = ""
-
-    # ESPN non espone direttamente la matchday; la ricaviamo dai filter/note
-    # Proviamo ad ottenerla da 'notes'
-    for note in data.get("notes", []):
-        text = note.get("headline", "")
-        if "matchday" in text.lower() or "giornata" in text.lower() or "week" in text.lower():
-            import re
-            m = re.search(r"\d+", text)
-            if m:
-                giornata = int(m.group())
-                break
-
-    # Scorri i children (gruppi/fasi)
-    children = data.get("children", [data])
-    for child in children:
-        standings_obj = child.get("standings", {})
-        entries = standings_obj.get("entries", [])
-        if not entries:
-            continue
-
-        # ── Stagione dall'API ESPN ──
-        # Sorgente primaria: il campo intero 'season' (anno d'inizio, es. 2026).
-        # Fallback: testo di 'seasonDisplayName' / nome o abbreviazione del gruppo
-        # (es. "2026-27 Serie A", "Serie A 2026-2027", "2026-2027").
-        if not stagione:
-            stagione = format_stagione(standings_obj.get("season"))
-        if not stagione:
-            stagione = stagione_da_testo(
-                standings_obj.get("seasonDisplayName")
-                or child.get("abbreviation")
-                or child.get("name")
-            )
-
-        for entry in entries:
-            team = entry.get("team", {})
-            nome = team.get("displayName", team.get("name", "?"))
-
-            # Logo ESPN: variante scura su fondi chiari e variante chiara su
-            # fondi scuri. L'API espone normalmente il link ``/500/``; il CDN
-            # rende disponibile la coppia equivalente sotto ``/500-dark/``.
-            logos = team.get("logos", [])
-            logo_url = next(
-                (logo.get("href", "") for logo in logos if "default" in logo.get("rel", [])),
-                logos[0].get("href", "") if logos else "",
-            )
-
-            nome_lower = nome.lower()
-            override_key = next(
-                (chiave for chiave in LOGO_OVERRIDE if chiave in nome_lower),
-                None,
-            )
-
-            if override_key == "juventus":
-                # La riga Juventus e' evidenziata anche nel tema chiaro della
-                # Serie A: il marchio ESPN bianco resta quindi uguale ovunque.
-                _, logo_espn_bianco = varianti_logo_espn(logo_url)
-                logo_light_bg = logo_espn_bianco or JUVENTUS_ESPN_WHITE_LOGO
-                logo_dark_bg = logo_light_bg
-            elif override_key:
-                # Tutti gli altri override rimangono esattamente quelli
-                # configurati sopra, indipendentemente dal tema.
-                logo_light_bg = LOGO_OVERRIDE[override_key]
-                logo_dark_bg = logo_light_bg
-            else:
-                logo_light_bg, logo_dark_bg = varianti_logo_espn(logo_url)
-
-            # Statistiche dalle 'stats'
-            stats = {s["name"]: s.get("value", 0) for s in entry.get("stats", [])}
-
-            pos   = int(stats.get("rank", entry.get("rank", 0)))
-            pt    = int(stats.get("points", 0))
-            pld   = int(stats.get("gamesPlayed", 0))
-            won   = int(stats.get("wins", 0))
-            draw  = int(stats.get("ties", 0))
-            lost  = int(stats.get("losses", 0))
-            gf    = int(stats.get("pointsFor", 0))
-            ga    = int(stats.get("pointsAgainst", 0))
-            dr    = int(stats.get("pointDifferential", gf - ga))
-
-            # Aggiorna giornata con il massimo delle partite giocate
-            if pld > giornata:
-                giornata = pld
-
-            # Nome corretto da teams.json.
-            nome = nome_corretto(nome)
-
-            classifica.append({
-                "pos":    pos,
-                "team":   nome,
-                # ``logo`` resta per compatibilità con dataset e client meno
-                # recenti; punta alla variante adatta al fondo chiaro.
-                "logo":          logo_light_bg,
-                "logo_light_bg": logo_light_bg,
-                "logo_dark_bg":  logo_dark_bg,
-                "pt":     pt,
-                "p":      pld,
-                "v":      won,
-                "n":      draw,
-                "p_pers": lost,
-                "gf":     gf,
-                "gs":     ga,
-                "dr":     dr,
-            })
-
-        break  # usa solo il primo gruppo valido
-
-    # Ordina per posizione
-    classifica.sort(key=lambda x: x["pos"])
-    return classifica, giornata, stagione
+def _env_true(nome: str) -> bool:
+    return os.environ.get(nome, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
 def genera_json_classifica():
@@ -448,50 +264,57 @@ def genera_json_classifica():
         print(f"❌ Competizione non riconosciuta: {comp_key}. Usa SA, UCL, UEL o UECL.")
         sys.exit(1)
 
-    if comp["source"] == "diretta":
-        print(f"📡 Recupero classifica Diretta.it: {comp['nome']} ({comp_key})...")
-        risultato = scrape_standings_diretta(comp["url"])
-        if risultato is None:
-            print("❌ Impossibile recuperare la classifica da Diretta.it.")
-            sys.exit(1)
-        classifica, giornata, stagione = risultato
-    else:
-        print(f"📡 Recupero classifica ESPN: {comp['nome']} ({comp_key})...")
-        data = get_standings_espn(comp["slug"])
-        if data is None:
-            print("❌ Impossibile recuperare i dati. Controlla la connessione.")
-            sys.exit(1)
-        classifica, giornata, stagione = parse_standings(data)
+    test_only = _env_true("TEST_ONLY")
+    url_override = os.environ.get("DIRETTA_STANDINGS_URL", "").strip()
+    url = url_override or (comp["test_url"] if test_only else comp["url"])
 
-    if not classifica:
-        print(f"❌ Nessuna squadra trovata nella risposta {comp['source']}.")
+    modalita = "test senza Telegram" if test_only else "produzione"
+    print(
+        f"📡 Recupero classifica Diretta.it: {comp['nome']} "
+        f"({comp_key}, {modalita})..."
+    )
+    if test_only and url == comp["test_url"] and url != comp["url"]:
+        print("ℹ️  Test europeo su classifica completa archiviata 2025/26.")
+
+    risultato = scrape_standings_diretta(url)
+    if risultato is None:
+        print("❌ Impossibile recuperare la classifica da Diretta.it.")
         sys.exit(1)
+    classifica, giornata, stagione = risultato
 
-    squadre_attese = comp.get("squadre")
-    if squadre_attese and len(classifica) != squadre_attese:
+    squadre_attese = comp["squadre"]
+    if len(classifica) != squadre_attese:
         print(
             f"❌ Numero di squadre inatteso: {len(classifica)} "
             f"(attese {squadre_attese})."
         )
         sys.exit(1)
 
-    # Se l'API non ha esposto la stagione, la ricaviamo dalla data odierna
     if not stagione:
         stagione = stagione_corrente_da_data()
-        print(f"⚠️  Stagione non trovata nella sorgente: uso il fallback da data ({stagione}).")
+        print(
+            "⚠️  Stagione non trovata nella pagina: "
+            f"uso il fallback da data ({stagione})."
+        )
 
     output = {
-        "competition":      comp_key,
+        "competition": comp_key,
         "competition_name": comp["nome"],
-        "giornata":         giornata,
-        "stagione":         stagione,
-        "classifica":       classifica,
+        "giornata": giornata,
+        "stagione": stagione,
+        "classifica": classifica,
     }
 
-    with open("classifica.json", "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=4)
+    with open("classifica.json", "w", encoding="utf-8") as file:
+        json.dump(output, file, ensure_ascii=False, indent=4)
 
-    print(f"✅ JSON salvato: {comp['nome']} – Giornata {giornata} – Stagione {stagione} ({len(classifica)} squadre).")
+    print(
+        f"✅ JSON salvato: {comp['nome']} – Giornata {giornata} – "
+        f"Stagione {stagione} ({len(classifica)} squadre)."
+    )
+    if test_only:
+        for row in classifica:
+            print(f"{row['pos']:>2}. {row['team']:<22} {row['pt']:>3} pt")
 
 
 if __name__ == "__main__":
