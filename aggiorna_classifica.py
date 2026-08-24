@@ -4,7 +4,6 @@ import re
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
-from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
@@ -92,44 +91,6 @@ LOGHI_PERSONALIZZATI = {
     "roma": "https://assets.football-logos.cc/logos/italy/512x512/roma.8dfa8968.png",
     "as roma": "https://assets.football-logos.cc/logos/italy/512x512/roma.8dfa8968.png",
 }
-
-
-def carica_mappa_nomi() -> tuple[dict, dict]:
-    """Carica le correzioni dei nomi da teams.json, se disponibili."""
-    path = Path(__file__).parent / "teams.json"
-    try:
-        with open(path, encoding="utf-8") as file:
-            raw = json.load(file)
-    except FileNotFoundError:
-        print("⚠️  teams.json non trovato: uso i nomi di Diretta.it.")
-        return {}, {}
-    except Exception as exc:
-        print(f"⚠️  Impossibile leggere teams.json ({exc}): uso i nomi di Diretta.it.")
-        return {}, {}
-
-    esatta: dict[str, str] = {}
-    minuscola: dict[str, str] = {}
-    for nome_sorgente, valori in raw.items():
-        corretto = (
-            valori[0]
-            if isinstance(valori, list) and valori
-            else nome_sorgente
-        )
-        esatta[nome_sorgente] = corretto
-        minuscola[nome_sorgente.lower().strip()] = corretto
-    return esatta, minuscola
-
-
-MAPPA_NOMI, MAPPA_NOMI_LOWER = carica_mappa_nomi()
-
-
-def nome_corretto(source_name: str) -> str:
-    """Applica l'eventuale correzione del nome definita in teams.json."""
-    if not source_name:
-        return source_name
-    if source_name in MAPPA_NOMI:
-        return MAPPA_NOMI[source_name]
-    return MAPPA_NOMI_LOWER.get(source_name.lower().strip(), source_name)
 
 
 def format_stagione(anno_inizio) -> str:
@@ -315,7 +276,9 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
             logo = logo_grande
             classifica.append({
                 "pos": int(posizione_testo),
-                "team": nome_corretto(squadra_originale),
+                # Diretta.it e' gia' localizzato in italiano: manteniamo il
+                # nome mostrato dal sito senza mappe legacy esterne.
+                "team": squadra_originale,
                 "logo": logo,
                 "logo_light_bg": logo,
                 "logo_dark_bg": logo,
