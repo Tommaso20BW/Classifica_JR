@@ -39,7 +39,6 @@ jobs:
 
       - name: Esegui Script Classifica
         env:
-          FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
           COMPETITION: UECL
         run: python -u aggiorna_classifica.py
 
