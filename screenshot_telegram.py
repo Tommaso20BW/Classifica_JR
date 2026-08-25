@@ -281,33 +281,38 @@ async def scatta_screenshot():
                     "nessuna linea celeste extra."
                 )
 
-            indicatori_zona = page.locator(
-                '.row[data-zone]:not([data-zone=""])'
+        indicatori_zona = page.locator(
+            '.row[data-zone]:not([data-zone=""])'
+        )
+        stili_indicatori = await indicatori_zona.evaluate_all(
+            """rows => rows.map(row => {
+                const style = getComputedStyle(row, '::before');
+                return {
+                    display: style.display,
+                    backgroundColor: style.backgroundColor,
+                    top: style.top,
+                    bottom: style.bottom
+                };
+            })"""
+        )
+        if not stili_indicatori or any(
+            stile["display"] == "none"
+            or stile["backgroundColor"] in {
+                "transparent", "rgba(0, 0, 0, 0)"
+            }
+            or stile["top"] != "0px"
+            or stile["bottom"] != "1px"
+            for stile in stili_indicatori
+        ):
+            raise RuntimeError(
+                "uno o piu' indicatori UCL/UEL/UECL/retrocessione "
+                "non coprono la riga lasciando il distacco inferiore"
             )
-            stili_indicatori = await indicatori_zona.evaluate_all(
-                """rows => rows.map(row => {
-                    const style = getComputedStyle(row, '::before');
-                    return {
-                        display: style.display,
-                        backgroundColor: style.backgroundColor
-                    };
-                })"""
-            )
-            if not stili_indicatori or any(
-                stile["display"] == "none"
-                or stile["backgroundColor"] in {
-                    "transparent", "rgba(0, 0, 0, 0)"
-                }
-                for stile in stili_indicatori
-            ):
-                raise RuntimeError(
-                    "uno o piu' indicatori UCL/UEL/UECL/retrocessione "
-                    "non sono visibili"
-                )
-            print(
-                "✅ Indicatori di zona verificati: "
-                "UCL, UEL, UECL e retrocessione visibili."
-            )
+        print(
+            "✅ Indicatori di zona verificati: "
+            "UCL, UEL, UECL e retrocessione a tutta altezza, "
+            "con distacco tra le righe."
+        )
 
         await page.screenshot(
             path="screenshot_raw.png",
