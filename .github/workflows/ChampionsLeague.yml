@@ -7,6 +7,14 @@ on:
         required: false
         default: false
         type: boolean
+      channel:
+        description: 'Destinazione Telegram'
+        required: true
+        default: 'Juventus Reborn'
+        type: choice
+        options:
+          - Juventus Reborn
+          - Bot JR
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -64,7 +72,8 @@ jobs:
         if: ${{ !inputs.test_only }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ inputs.channel == 'Bot JR' && secrets.TELEGRAM_CHAT_ID_BOT_JR || secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_DESTINATION: ${{ inputs.channel }}
           COMPETITION: UCL
         run: python -u screenshot_telegram.py
 

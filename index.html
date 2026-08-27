@@ -269,6 +269,158 @@
     background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);transition:.15s;
   }
   .preview-bar button:hover{background:rgba(255,255,255,0.22);color:#fff;}
+
+  /* ══ GRAFICA UEFA 2026: sfondi ufficiali pieni, senza velature ══ */
+  body.comp-UCL{
+    background:#050f61 url("bg-ucl.png") -210px -190px / 1200px 1600px no-repeat;
+    --panel:#071663;--panel-row:#0a247d;--panel-alt:#0a247d;
+    --ink:#f7f9ff;--ink-dim:#a9c8ff;--head-ink:#fff;
+    --line:#3154b8;--chip-bg:#153596;--chip-fg:#fff;
+    --dr-pos:#54efff;--dr-neg:#ff82b0;
+    --z1:#37e9ff;--z2:#a688ff;--z3:#ff5e91;
+  }
+  body.comp-UEL{
+    background:#ff6900 url("bg-uel.png") center / cover no-repeat;
+    --panel:#050505;--panel-row:#090909;--panel-alt:#090909;
+    --ink:#fffaf5;--ink-dim:#ffc39c;--head-ink:#050505;
+    --line:#585858;--chip-bg:#3b1d0d;--chip-fg:#fff;
+    --dr-pos:#b5f0c2;--dr-neg:#ff8d62;
+    --z1:#ff6a17;--z2:#ffbf26;--z3:#e45442;
+  }
+  body.comp-UECL{
+    background:#00c91a url("bg-uecl.png") center / cover no-repeat;
+    --panel:#050505;--panel-row:#090909;--panel-alt:#090909;
+    --ink:#f4fff7;--ink-dim:#a9eabd;--head-ink:#050505;
+    --line:#585858;--chip-bg:#0b4927;--chip-fg:#fff;
+    --dr-pos:#72ffac;--dr-neg:#ff9c9c;
+    --z1:#00e16d;--z2:#b4f43f;--z3:#ed5b5b;
+  }
+
+  body.comp-UCL::after,
+  body.comp-UEL::after,
+  body.comp-UECL::after{content:none;background:none;}
+
+  body.comp-UCL .competition-mark img{filter:none;}
+  body.comp-UEL .competition-mark img,
+  body.comp-UECL .competition-mark img{filter:brightness(0);}
+
+  body.comp-UEL .header-title,
+  body.comp-UECL .header-title{color:#050505;}
+  body.comp-UEL .header-sub,
+  body.comp-UECL .header-sub{color:#111;}
+
+  body.comp-UCL .table-area,
+  body.comp-UEL .table-area,
+  body.comp-UECL .table-area{
+    flex:1;margin:0 28px;padding:16px 20px 8px;min-height:0;
+    background:var(--panel);border:0;border-radius:0;
+  }
+  body.comp-UCL .col + .col,
+  body.comp-UEL .col + .col,
+  body.comp-UECL .col + .col{border-left:1px solid var(--line);}
+
+  body.comp-UCL .col-head,
+  body.comp-UEL .col-head,
+  body.comp-UECL .col-head{
+    height:34px;flex:0 0 34px;
+    grid-template-columns:29px 40px minmax(0,1fr) 42px 38px;
+    border-bottom:0;
+  }
+  body.comp-UCL .col-head,body.comp-UCL .legend-item{color:#b9d8ff;}
+  body.comp-UEL .col-head,body.comp-UEL .legend-item{color:#ffb27f;}
+  body.comp-UECL .col-head,body.comp-UECL .legend-item{color:#9ff1bd;}
+
+  body.comp-UCL .row,
+  body.comp-UEL .row,
+  body.comp-UECL .row{
+    grid-template-columns:29px 40px minmax(0,1fr) 42px 38px;
+    background:var(--panel-row);border-bottom-color:var(--line);
+  }
+  body.comp-UCL .row.odd,body.comp-UCL .row.even,
+  body.comp-UEL .row.odd,body.comp-UEL .row.even,
+  body.comp-UECL .row.odd,body.comp-UECL .row.even{background:var(--panel-row);}
+
+  body.comp-UCL .c-logo,
+  body.comp-UEL .c-logo,
+  body.comp-UECL .c-logo{width:36px;height:36px;}
+  body.comp-UCL .c-logo img,
+  body.comp-UEL .c-logo img,
+  body.comp-UECL .c-logo img{width:31px;height:31px;}
+
+  body.comp-UCL .c-pt{color:#45e9ff;}
+  body.comp-UEL .c-pt{color:#ff7a2a;}
+  body.comp-UECL .c-pt{color:#21df72;}
+
+  body.comp-UCL .row.hl{
+    background:linear-gradient(90deg,#17459b 0%,var(--panel-row) 72%);
+  }
+  body.comp-UEL .row.hl{
+    background:linear-gradient(90deg,#3a1708 0%,var(--panel-row) 72%);
+  }
+  body.comp-UECL .row.hl{
+    background:linear-gradient(90deg,#07351d 0%,var(--panel-row) 72%);
+  }
+  body.comp-UCL .row.hl,
+  body.comp-UEL .row.hl,
+  body.comp-UECL .row.hl{box-shadow:none;}
+  body.comp-UCL .row.hl .c-logo img,
+  body.comp-UEL .row.hl .c-logo img,
+  body.comp-UECL .row.hl .c-logo img{width:35px;height:35px;}
+  body.comp-UCL .row.hl .c-name,
+  body.comp-UEL .row.hl .c-name,
+  body.comp-UECL .row.hl .c-name{font-weight:900;letter-spacing:.015em;}
+  body.comp-UCL .row.hl .c-pt{color:#45e9ff;}
+  body.comp-UEL .row.hl .c-pt{color:#ff7a2a;}
+  body.comp-UECL .row.hl .c-pt{color:#21df72;}
+  body.comp-UCL .row.hl .c-dr.pos,
+  body.comp-UEL .row.hl .c-dr.pos,
+  body.comp-UECL .row.hl .c-dr.pos{color:var(--dr-pos);}
+  body.comp-UCL .row.hl .c-dr.neg,
+  body.comp-UEL .row.hl .c-dr.neg,
+  body.comp-UECL .row.hl .c-dr.neg{color:var(--dr-neg);}
+  body.comp-UCL .row.hl .c-dr.zer,
+  body.comp-UEL .row.hl .c-dr.zer,
+  body.comp-UECL .row.hl .c-dr.zer{color:var(--ink-dim);opacity:.75;}
+
+  body.comp-UCL .row::before,
+  body.comp-UEL .row::before,
+  body.comp-UECL .row::before{display:block;}
+  body.comp-UCL .zone-divider,
+  body.comp-UEL .zone-divider,
+  body.comp-UECL .zone-divider{display:none;}
+
+  body.comp-UCL .legend,
+  body.comp-UEL .legend,
+  body.comp-UECL .legend{
+    width:auto;height:64px;margin:0 28px 26px;padding:0 20px;
+    background:var(--panel);border:0;border-top:1px solid var(--line);border-radius:0;
+  }
+  body.comp-UCL .legend-item,
+  body.comp-UEL .legend-item,
+  body.comp-UECL .legend-item{opacity:1;}
+
+  body.comp-UCL .header-title{
+    font-family:'Saira Semi Condensed',sans-serif;font-size:3.42rem;
+    font-weight:800;letter-spacing:.025em;
+  }
+  body.comp-UEL .header-title{
+    font-family:'Roboto Slab',serif;font-size:3.50rem;
+    font-weight:900;letter-spacing:-.005em;
+  }
+  body.comp-UECL .header-title{
+    font-family:'Sofia Sans Semi Condensed',sans-serif;font-size:3.50rem;
+    font-weight:900;letter-spacing:-.005em;
+  }
+  body.comp-UECL .header-sub{letter-spacing:.19em;}
+  body.comp-UCL .titlecopy,
+  body.comp-UEL .titlecopy,
+  body.comp-UECL .titlecopy{height:86px;justify-content:flex-start;}
+  body.comp-UCL .header-title,
+  body.comp-UEL .header-title,
+  body.comp-UECL .header-title{height:62px;line-height:62px;}
+  body.comp-UCL .header-sub,
+  body.comp-UEL .header-sub{height:16px;line-height:16px;margin-top:8px;}
+  body.comp-UECL .header-sub{height:16px;line-height:16px;margin-top:2px;}
   .preview-bar button.active{background:#fff;color:#111;}
 </style>
 </head>

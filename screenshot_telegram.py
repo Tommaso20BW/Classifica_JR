@@ -11,6 +11,9 @@ from PIL import Image
 
 TELEGRAM_TOKEN   = os.environ.get('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
+TELEGRAM_DESTINATION = os.environ.get(
+    'TELEGRAM_DESTINATION', 'Juventus Reborn'
+).strip()
 TEST_ONLY = os.environ.get("TEST_ONLY", "").strip().lower() in {
     "1", "true", "yes", "on"
 }
@@ -207,8 +210,14 @@ async def scatta_screenshot():
     comp_key  = json_completo.get("competition", "SA").upper()
     comp_data = COMP_INFO.get(comp_key, COMP_INFO["SA"])
 
-    # La stessa texture chiara rifinisce tutte e quattro le competizioni.
-    texture_file = "texture_white.png"
+    # Finitura richiesta per competizione: Serie A e UCL usano la texture
+    # bianca del progetto; UEL e UECL usano quella nera.
+    texture_file = {
+        "SA": "texture_white.png",
+        "UCL": "texture_white.png",
+        "UEL": "texture_black.png",
+        "UECL": "texture_black.png",
+    }.get(comp_key)
 
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
@@ -347,8 +356,10 @@ def applica_texture(base_path, texture_path, output_path):
 
 def invia_telegram(giornata, comp_key):
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print("❌ Errore: TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID mancanti.")
-        return
+        raise RuntimeError(
+            "TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID mancanti per la "
+            f"destinazione {TELEGRAM_DESTINATION!r}."
+        )
 
     comp_data     = COMP_INFO.get(comp_key, COMP_INFO["SA"])
     caption_testo = comp_data["caption"](giornata)
@@ -372,7 +383,10 @@ def invia_telegram(giornata, comp_key):
         sent_w = largest.get("width", 0)
         sent_h = largest.get("height", 0)
         if max(sent_w, sent_h) >= 2000:
-            print(f"✅ Immagine HD inviata su Telegram ({comp_key}) – variante massima {sent_w}x{sent_h}.")
+            print(
+                f"✅ Immagine HD inviata a {TELEGRAM_DESTINATION} "
+                f"({comp_key}) – variante massima {sent_w}x{sent_h}."
+            )
         else:
             print(f"⚠️ Telegram ha restituito solo {sent_w}x{sent_h}: verificare la variante HD.")
     else:
