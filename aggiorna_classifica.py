@@ -62,6 +62,24 @@ COMPETIZIONI = {
     },
 }
 
+COPPA_ITALIA_RISULTATI_URL = (
+    "https://www.diretta.it/calcio/italia/coppa-italia/risultati/"
+)
+
+ZONE_SERIE_A_PROVVISORIE = {
+    **{pos: "z1" for pos in range(1, 5)},
+    **{pos: "z2" for pos in range(5, 7)},
+    7: "z3",
+    **{pos: "z4" for pos in range(18, 21)},
+}
+
+ETICHETTE_ZONE_SERIE_A = (
+    ("z1", "Champions"),
+    ("z2", "Europa"),
+    ("z3", "Conference"),
+    ("z4", "Retrocesse"),
+)
+
 TEAM_PAGE_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (X11; Linux x86_64) "
@@ -183,7 +201,139 @@ def _loghi_grandi_diretta(raw_rows: list[dict]) -> list[str]:
     return loghi
 
 
-def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
+def _zona_da_qualificazione_diretta(testo: str) -> str:
+    """Converte la descrizione Diretta.it nel colore usato dalla grafica."""
+    testo_norm = (testo or "").strip().lower()
+    if "champions league" in testo_norm:
+        return "z1"
+    if "conference league" in testo_norm:
+        return "z3"
+    if "europa league" in testo_norm:
+        return "z2"
+    if "retrocessione" in testo_norm:
+        return "z4"
+    return ""
+
+
+def _intervalli_posizioni(posizioni: list[int]) -> str:
+    """Compatta [1, 2, 3, 5] in '1–3, 5'."""
+    if not posizioni:
+        return ""
+    intervalli = []
+    inizio = precedente = posizioni[0]
+    for posizione in posizioni[1:]:
+        if posizione == precedente + 1:
+            precedente = posizione
+            continue
+        intervalli.append(
+            str(inizio) if inizio == precedente else f"{inizio}–{precedente}"
+        )
+        inizio = precedente = posizione
+    intervalli.append(
+        str(inizio) if inizio == precedente else f"{inizio}–{precedente}"
+    )
+    return ", ".join(intervalli)
+
+
+def _legenda_serie_a(classifica: list[dict]) -> list[str]:
+    legenda = []
+    for zona, etichetta in ETICHETTE_ZONE_SERIE_A:
+        posizioni = [row["pos"] for row in classifica if row.get("zone") == zona]
+        intervallo = _intervalli_posizioni(posizioni)
+        if not intervallo:
+            raise ValueError(f"zona Serie A mancante nella classifica: {zona}")
+        legenda.append(f"{intervallo} {etichetta}")
+    return legenda
+
+
+def _applica_zone_serie_a(
+    classifica: list[dict],
+    coppa_italia_decisa: bool,
+) -> tuple[str, list[str]]:
+    """Applica fasce provvisorie o definitive e restituisce modalita'/legenda."""
+    zone_diretta = {
+        row["pos"]: _zona_da_qualificazione_diretta(
+            row.pop("_qualification", "")
+        )
+        for row in classifica
+    }
+    zone_europee_presenti = {
+        zona for zona in zone_diretta.values() if zona in {"z1", "z2", "z3"}
+    }
+    definitive_disponibili = zone_europee_presenti == {"z1", "z2", "z3"}
+
+    if coppa_italia_decisa and definitive_disponibili:
+        modalita = "definitive_diretta"
+        zone = zone_diretta
+        print(
+            "🏆 Coppa Italia conclusa: uso le fasce europee definitive "
+            "pubblicate da Diretta.it."
+        )
+    else:
+        modalita = "provvisorie_coppa_italia"
+        zone = ZONE_SERIE_A_PROVVISORIE
+        if coppa_italia_decisa:
+            print(
+                "⚠️  Finale conclusa ma fasce definitive non ancora complete "
+                "su Diretta.it: mantengo temporaneamente le fasce provvisorie."
+            )
+        else:
+            print(
+                "ℹ️  Coppa Italia non ancora conclusa: 5ª–6ª Europa League, "
+                "7ª Conference League."
+            )
+
+    for row in classifica:
+        row["zone"] = zone.get(row["pos"], "")
+    return modalita, _legenda_serie_a(classifica)
+
+
+def _coppa_italia_decisa(page, url: str) -> bool:
+    """Rileva una finale conclusa dalla dicitura 'Vincitore' di Diretta.it."""
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=45_000)
+        page.locator(".event__round").first.wait_for(
+            state="visible",
+            timeout=45_000,
+        )
+        finale = page.evaluate(
+            """
+            () => {
+                const round = document.querySelector('.event__round');
+                if (!round) return null;
+                let match = round.nextElementSibling;
+                while (match && !match.classList.contains('event__match')) {
+                    if (match.classList.contains('event__round')) return null;
+                    match = match.nextElementSibling;
+                }
+                return {
+                    round: (round.textContent || '').trim(),
+                    match: (match?.textContent || '').trim()
+                };
+            }
+            """
+        )
+        resolved_url = page.url
+        decisa = bool(
+            finale
+            and finale.get("round", "").strip().lower() == "finale"
+            and "vincitore:" in finale.get("match", "").lower()
+        )
+        stato = "conclusa" if decisa else "non conclusa"
+        print(f"🏆 Coppa Italia {stato}: {resolved_url}")
+        return decisa
+    except Exception as exc:
+        print(
+            "⚠️  Stato Coppa Italia non verificabile; per sicurezza considero "
+            f"le fasce ancora provvisorie: {exc}"
+        )
+        return False
+
+
+def scrape_standings_diretta(
+    url: str,
+    coppa_italia_url: str = "",
+) -> tuple[list, int, str, bool] | None:
     """Legge una classifica dal DOM renderizzato di Diretta.it.
 
     La pagina carica la tabella tramite JavaScript, quindi viene usato Chromium
@@ -219,6 +369,7 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                     """
                     rows => rows.map(row => ({
                         pos: row.querySelector('.tableCellRank')?.textContent?.trim() || '',
+                        qualification: row.querySelector('.tableCellRank')?.getAttribute('title') || '',
                         team: row.querySelector('.tableCellParticipant__name')?.textContent?.trim() || '',
                         team_url: row.querySelector('.tableCellParticipant__name')?.href || '',
                         logo: row.querySelector('.tableCellParticipant__image img')?.src || '',
@@ -229,6 +380,11 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                 )
                 titolo = page.locator("h1").first.inner_text(timeout=10_000)
                 resolved_url = page.url
+                coppa_italia_decisa = (
+                    _coppa_italia_decisa(page, coppa_italia_url)
+                    if coppa_italia_url
+                    else False
+                )
             finally:
                 browser.close()
     except Exception as exc:
@@ -290,6 +446,7 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
                 "gf": gf,
                 "gs": ga,
                 "dr": dr,
+                "_qualification": raw.get("qualification", ""),
             })
 
         classifica.sort(key=lambda row: row["pos"])
@@ -302,7 +459,7 @@ def scrape_standings_diretta(url: str) -> tuple[list, int, str] | None:
         giornata = max((row["p"] for row in classifica), default=0) or 1
         stagione = stagione_da_testo(titolo)
         print(f"🌐 Pagina risolta: {resolved_url}")
-        return classifica, giornata, stagione
+        return classifica, giornata, stagione, coppa_italia_decisa
     except Exception as exc:
         print(f"❌ Formato classifica Diretta.it non valido: {exc}")
         return None
@@ -322,6 +479,12 @@ def genera_json_classifica():
     test_only = _env_true("TEST_ONLY")
     url_override = os.environ.get("DIRETTA_STANDINGS_URL", "").strip()
     url = url_override or (comp["test_url"] if test_only else comp["url"])
+    coppa_italia_url = ""
+    if comp_key == "SA":
+        coppa_italia_url = (
+            os.environ.get("DIRETTA_COPPA_ITALIA_URL", "").strip()
+            or COPPA_ITALIA_RISULTATI_URL
+        )
 
     modalita = "test senza Telegram" if test_only else "produzione"
     print(
@@ -331,11 +494,11 @@ def genera_json_classifica():
     if test_only and url == comp["test_url"] and url != comp["url"]:
         print("ℹ️  Test europeo su classifica completa archiviata 2025/26.")
 
-    risultato = scrape_standings_diretta(url)
+    risultato = scrape_standings_diretta(url, coppa_italia_url)
     if risultato is None:
         print("❌ Impossibile recuperare la classifica da Diretta.it.")
         sys.exit(1)
-    classifica, giornata, stagione = risultato
+    classifica, giornata, stagione, coppa_italia_decisa = risultato
 
     squadre_attese = comp["squadre"]
     if len(classifica) != squadre_attese:
@@ -359,6 +522,16 @@ def genera_json_classifica():
         "stagione": stagione,
         "classifica": classifica,
     }
+    if comp_key == "SA":
+        qualification_mode, qualification_legend = _applica_zone_serie_a(
+            classifica,
+            coppa_italia_decisa,
+        )
+        output["qualification_mode"] = qualification_mode
+        output["qualification_legend"] = qualification_legend
+    else:
+        for row in classifica:
+            row.pop("_qualification", None)
 
     with open("classifica.json", "w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=4)

@@ -77,8 +77,17 @@ jobs:
           assert [row["pos"] for row in rows] == list(range(1, 21))
           assert all(row["p"] == row["v"] + row["n"] + row["p_pers"] for row in rows)
           assert all(row["dr"] == row["gf"] - row["gs"] for row in rows)
+          assert data["qualification_mode"] in {
+              "provvisorie_coppa_italia",
+              "definitive_diretta",
+          }
+          assert data["qualification_legend"]
+          assert all(row["zone"] in {"", "z1", "z2", "z3", "z4"} for row in rows)
 
-          print(f"OK: {len(rows)} squadre, giornata {data['giornata']}, stagione {data['stagione']}")
+          print(
+              f"OK: {len(rows)} squadre, giornata {data['giornata']}, "
+              f"stagione {data['stagione']}, fasce {data['qualification_mode']}"
+          )
           for row in rows:
               print(f"{row['pos']:>2}. {row['team']:<15} {row['pt']:>3} pt")
           PY
