@@ -98,7 +98,7 @@
             "gf": 2,
             "gs": 1,
             "dr": 1,
-            "zone": "z2"
+            "zone": "z3"
         },
         {
             "pos": 7,
@@ -114,7 +114,7 @@
             "gf": 1,
             "gs": 0,
             "dr": 1,
-            "zone": "z3"
+            "zone": ""
         },
         {
             "pos": 8,
@@ -328,8 +328,8 @@
     "qualification_mode": "provvisorie_coppa_italia",
     "qualification_legend": [
         "1–4 Champions",
-        "5–6 Europa",
-        "7 Conference",
+        "5 Europa",
+        "6 Conference",
         "18–20 Retrocesse"
     ]
 }
