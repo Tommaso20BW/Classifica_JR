@@ -68,8 +68,8 @@ COPPA_ITALIA_RISULTATI_URL = (
 
 ZONE_SERIE_A_PROVVISORIE = {
     **{pos: "z1" for pos in range(1, 5)},
-    **{pos: "z2" for pos in range(5, 7)},
-    7: "z3",
+    5: "z2",
+    6: "z3",
     **{pos: "z4" for pos in range(18, 21)},
 }
 
@@ -279,8 +279,8 @@ def _applica_zone_serie_a(
             )
         else:
             print(
-                "ℹ️  Coppa Italia non ancora conclusa: 5ª–6ª Europa League, "
-                "7ª Conference League."
+                "ℹ️  Coppa Italia non ancora conclusa: 5ª Europa League, "
+                "6ª Conference League."
             )
 
     for row in classifica:

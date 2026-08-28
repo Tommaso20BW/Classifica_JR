@@ -457,9 +457,9 @@ const CFG = {
     cols:2, perCol:10,
     zone:(t,p)=>Object.prototype.hasOwnProperty.call(t,'zone')
       ? t.zone
-      : (p<=4 ? "z1" : p<=6 ? "z2" : p===7 ? "z3" : p>=18 ? "z4" : ""),
+      : (p<=4 ? "z1" : p===5 ? "z2" : p===6 ? "z3" : p>=18 ? "z4" : ""),
     sepAfter:[],
-    legend:["1–4 Champions","5–6 Europa","7 Conference","18–20 Retrocesse"]
+    legend:["1–4 Champions","5 Europa","6 Conference","18–20 Retrocesse"]
   },
   UCL:{
     titolo:"CHAMPIONS LEAGUE",
