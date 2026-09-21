@@ -57,9 +57,9 @@ def menu(competition, destination, page="home"):
         rows.append([{"text": "↩️ Indietro", "callback_data": "back"}])
     else:
         rows = [[
-            {"text": f"Classifica: {COMPETIZIONI.get(competition, 'da scegliere')}",
+            {"text": COMPETIZIONI.get(competition, "Scegli classifica"),
              "callback_data": "choose:competition"},
-            {"text": f"Destinazione: {DESTINAZIONI[destination]}",
+            {"text": DESTINAZIONI[destination],
              "callback_data": "choose:destination"},
         ], [{"text": "📤 Invia", "callback_data": "send"}]]
     return {
@@ -67,7 +67,7 @@ def menu(competition, destination, page="home"):
             "📊 Scegli la classifica da inviare\n\n"
             f"Classifica: {COMPETIZIONI.get(competition, 'da scegliere')}\n"
             f"Destinazione: {DESTINAZIONI[destination]}\n\n"
-            "Usa Classifica e Destinazione per cambiare le scelte, poi premi Invia.\n"
+            "Usa i due pulsanti per cambiare classifica e destinazione, poi premi Invia.\n"
             "Il menu scade dopo 10 minuti."
         ),
         "reply_markup": {"inline_keyboard": rows},

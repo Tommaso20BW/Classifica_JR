@@ -74,7 +74,7 @@ class BotJRTests(unittest.TestCase):
         first_buttons = [button for row in menus[0]["reply_markup"]["inline_keyboard"]
                          for button in row]
         self.assertEqual(len(first_buttons), 3)
-        self.assertIn("da scegliere", first_buttons[0]["text"])
+        self.assertEqual("Scegli classifica", first_buttons[0]["text"])
         self.assertIn("Juventus Reborn", first_buttons[1]["text"])
         self.assertEqual([button["callback_data"] for button in first_buttons],
                          ["choose:competition", "choose:destination", "send"])
