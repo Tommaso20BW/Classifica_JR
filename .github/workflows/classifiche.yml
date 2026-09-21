@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   test:
-    name: Verifica Bot JR
+    name: Verifica Bot
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
