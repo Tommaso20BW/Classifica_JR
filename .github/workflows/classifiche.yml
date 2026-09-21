@@ -1,4 +1,4 @@
-name: Bot JR - Classifiche
+name: Classifiche
 
 on:
   workflow_dispatch:
