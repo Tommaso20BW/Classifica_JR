@@ -1,0 +1,170 @@
+name: Bot JR - Classifiche
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+
+# Un solo menu in ascolto; una nuova richiesta non interrompe quella attiva.
+concurrency:
+  group: ${{ github.event_name == 'workflow_dispatch' && 'bot-jr-menu' || format('bot-jr-test-{0}', github.ref) }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Verifica Bot JR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -v
+
+  invia:
+    name: Scegli e invia classifica
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          # Una run accodata deve partire dall'ultimo commit del branch.
+          ref: ${{ github.ref }}
+
+      - name: Configura Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: pip
+
+      # Solo libreria standard: il menu arriva prima di installare le dipendenze.
+      - name: Scegli classifica e destinazione su Bot JR
+        id: scelta
+        timeout-minutes: 12
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_BOT_JR: ${{ secrets.TELEGRAM_CHAT_ID_BOT_JR }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -u bot_jr.py
+
+      - name: Installa dipendenze
+        if: steps.scelta.outputs.competition != ''
+        run: pip install -r requirements.txt
+
+      - name: Cache browser Playwright
+        if: steps.scelta.outputs.competition != ''
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Installa browser Playwright
+        if: steps.scelta.outputs.competition != '' && steps.playwright-cache.outputs.cache-hit != 'true'
+        run: playwright install chromium --with-deps
+
+      - name: Installa dipendenze di sistema del browser
+        if: steps.scelta.outputs.competition != '' && steps.playwright-cache.outputs.cache-hit == 'true'
+        run: playwright install-deps chromium
+
+      - name: Aggiorna la classifica scelta
+        if: steps.scelta.outputs.competition != ''
+        env:
+          COMPETITION: ${{ steps.scelta.outputs.competition }}
+        run: python -u aggiorna_classifica.py
+
+      - name: Invia immagine alla destinazione scelta
+        id: invio
+        if: steps.scelta.outputs.competition != ''
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_BOT_JR: ${{ secrets.TELEGRAM_CHAT_ID_BOT_JR }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DESTINATION: ${{ steps.scelta.outputs.destination }}
+          COMPETITION: ${{ steps.scelta.outputs.competition }}
+        run: |
+          # Selezione esplicita: un secret mancante non deve cambiare destinatario.
+          case "$DESTINATION" in
+            bot_jr)
+              export TELEGRAM_CHAT_ID="$TELEGRAM_CHAT_ID_BOT_JR"
+              export TELEGRAM_DESTINATION="Bot JR"
+              ;;
+            juventus_reborn)
+              export TELEGRAM_DESTINATION="Juventus Reborn"
+              ;;
+            *) echo "Destinazione non valida"; exit 1 ;;
+          esac
+          python -u screenshot_telegram.py
+
+      - name: Salva la classifica aggiornata
+        if: steps.invio.outcome == 'success'
+        env:
+          COMPETITION: ${{ steps.scelta.outputs.competition }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          cp classifica.json "$RUNNER_TEMP/bot-jr-classifica.json"
+          git restore -- classifica.json
+          # Il checkout CI e' usa e getta: applica solo il JSON generato al tip
+          # aggiornato, preservando eventuali commit arrivati durante il menu.
+          for ATTEMPT in 1 2 3; do
+            git fetch origin "$GITHUB_REF"
+            git checkout -B "$GITHUB_REF_NAME" FETCH_HEAD
+            cp "$RUNNER_TEMP/bot-jr-classifica.json" classifica.json
+            git add classifica.json
+            if git diff --staged --quiet; then
+              exit 0
+            fi
+            git commit -m "Classifica aggiornata automaticamente ($COMPETITION)"
+            if git push origin "HEAD:$GITHUB_REF"; then
+              exit 0
+            fi
+          done
+          echo "Immagine inviata, ma salvataggio JSON non riuscito dopo 3 tentativi."
+          exit 1
+
+      - name: Segnala un invio non riuscito su Bot JR
+        if: failure() && steps.invio.outcome != 'success'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python -u bot_jr.py --status failed
+
+      - name: Chiudi il menu se il workflow viene annullato
+        if: cancelled() && steps.invio.outcome != 'success'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python -u bot_jr.py --status cancelled
+
+  pulizia:
+    name: Elimina le vecchie run
+    needs: invia
+    if: always() && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: write
+    steps:
+      - name: Elimina run precedenti completate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUNS_FILE=$(mktemp)
+          # Prima raccogli tutti gli ID: le cancellazioni non spostano le pagine da leggere.
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs?per_page=100" \
+            --jq '.workflow_runs[] | select(.status == "completed") | select(.path == ".github/workflows/BotJR.yml" or .path == ".github/workflows/SerieA.yml" or .path == ".github/workflows/ChampionsLeague.yml" or .path == ".github/workflows/EuropaLeague.yml" or .path == ".github/workflows/ConferenceLeague.yml") | .id' > "$RUNS_FILE"
+          while read -r RUN_ID; do
+            if (( RUN_ID < GITHUB_RUN_ID )); then
+              echo "Elimino run $RUN_ID"
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID"
+            fi
+          done < "$RUNS_FILE"
+          rm "$RUNS_FILE"
