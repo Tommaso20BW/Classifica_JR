@@ -160,7 +160,7 @@ jobs:
           RUNS_FILE=$(mktemp)
           # Prima raccogli tutti gli ID: le cancellazioni non spostano le pagine da leggere.
           gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs?per_page=100" \
-            --jq '.workflow_runs[] | select(.status == "completed") | select(.path == ".github/workflows/BotJR.yml" or .path == ".github/workflows/SerieA.yml" or .path == ".github/workflows/ChampionsLeague.yml" or .path == ".github/workflows/EuropaLeague.yml" or .path == ".github/workflows/ConferenceLeague.yml") | .id' > "$RUNS_FILE"
+            --jq '.workflow_runs[] | select(.status == "completed") | select(.path == ".github/workflows/classifiche.yml" or .path == ".github/workflows/BotJR.yml" or .path == ".github/workflows/SerieA.yml" or .path == ".github/workflows/ChampionsLeague.yml" or .path == ".github/workflows/EuropaLeague.yml" or .path == ".github/workflows/ConferenceLeague.yml") | .id' > "$RUNS_FILE"
           while read -r RUN_ID; do
             if (( RUN_ID < GITHUB_RUN_ID )); then
               echo "Elimino run $RUN_ID"

@@ -1,15 +1,16 @@
 # Classifica JR
 
-Un solo workflow, **Bot JR - Classifiche**, genera le immagini di Serie A,
+Un solo workflow, **Classifiche**, genera le immagini di Serie A,
 Champions League, Europa League e Conference League.
 
 ## Come usarlo
 
-1. Su GitHub apri **Actions → Bot JR - Classifiche → Run workflow**.
+1. Su GitHub apri **Actions → Classifiche → Run workflow**.
 2. Su **Bot JR** arriva un messaggio con due pulsanti affiancati:
-   **Classifica: da scegliere** e **Destinazione: Juventus Reborn**, e **Invia** sotto.
-3. **Classifica** apre l'elenco delle quattro competizioni. Nessuna è preselezionata.
-4. **Destinazione** permette di scegliere **Bot JR** o **Juventus Reborn**;
+   **Scegli classifica** e **Juventus Reborn**, e **Invia** sotto.
+3. Il primo pulsante apre l'elenco delle quattro competizioni. Nessuna è preselezionata;
+   dopo la scelta mostra soltanto il nome, ad esempio **Serie A**.
+4. Il secondo pulsante permette di scegliere **Bot JR** o **Juventus Reborn** e mostra solo il nome;
    Juventus Reborn è la scelta iniziale. Puoi cambiare entrambe le scelte o tornare indietro.
 5. Premi **Invia**. Se manca la classifica, compare un avviso. Altrimenti il menu
    viene cancellato e il workflow prepara e invia l'immagine alla destinazione scelta.
