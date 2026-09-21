@@ -1,0 +1,5 @@
+__pycache__/
+.venv/
+.bot-jr-menu.json
+_screenshot_temp.html
+screenshot*.png

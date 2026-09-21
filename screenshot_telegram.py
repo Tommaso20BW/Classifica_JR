@@ -378,6 +378,8 @@ def invia_telegram(giornata, comp_key):
 
     if response.status_code == 200:
         payload = response.json()
+        if not payload.get("ok"):
+            raise RuntimeError("Telegram ha rifiutato l'invio della classifica.")
         photo_sizes = payload.get("result", {}).get("photo", [])
         largest = max(photo_sizes, key=lambda p: p.get("width", 0) * p.get("height", 0), default={})
         sent_w = largest.get("width", 0)
@@ -390,7 +392,7 @@ def invia_telegram(giornata, comp_key):
         else:
             print(f"⚠️ Telegram ha restituito solo {sent_w}x{sent_h}: verificare la variante HD.")
     else:
-        print(f"❌ Errore Telegram: {response.status_code} — {response.text}")
+        raise RuntimeError(f"Invio Telegram non riuscito: HTTP {response.status_code}.")
 
 
 if __name__ == "__main__":
