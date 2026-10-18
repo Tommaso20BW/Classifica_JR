@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
@@ -73,11 +76,11 @@ class BotJRTests(unittest.TestCase):
                  if params.get("reply_markup", {}).get("inline_keyboard")]
         first_buttons = [button for row in menus[0]["reply_markup"]["inline_keyboard"]
                          for button in row]
-        self.assertEqual(len(first_buttons), 3)
+        self.assertEqual(len(first_buttons), 4)
         self.assertEqual("Scegli classifica", first_buttons[0]["text"])
         self.assertIn("Juventus Reborn", first_buttons[1]["text"])
         self.assertEqual([button["callback_data"] for button in first_buttons],
-                         ["choose:competition", "choose:destination", "send"])
+                         ["choose:competition", "choose:destination", "send", "cancel"])
         competition_buttons = [button for row in menus[1]["reply_markup"]["inline_keyboard"]
                                for button in row]
         self.assertEqual(
@@ -132,12 +135,21 @@ class BotJRTests(unittest.TestCase):
                          ("UECL", "juventus_reborn"))
         self.assertEqual(api.calls[-1][0], "deleteMessage")
 
-    def test_timeout_removes_buttons_without_selecting_a_default(self):
+    def test_timeout_deletes_menu_without_selecting_a_default(self):
         api = FakeTelegram()
         with patch("bot_jr.time.monotonic", side_effect=[0, 601]):
             self.assertIsNone(self.choose(api))
-        self.assertEqual(api.calls[-1][0], "editMessageText")
-        self.assertEqual(api.calls[-1][1]["reply_markup"]["inline_keyboard"], [])
+        self.assertEqual(api.calls[-1], ("deleteMessage", {"chat_id": 101, "message_id": 50}))
+
+    def test_cancel_button_deletes_menu_and_stops_workflow(self):
+        api = FakeTelegram([[callback(1, "cancel")]])
+        with TemporaryDirectory() as temp:
+            state_path = Path(temp) / "state.json"
+            self.assertIsNone(self.choose(api, state_path=state_path))
+            self.assertEqual(api.calls[-1],
+                             ("deleteMessage", {"chat_id": 101, "message_id": 50}))
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            self.assertTrue(state["menu_deleted"])
 
     def test_existing_webhook_is_not_overwritten(self):
         api = FakeTelegram(webhook="https://example.com/existing-bot")
