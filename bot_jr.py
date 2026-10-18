@@ -55,13 +55,15 @@ def menu(competition, destination, page="home"):
         rows = [[{"text": ("✅ " if code == selected else "") + name,
                   "callback_data": f"{page}:{code}"}] for code, name in choices.items()]
         rows.append([{"text": "↩️ Indietro", "callback_data": "back"}])
+        rows.append([{"text": "❌ Annulla", "callback_data": "cancel"}])
     else:
         rows = [[
             {"text": COMPETIZIONI.get(competition, "Scegli classifica"),
              "callback_data": "choose:competition"},
             {"text": DESTINAZIONI[destination],
              "callback_data": "choose:destination"},
-        ], [{"text": "📤 Invia", "callback_data": "send"}]]
+        ], [{"text": "📤 Invia", "callback_data": "send"}],
+            [{"text": "❌ Annulla", "callback_data": "cancel"}]]
     return {
         "text": (
             "📊 Scegli la classifica da inviare\n\n"
@@ -79,6 +81,13 @@ def chiudi_menu(api, state, text):
         "editMessageText", chat_id=state["chat_id"], message_id=state["message_id"],
         text=text, reply_markup={"inline_keyboard": []},
     )
+
+
+def elimina_menu(api, state, state_path=None):
+    api.call("deleteMessage", chat_id=state["chat_id"], message_id=state["message_id"])
+    state["menu_deleted"] = True
+    if state_path is not None:
+        state_path.write_text(json.dumps(state), encoding="utf-8")
 
 
 def scegli_classifica(api, chat_id, state_path=None):
@@ -101,7 +110,8 @@ def scegli_classifica(api, chat_id, state_path=None):
         while True:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
-                chiudi_menu(api, state, "⌛ Tempo scaduto. Nessuna classifica inviata. Avvia di nuovo il workflow.")
+                elimina_menu(api, state, state_path)
+                print("Menu scaduto dopo 10 minuti: messaggio Telegram eliminato.")
                 return None
             updates = api.call(
                 "getUpdates", offset=offset, timeout=min(25, max(1, int(remaining))),
@@ -116,6 +126,12 @@ def scegli_classifica(api, chat_id, state_path=None):
                     continue
                 data = query.get("data", "")
                 old_choices = (competition, destination, page)
+                if data == "cancel":
+                    api.call("answerCallbackQuery", callback_query_id=query["id"],
+                             text="Workflow annullato.")
+                    elimina_menu(api, state, state_path)
+                    print("Workflow annullato da Telegram: messaggio eliminato.")
+                    return None
                 if data in {"choose:competition", "choose:destination", "back"}:
                     page = "home" if data == "back" else data[7:]
                 elif data.startswith("competition:") and data[12:] in COMPETIZIONI:
@@ -127,10 +143,7 @@ def scegli_classifica(api, chat_id, state_path=None):
                 elif data == "send" and competition:
                     api.call("answerCallbackQuery", callback_query_id=query["id"], text="Preparo la classifica…")
                     state.update(competition=competition, destination=destination)
-                    api.call("deleteMessage", chat_id=state["chat_id"], message_id=state["message_id"])
-                    state["menu_deleted"] = True
-                    if state_path is not None:
-                        state_path.write_text(json.dumps(state), encoding="utf-8")
+                    elimina_menu(api, state, state_path)
                     return state
                 else:
                     api.call("answerCallbackQuery", callback_query_id=query["id"],
