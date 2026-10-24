@@ -2,14 +2,33 @@ name: Classifiche
 
 on:
   workflow_dispatch:
+    inputs:
+      classifica:
+        description: 'Classifica'
+        required: true
+        default: 'Serie A'
+        type: choice
+        options:
+          - 'Serie A'
+          - 'Champions League'
+          - 'Europa League'
+          - 'Conference League'
+      destinazione:
+        description: 'Dove inviarla'
+        required: true
+        default: 'Juventus Reborn'
+        type: choice
+        options:
+          - 'Juventus Reborn'
+          - 'Bot JR (test)'
   pull_request:
 
 permissions:
   contents: read
 
-# Un solo menu in ascolto; una nuova richiesta non interrompe quella attiva.
+# Un invio alla volta; una nuova richiesta aspetta quella attiva.
 concurrency:
-  group: ${{ github.event_name == 'workflow_dispatch' && 'bot-jr-menu' || format('bot-jr-test-{0}', github.ref) }}
+  group: ${{ github.event_name == 'workflow_dispatch' && 'classifiche' || format('classifiche-test-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
@@ -46,15 +65,28 @@ jobs:
           python-version: '3.14'
           cache: pip
 
-      # Solo libreria standard: il menu arriva prima di installare le dipendenze.
-      - name: Scegli classifica e destinazione su Bot JR
+      # Le scelte arrivano dal menu "Run workflow" (o da Comandi Rapidi via API).
+      - name: Leggi classifica e destinazione
         id: scelta
-        timeout-minutes: 12
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID_BOT_JR: ${{ secrets.TELEGRAM_CHAT_ID_BOT_JR }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python -u bot_jr.py
+          CLASSIFICA: ${{ inputs.classifica }}
+          DESTINAZIONE: ${{ inputs.destinazione }}
+        run: |
+          case "$CLASSIFICA" in
+            "Serie A")           COMPETITION=SA ;;
+            "Champions League")  COMPETITION=UCL ;;
+            "Europa League")     COMPETITION=UEL ;;
+            "Conference League") COMPETITION=UECL ;;
+            *) echo "::error::Classifica non valida: '$CLASSIFICA'"; exit 1 ;;
+          esac
+          case "$DESTINAZIONE" in
+            "Juventus Reborn") DESTINATION=juventus_reborn ;;
+            "Bot JR (test)")   DESTINATION=bot_jr ;;
+            *) echo "::error::Destinazione non valida: '$DESTINAZIONE'"; exit 1 ;;
+          esac
+          echo "competition=$COMPETITION" >> "$GITHUB_OUTPUT"
+          echo "destination=$DESTINATION" >> "$GITHUB_OUTPUT"
+          echo "Scelta: $CLASSIFICA -> $DESTINAZIONE"
 
       - name: Installa dipendenze
         if: steps.scelta.outputs.competition != ''
@@ -131,18 +163,6 @@ jobs:
           done
           echo "Immagine inviata, ma salvataggio JSON non riuscito dopo 3 tentativi."
           exit 1
-
-      - name: Segnala un invio non riuscito su Bot JR
-        if: failure() && steps.invio.outcome != 'success'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: python -u bot_jr.py --status failed
-
-      - name: Chiudi il menu se il workflow viene annullato
-        if: cancelled() && steps.invio.outcome != 'success'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        run: python -u bot_jr.py --status cancelled
 
   pulizia:
     name: Elimina le vecchie run
