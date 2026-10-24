@@ -100,13 +100,11 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
+      # Niente install-deps: il runner ha gia' le librerie di Chrome e i font di
+      # base; quelli della classifica (Google Fonts) li incorpora lo screenshot.
       - name: Installa browser Playwright
         if: steps.scelta.outputs.competition != '' && steps.playwright-cache.outputs.cache-hit != 'true'
-        run: playwright install chromium --with-deps
-
-      - name: Installa dipendenze di sistema del browser
-        if: steps.scelta.outputs.competition != '' && steps.playwright-cache.outputs.cache-hit == 'true'
-        run: playwright install-deps chromium
+        run: playwright install chromium
 
       - name: Aggiorna la classifica scelta
         if: steps.scelta.outputs.competition != ''
